@@ -21,13 +21,16 @@ public:
             centreWithSize(500, 500);
             // setBounds (50, 50, 100, 100);
             // setBoundsRelative ((0.25f / 2), (0.25f / 2), 0.75f, 0.75f);
-            setFullScreen(false);
-            setResizable(true, true);
 
             MainComponent *main = new MainComponent();
             setContentOwned(main, false);
-
-            // setUsingNativeTitleBar (true);
+            setUsingNativeTitleBar (true);
+#if JUCE_IOS || JUCE_ANDROID
+            setFullScreen(true);
+#else
+            setResizable(true, true);
+            centreWithSize(getWidth(), getHeight());
+#endif
             setVisible(true);
         }
 

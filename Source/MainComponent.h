@@ -14,9 +14,8 @@
 #include <iostream>  
 #include <string>  
 #include "rest_request.h"
-#include "json.h"
+#include <json.h>
 #include <nlohmann/json.hpp>
-#include "Vars.h"
 
 //==============================================================================
 /*
@@ -34,13 +33,16 @@ public:
     void sliderDragEnded(juce::Slider* slider) override;
     void getPhilipsData();
     void pushPhilipsDataUpdate();
+    void updateRootJSON();
+    nlohmann::json pingAndReceive(juce::String target);
+    int getNumLights();
 
 private:
     juce::String _currentSizeAsString;
 
     const juce::String _httpTarget = "http://10.0.0.139";
 
-    const juce::String _apiTarget = DataVault::getAPITarget();
+    const juce::String _apiTarget = "/api/5Gpo7VxAqssVu2E8lvpcZTRCVzqfmngwBbXqvJpO";;
     
     const juce::String _apiGetTarget = "/lights";
 
@@ -58,6 +60,10 @@ private:
     juce::uint8 _rVal = 0;
     juce::uint8 _gVal = 0;
     juce::uint8 _bVal = 0;
+
+    int _numLights = -1;
+
+    nlohmann::json _rootJSON;
 
     adamski::RestRequest _req;
 

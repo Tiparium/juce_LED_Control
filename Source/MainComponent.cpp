@@ -16,6 +16,8 @@ MainComponent::MainComponent()
 {
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
+    MainComponent::updateRootJSON();
+    _numLights = MainComponent::_rootJSON.size();
 }
 
 MainComponent::~MainComponent()
@@ -126,25 +128,19 @@ void MainComponent::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void MainComponent::sliderDragEnded(juce::Slider* slider) {
-    MainComponent::getPhilipsData();
+    // MainComponent::getPhilipsData();
+    MainComponent::pushPhilipsDataUpdate();
 }
 
 void MainComponent::getPhilipsData() {
-    juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
-    // DBG(target); // Prints the target URL
-    adamski::RestRequest::Response res = _req.get(target).execute();
-    
-    juce::String resBody = res.bodyAsString;
-    // json::jobject result = json::jobject::parse(resBody.toStdString());
-    nlohmann::json json = nlohmann::json::parse(resBody.toStdString()); // Remnant to my stupidity
 
-    for (int i = 0; i < json.size(); i++) {
+    for (int i = 0; i < _rootJSON.size(); i++) {
 
         std::string it = std::to_string(i + 1);
 
-        DBG(it);
+        DBG(_rootJSON.size());
 
-        juce::String test = json[it]["manufacturername"];
+        juce::String test = _rootJSON[it]["manufacturername"];
 
         DBG(test);
     }
@@ -154,5 +150,39 @@ void MainComponent::getPhilipsData() {
 }
 
 void MainComponent::pushPhilipsDataUpdate() {
+    juce::String putTarget = _apiPutTarget;
+    juce::String target = "";
+    for (int i = 0; i < _rootJSON.size(); i++) {
+        putTarget = putTarget.substring(0, 7) + std::to_string(i + 1) + putTarget.substring(8, putTarget.length());
+        target = _httpTarget + _apiTarget + putTarget;
 
+        juce::var obj;
+        obj.append(0.000f);
+        obj.append(000.0f);
+
+        adamski::RestRequest::Response res = _req.post(target)
+            .field("xy", obj)
+            .execute();
+
+        DBG(res.bodyAsString);
+    }
+}
+
+void MainComponent::updateRootJSON() {
+    juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
+    _rootJSON = pingAndReceive(target);
+}
+
+nlohmann::json MainComponent::pingAndReceive(juce::String target) {
+    // DBG(target); // Prints the target URL
+    adamski::RestRequest::Response res = _req.get(target).execute();
+
+    juce::String resBody = res.bodyAsString;
+    // json::jobject result = json::jobject::parse(resBody.toStdString());
+    nlohmann::json json = nlohmann::json::parse(resBody.toStdString());
+    return json;
+}
+
+int MainComponent::getNumLights() {
+    return _rootJSON.size();
 }

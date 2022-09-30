@@ -10,7 +10,6 @@
     <FILE id="fOCFM3" name="MainComponent.cpp" compile="1" resource="0"
           file="Source/MainComponent.cpp"/>
     <FILE id="tlYbrt" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
-    <FILE id="BAwi6w" name="Vars.h" compile="0" resource="0" file="Source/Vars.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>

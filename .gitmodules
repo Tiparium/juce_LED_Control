@@ -1,0 +1,9 @@
+[submodule "RestRequest"]
+	path = RestRequest
+	url = https://github.com/adamski/RestRequest.git
+[submodule "simpleson"]
+	path = simpleson
+	url = https://github.com/gregjesl/simpleson.git
+[submodule "json"]
+	path = json
+	url = https://github.com/nlohmann/json.git

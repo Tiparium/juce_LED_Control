@@ -1,7 +1,13 @@
 /*
   ==============================================================================
 
-    This file contains the basic startup code for a JUCE application.
+     An application which allows control over both Philips Hue LEDS,
+     and "dumb" LEDS attached to an Arduino or NodeMCU
+
+     External Reliances::
+        For making REST requests:   https://github.com/adamski/RestRequest
+        For parsing JSON:           https://github.com/nlohmann/json
+        Because I'm Stupid:         https://github.com/gregjesl/simpleson
 
   ==============================================================================
 */

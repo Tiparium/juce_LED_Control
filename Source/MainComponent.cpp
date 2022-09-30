@@ -14,7 +14,8 @@
 //==============================================================================
 MainComponent::MainComponent()
 {
-
+    _req.header("Content-Type", "application/json");
+    _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
 }
 
 MainComponent::~MainComponent()
@@ -25,8 +26,8 @@ void MainComponent::paint (juce::Graphics& g)
 {
     setSize(600, 400);
     size();
-    g.drawRect(getLocalBounds(), 1);   // draw an outline around the component
-    g.fillAll (juce::Colour(_rVal, _gVal, _bVal));
+    g.drawRect(getLocalBounds(), 1);
+    g.fillAll (juce::Colour(_rVal, _gVal, _bVal)); // Set the color of the window to be the current RGB value
 
     g.setColour (juce::Colours::grey);
 
@@ -87,14 +88,14 @@ void MainComponent::paint (juce::Graphics& g)
     }
 
     g.setFont (30.0f);
-    g.drawText (currentSizeAsString, getLocalBounds(),
+    g.drawText (_currentSizeAsString, getLocalBounds(),
                 juce::Justification::centred, true);
 }
 
 void MainComponent::resized()
 {
     size();
-    currentSizeAsString = juce::String (getWidth()) + " x " + juce::String (getHeight());
+    //_currentSizeAsString = juce::String (getWidth()) + " x " + juce::String (getHeight());
 
     int height = getHeight() - getHeight() / 1.5;
 
@@ -110,6 +111,7 @@ void MainComponent::size() {
     setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
+// Runs when slider value is changed
 void MainComponent::sliderValueChanged(juce::Slider* slider) {
     if (slider == &_rSlider) {
         _rVal = _rSlider.getValue();
@@ -120,4 +122,31 @@ void MainComponent::sliderValueChanged(juce::Slider* slider) {
     else {
         _bVal = _bSlider.getValue();
     }
+}
+
+// Runs when mouse is lifted from a slider
+void MainComponent::sliderDragEnded(juce::Slider* slider) {
+    MainComponent::getPhilipsData();
+}
+
+void MainComponent::getPhilipsData() {
+    juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
+    // DBG(target); // Prints the target URL
+    adamski::RestRequest::Response res = _req.get(target).execute();
+    
+    juce::String resBody = res.bodyAsString;
+    // json::jobject result = json::jobject::parse(resBody.toStdString());
+    nlohmann::json json = nlohmann::json::parse(resBody.toStdString()); // Remnant to my stupidity
+
+    juce::String test = json[1]["state"]["effect"];
+
+    DBG(test);
+    //DBG(res.bodyAsString); // Prints the full response as JSON (not pretty)
+    //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
+}
+
+void MainComponent::pushPhilipsDataUpdate() {
+    juce::String target = "";
+
+
 }

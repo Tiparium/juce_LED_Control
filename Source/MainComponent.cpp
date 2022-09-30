@@ -126,7 +126,7 @@ void MainComponent::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void MainComponent::sliderDragEnded(juce::Slider* slider) {
-    MainComponent::pushPhilipsDataUpdate();
+    MainComponent::getPhilipsData();
 }
 
 void MainComponent::getPhilipsData() {
@@ -154,7 +154,5 @@ void MainComponent::getPhilipsData() {
 }
 
 void MainComponent::pushPhilipsDataUpdate() {
-    juce::String target = "";
-
 
 }

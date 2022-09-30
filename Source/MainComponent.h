@@ -11,6 +11,8 @@
 
 #include <JuceHeader.h>
 #include <fstream>
+#include <iostream>  
+#include <string>  
 #include "rest_request.h"
 #include "json.h"
 #include <nlohmann/json.hpp>

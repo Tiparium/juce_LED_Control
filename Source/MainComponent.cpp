@@ -126,7 +126,7 @@ void MainComponent::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void MainComponent::sliderDragEnded(juce::Slider* slider) {
-    MainComponent::getPhilipsData();
+    MainComponent::pushPhilipsDataUpdate();
 }
 
 void MainComponent::getPhilipsData() {
@@ -138,9 +138,17 @@ void MainComponent::getPhilipsData() {
     // json::jobject result = json::jobject::parse(resBody.toStdString());
     nlohmann::json json = nlohmann::json::parse(resBody.toStdString()); // Remnant to my stupidity
 
-    juce::String test = json[1]["state"]["effect"];
+    for (int i = 0; i < json.size(); i++) {
 
-    DBG(test);
+        std::string it = std::to_string(i + 1);
+
+        DBG(it);
+
+        juce::String test = json[it]["manufacturername"];
+
+        DBG(test);
+    }
+
     //DBG(res.bodyAsString); // Prints the full response as JSON (not pretty)
     //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
 }

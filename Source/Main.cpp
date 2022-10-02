@@ -7,7 +7,8 @@
      External Reliances::
         For making REST requests:   https://github.com/adamski/RestRequest
         For parsing JSON:           https://github.com/nlohmann/json
-        Because I'm Stupid:         https://github.com/gregjesl/simpleson
+        Because I'm Stupid: (DPRCT) https://github.com/gregjesl/simpleson
+        For processing RGB to HXY:  https://github.com/enwi/hueplusplus
 
   ==============================================================================
 */

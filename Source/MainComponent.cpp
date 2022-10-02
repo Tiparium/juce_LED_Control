@@ -16,6 +16,7 @@ MainComponent::MainComponent()
 {
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
+
     MainComponent::updateRootJSON();
     _numLights = MainComponent::_rootJSON.size();
 }
@@ -152,15 +153,32 @@ void MainComponent::getPhilipsData() {
 void MainComponent::pushPhilipsDataUpdate() {
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
-    for (int i = 0; i < _rootJSON.size(); i++) {
-        putTarget = putTarget.substring(0, 7) + std::to_string(i + 1) + putTarget.substring(8, putTarget.length());
+    for (int i = 0; i < _numLights; i++) {
+
+        // Build a target URL unique to each pHue LED
+        putTarget = putTarget.substring(0, _apiPutSplit) +
+            std::to_string(i + 1) +
+            putTarget.substring(_apiPutSplit + 1, putTarget.length());
+
         target = _httpTarget + _apiTarget + putTarget;
 
-        juce::var obj;
-        obj.append(0.000f);
-        obj.append(000.0f);
+        DBG(target);
 
-        adamski::RestRequest::Response res = _req.post(target)
+        // Convert our native RGB values to pHueXY
+        MainComponent::RGB rgb;
+        MainComponent::XYBrightness xyb;
+        rgb.r = _rVal;
+        rgb.g = _gVal;
+        rgb.b = _bVal;
+        xyb = rgb.toXY();
+
+        // Push our new pHueXY values to a juce::obj for RESTful call
+        juce::var obj;
+        obj.append(xyb.xy.x);
+        obj.append(xyb.xy.y);
+
+        // Make RESTful PUT call
+        adamski::RestRequest::Response res = _req.put(target)
             .field("xy", obj)
             .execute();
 

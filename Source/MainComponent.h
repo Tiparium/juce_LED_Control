@@ -143,7 +143,7 @@ private:
     juce::String _apiTarget;
     juce::String _apiGetTarget;
     juce::String _apiPutTarget;
-    int _apiPutSplit = 8; // Index of the placeholder character in _apiPutTarget
+    int _apiPutSplit = 8; // Index of the placeholder character (X) in _apiPutTarget
 
     juce::Label _rLabel;
     juce::Label _gLabel;

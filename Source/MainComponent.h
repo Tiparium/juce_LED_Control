@@ -40,6 +40,9 @@ public:
 
     int getNumLights();
 
+    // Debug Functions:
+    void resetColor(); // Reset lights to color they were at time of app being opened
+
     // I definitely didn't steal these structs. Nope.
     struct XY
     {

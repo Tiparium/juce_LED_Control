@@ -31,24 +31,7 @@ MainComponent::MainComponent()
 
 MainComponent::~MainComponent()
 {
-    juce::var xyColor;
-    xyColor.append(_OGxVal);
-    xyColor.append(_OGyVal);
-
-    juce::String putTarget = _apiPutTarget;
-    juce::String target = "";
-
-    for (int i = 0; i < _numLights; i++) {
-        int it = i + 1;
-        // Build a target URL unique to each pHue LED
-        putTarget = putTarget.substring(0, _apiPutSplit) +
-            std::to_string(i + 1) +
-            putTarget.substring(_apiPutSplit + 1, putTarget.length());
-
-        target = _httpTarget + _apiTarget + putTarget;
-
-        pushUpdate(xyColor, target);
-    }
+    resetColor();
 }
 
 void MainComponent::paint (juce::Graphics& g)
@@ -235,4 +218,30 @@ nlohmann::json MainComponent::pingAndReceive(juce::String target) {
 
 int MainComponent::getNumLights() {
     return _rootJSON.size();
+}
+
+/**
+
+EVERYTHING BELOW THIS LINE IS FOR DEBUG PURPOSES ONLY
+
+*/
+void MainComponent::resetColor() {
+    juce::var xyColor;
+    xyColor.append(_OGxVal);
+    xyColor.append(_OGyVal);
+
+    juce::String putTarget = _apiPutTarget;
+    juce::String target = "";
+
+    for (int i = 0; i < _numLights; i++) {
+        int it = i + 1;
+        // Build a target URL unique to each pHue LED
+        putTarget = putTarget.substring(0, _apiPutSplit) +
+            std::to_string(i + 1) +
+            putTarget.substring(_apiPutSplit + 1, putTarget.length());
+
+        target = _httpTarget + _apiTarget + putTarget;
+
+        pushUpdate(xyColor, target);
+    }
 }

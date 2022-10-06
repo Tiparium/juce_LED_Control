@@ -156,6 +156,8 @@ private:
     juce::Slider _gSlider;
     juce::Slider _bSlider;
 
+    juce::TextButton _testBoi{ "Hello World!"};
+
     juce::uint8 _rVal = 0;
     juce::uint8 _gVal = 0;
     juce::uint8 _bVal = 0;

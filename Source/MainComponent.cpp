@@ -25,6 +25,7 @@ MainComponent::MainComponent()
     MainComponent::updateRootJSON();
     _numLights = MainComponent::_rootJSON.size();
 
+    // These aren't needed for the app to run, just for resetColor()
     _OGxVal = _rootJSON["1"]["state"]["xy"][0];
     _OGyVal = _rootJSON["1"]["state"]["xy"][1];
 }
@@ -102,6 +103,9 @@ void MainComponent::paint (juce::Graphics& g)
     g.setFont (30.0f);
     g.drawText (_currentSizeAsString, getLocalBounds(),
                 juce::Justification::centred, true);
+
+    // Mucking Around
+    addAndMakeVisible(_testBoi);
 }
 
 void MainComponent::resized()
@@ -117,6 +121,9 @@ void MainComponent::resized()
     _gSlider.setBounds(border, height + 20, getWidth() - border, 20);
     _bSlider.setBounds(border, height + 40, getWidth() - border, 20);
     // *Resize Sliders
+
+    // Mucking Around
+    _testBoi.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 25, 100, 50);
 }
 
 void MainComponent::size() {

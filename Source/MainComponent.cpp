@@ -17,12 +17,38 @@ MainComponent::MainComponent()
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
 
+    _httpTarget = params::_httpTarget;
+    _apiTarget = params::_apiTarget;
+    _apiGetTarget = params::_apiGetTarget;
+    _apiPutTarget = params::_apiPutTarget;
+
     MainComponent::updateRootJSON();
     _numLights = MainComponent::_rootJSON.size();
+
+    _OGxVal = _rootJSON["1"]["state"]["xy"][0];
+    _OGyVal = _rootJSON["1"]["state"]["xy"][1];
 }
 
 MainComponent::~MainComponent()
 {
+    juce::var xyColor;
+    xyColor.append(_OGxVal);
+    xyColor.append(_OGyVal);
+
+    juce::String putTarget = _apiPutTarget;
+    juce::String target = "";
+
+    for (int i = 0; i < _numLights; i++) {
+        int it = i + 1;
+        // Build a target URL unique to each pHue LED
+        putTarget = putTarget.substring(0, _apiPutSplit) +
+            std::to_string(i + 1) +
+            putTarget.substring(_apiPutSplit + 1, putTarget.length());
+
+        target = _httpTarget + _apiTarget + putTarget;
+
+        pushUpdate(xyColor, target);
+    }
 }
 
 void MainComponent::paint (juce::Graphics& g)
@@ -130,7 +156,7 @@ void MainComponent::sliderValueChanged(juce::Slider* slider) {
 // Runs when mouse is lifted from a slider
 void MainComponent::sliderDragEnded(juce::Slider* slider) {
     // MainComponent::getPhilipsData();
-    MainComponent::pushPhilipsDataUpdate();
+    MainComponent::grabRGBPushUpdate();
 }
 
 void MainComponent::getPhilipsData() {
@@ -141,7 +167,7 @@ void MainComponent::getPhilipsData() {
 
         DBG(_rootJSON.size());
 
-        juce::String test = _rootJSON[it]["manufacturername"];
+        float test = _rootJSON[it]["state"]["xy"][1];
 
         DBG(test);
     }
@@ -150,7 +176,7 @@ void MainComponent::getPhilipsData() {
     //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
 }
 
-void MainComponent::pushPhilipsDataUpdate() {
+void MainComponent::grabRGBPushUpdate() {
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
     for (int i = 0; i < _numLights; i++) {
@@ -162,7 +188,7 @@ void MainComponent::pushPhilipsDataUpdate() {
 
         target = _httpTarget + _apiTarget + putTarget;
 
-        DBG(target);
+        DBG("Target Value: " + target);
 
         // Convert our native RGB values to pHueXY
         MainComponent::RGB rgb;
@@ -173,21 +199,27 @@ void MainComponent::pushPhilipsDataUpdate() {
         xyb = rgb.toXY();
 
         // Push our new pHueXY values to a juce::obj for RESTful call
-        juce::var obj;
-        obj.append(xyb.xy.x);
-        obj.append(xyb.xy.y);
+        juce::var xyColor;
+        xyColor.append(xyb.xy.x);
+        xyColor.append(xyb.xy.y);
 
-        // Make RESTful PUT call
-        adamski::RestRequest::Response res = _req.put(target)
-            .field("xy", obj)
-            .execute();
-
-        DBG(res.bodyAsString);
+        // Perform RESTful call
+        pushUpdate(xyColor, target);
     }
+}
+
+void MainComponent::pushUpdate(juce::var xyColor, juce::String target) {
+    // Make RESTful PUT call
+    adamski::RestRequest::Response res = _req.put(target)
+        .field("xy", xyColor)
+        .execute();
+
+    DBG(res.bodyAsString);
 }
 
 void MainComponent::updateRootJSON() {
     juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
+    DBG(target);
     _rootJSON = pingAndReceive(target);
 }
 

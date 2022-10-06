@@ -16,10 +16,10 @@
 #include <string>  
 #include "rest_request.h"
 #include "nlohmann/json.hpp"
+#include "../resources/params.h" // Replace with custom params file
 
 //==============================================================================
-/*
-*/
+
 class MainComponent : public juce::Component, public juce::Slider::Listener
 {
 public:
@@ -32,9 +32,12 @@ public:
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
     void getPhilipsData();
-    void pushPhilipsDataUpdate();
+    void grabRGBPushUpdate();
+    void pushUpdate(juce::var xyColor, juce::String target);
     void updateRootJSON();
+
     nlohmann::json pingAndReceive(juce::String target);
+
     int getNumLights();
 
     // I definitely didn't steal these structs. Nope.
@@ -136,12 +139,11 @@ private:
     juce::String _currentSizeAsString;
 
     // Combine these for a full callable RESTful URL
-    const juce::String _httpTarget = "http://10.0.0.139";
-    const juce::String _apiTarget = "/api/19tBs-6Jl8JRAivfTyMa0OV6rhALyR1LJg1hRw7A";;
-    const juce::String _apiGetTarget = "/lights";
-    // Change character 8(x) to assign to a specific light
-    juce::String _apiPutTarget = "/lights/x/state";
-    int _apiPutSplit = 8;
+    juce::String _httpTarget;
+    juce::String _apiTarget;
+    juce::String _apiGetTarget;
+    juce::String _apiPutTarget;
+    int _apiPutSplit = 8; // Index of the placeholder character in _apiPutTarget
 
     juce::Label _rLabel;
     juce::Label _gLabel;
@@ -160,7 +162,11 @@ private:
     // holds response of the get all lights RESTful call
     nlohmann::json _rootJSON;
 
+    // For making API calls
     adamski::RestRequest _req;
 
+    // For resetting to original color settings
+    float _OGxVal;
+    float _OGyVal;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

@@ -7,12 +7,13 @@
      External Reliances::
         For making REST requests:           https://github.com/adamski/RestRequest
         For parsing JSON:                   https://github.com/nlohmann/json
-        Because I'm Stupid: (DPRCD)         https://github.com/gregjesl/simpleson
+        Because I'm Stupid: (RMVD)          https://github.com/gregjesl/simpleson
         For processing RGB to HXY: (DRPCD)  https://github.com/enwi/hueplusplus
 
-     Legend::All tags shoudl be in .h files
+     Legend::All tags should be in .h files
         TODO:   A thing to do
         DRPCD:  A depricated featuer I'm keeping for now
+        RMVD:   A removed feature stored externally
   ==============================================================================
 */
 

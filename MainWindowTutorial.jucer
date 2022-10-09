@@ -7,6 +7,8 @@
     <GROUP id="{216EAAD5-2819-DE20-19C6-696F2D2282F5}" name="Source">
       <FILE id="KxwyBf" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>
+    <FILE id="G7uQat" name="main_C.cpp" compile="1" resource="0" file="Source/main_C.cpp"/>
+    <FILE id="p4ojv3" name="main_C.h" compile="0" resource="0" file="Source/main_C.h"/>
     <FILE id="fOCFM3" name="MainComponent.cpp" compile="1" resource="0"
           file="Source/MainComponent.cpp"/>
     <FILE id="tlYbrt" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>

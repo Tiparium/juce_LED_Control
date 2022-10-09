@@ -1,5 +1,8 @@
 /*
   ==============================================================================
+    
+    NOTES:
+        DRPCD : Functionality moved to rgbSlider_C.h/cpp
 
     MainComponent.h
     Created: 26 Sep 2022 11:09:01am
@@ -26,7 +29,7 @@ public:
     MainComponent();
     ~MainComponent() override;
 
-    void paint (juce::Graphics&) override;
+    void paint(juce::Graphics&) override;
     void resized() override;
     void size();
     void sliderValueChanged(juce::Slider* slider) override;

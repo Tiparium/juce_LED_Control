@@ -1,12 +1,18 @@
 /*
   ==============================================================================
-
+    NOTE:
+        TODO:
+            Currently all data pushing happens through this file.
+            This should ONLY be the rgb sliders. PHue data pushes should happen elsewhere.
+            Handle it.
     rgbSlider_C.h
     Created: 8 Oct 2022 11:44:25pm
     Author:  Tiparium
 
   ==============================================================================
 */
+
+#pragma once
 
 #include <JuceHeader.h>
 #include <fstream>
@@ -16,7 +22,10 @@
 #include "nlohmann/json.hpp"
 #include "../resources/params.h" // Replace with custom params file
 
-class rgbSlider_C : public juce::Component, public juce::Slider::Listener {
+//==============================================================================
+
+class rgbSlider_C : public juce::Component, public juce::Slider::Listener
+{
 public:
     rgbSlider_C();
     ~rgbSlider_C() override;
@@ -170,5 +179,3 @@ private:
     float _OGyVal;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(rgbSlider_C)
 };
-
-#pragma once

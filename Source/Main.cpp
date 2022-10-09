@@ -5,16 +5,20 @@
      and "dumb" LEDS attached to an Arduino or NodeMCU
 
      External Reliances::
-        For making REST requests:   https://github.com/adamski/RestRequest
-        For parsing JSON:           https://github.com/nlohmann/json
-        Because I'm Stupid: (DPRCT) https://github.com/gregjesl/simpleson
-        For processing RGB to HXY:  https://github.com/enwi/hueplusplus
+        For making REST requests:           https://github.com/adamski/RestRequest
+        For parsing JSON:                   https://github.com/nlohmann/json
+        Because I'm Stupid: (DPRCD)         https://github.com/gregjesl/simpleson
+        For processing RGB to HXY: (DRPCD)  https://github.com/enwi/hueplusplus
 
+     Legend::All tags shoudl be in .h files
+        TODO:   A thing to do
+        DRPCD:  A depricated featuer I'm keeping for now
   ==============================================================================
 */
 
 #include <JuceHeader.h>
 #include "MainComponent.h"
+#include "main_C.h"
 
 //==============================================================================
 class MainWindowTutorialApplication  : public juce::JUCEApplication
@@ -29,8 +33,16 @@ public:
             // setBounds (50, 50, 100, 100);
             // setBoundsRelative ((0.25f / 2), (0.25f / 2), 0.75f, 0.75f);
 
-            MainComponent *main = new MainComponent();
-            setContentOwned(main, false);
+
+            // DRPCD
+            //MainComponent *main = new MainComponent();
+            //setContentOwned(main, false);
+
+            // Messin Round
+            Main_C *main_C = new Main_C();
+            setContentOwned(main_C, false);
+            // * Messin Round
+
             setUsingNativeTitleBar (true);
 #if JUCE_IOS || JUCE_ANDROID
             setFullScreen(true);

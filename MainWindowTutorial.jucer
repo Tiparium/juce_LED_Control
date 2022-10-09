@@ -14,6 +14,8 @@
     <FILE id="TP2L8V" name="params.h" compile="0" resource="0" file="resources/params.h"/>
     <FILE id="xfBMQA" name="paramsTemplate.cpp" compile="1" resource="0"
           file="Source/paramsTemplate.cpp"/>
+    <FILE id="Ar8s73" name="rgbSlider_C.cpp" compile="1" resource="0" file="Source/rgbSlider_C.cpp"/>
+    <FILE id="RZ3uSS" name="rgbSlider_C.h" compile="0" resource="0" file="Source/rgbSlider_C.h"/>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
   <EXPORTFORMATS>

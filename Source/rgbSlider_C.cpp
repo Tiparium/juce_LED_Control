@@ -1,55 +1,55 @@
 /*
   ==============================================================================
 
-    MainComponent.cpp
-    Created: 26 Sep 2022 11:09:01am
+    rgbSlider_C.cpp
+    Created: 8 Oct 2022 11:44:25pm
     Author:  Tiparium
 
   ==============================================================================
 */
 
 #include <JuceHeader.h>
-#include "MainComponent.h"
+#include "rgbSlider_C.h"
 
 //==============================================================================
-MainComponent::MainComponent()
+rgbSlider_C::rgbSlider_C()
 {
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
 
-    _httpTarget =   params::_httpTarget;
-    _apiTarget =    params::_apiTarget;
+    _httpTarget = params::_httpTarget;
+    _apiTarget = params::_apiTarget;
     _apiGetTarget = params::_apiGetTarget;
     _apiPutTarget = params::_apiPutTarget;
 
-    MainComponent::updateRootJSON();
-    _numLights = MainComponent::_rootJSON.size();
+    rgbSlider_C::updateRootJSON();
+    _numLights = rgbSlider_C::_rootJSON.size();
 
     // These aren't needed for the app to run, just for resetColor()
     _OGxVal = _rootJSON["1"]["state"]["xy"][0];
     _OGyVal = _rootJSON["1"]["state"]["xy"][1];
 }
 
-MainComponent::~MainComponent()
+rgbSlider_C::~rgbSlider_C()
 {
     resetColor();
 }
 
-void MainComponent::paint (juce::Graphics& g)
+void rgbSlider_C::paint(juce::Graphics& g)
 {
     setSize(600, 400);
     size();
     g.drawRect(getLocalBounds(), 1);
-    g.fillAll (juce::Colour(_rVal, _gVal, _bVal)); // Set the color of the window to be the current RGB value
+    g.fillAll(juce::Colour(_rVal, _gVal, _bVal)); // Set the color of the window to be the current RGB value
 
-    g.setColour (juce::Colours::grey);
+    g.setColour(juce::Colours::grey);
 
     // Red Slider
     addAndMakeVisible(_rSlider);
     _rSlider.setSliderStyle(juce::Slider::LinearHorizontal);
     _rSlider.setRange(0, 255, 1);
     _rSlider.setTextValueSuffix(" R");
-    
+
     addAndMakeVisible(_rLabel);
     _rLabel.setText("RED", juce::NotificationType::dontSendNotification);
     _rLabel.attachToComponent(&_rSlider, true);
@@ -100,15 +100,15 @@ void MainComponent::paint (juce::Graphics& g)
         _bSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::white);
     }
 
-    g.setFont (30.0f);
-    g.drawText (_currentSizeAsString, getLocalBounds(),
-                juce::Justification::centred, true);
+    g.setFont(30.0f);
+    g.drawText(_currentSizeAsString, getLocalBounds(),
+        juce::Justification::centred, true);
 
     // Mucking Around
     addAndMakeVisible(_testBoi);
 }
 
-void MainComponent::resized()
+void rgbSlider_C::resized()
 {
     size();
     //_currentSizeAsString = juce::String (getWidth()) + " x " + juce::String (getHeight());
@@ -126,12 +126,12 @@ void MainComponent::resized()
     _testBoi.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 25, 100, 50);
 }
 
-void MainComponent::size() {
+void rgbSlider_C::size() {
     setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 // Runs when slider value is changed
-void MainComponent::sliderValueChanged(juce::Slider* slider) {
+void rgbSlider_C::sliderValueChanged(juce::Slider* slider) {
     if (slider == &_rSlider) {
         _rVal = _rSlider.getValue();
     }
@@ -144,12 +144,12 @@ void MainComponent::sliderValueChanged(juce::Slider* slider) {
 }
 
 // Runs when mouse is lifted from a slider
-void MainComponent::sliderDragEnded(juce::Slider* slider) {
-    // MainComponent::getPhilipsData();
-    MainComponent::grabRGBPushUpdate();
+void rgbSlider_C::sliderDragEnded(juce::Slider* slider) {
+    // rgbSlider_C::getPhilipsData();
+    rgbSlider_C::grabRGBPushUpdate();
 }
 
-void MainComponent::getPhilipsData() {
+void rgbSlider_C::getPhilipsData() {
 
     for (int i = 0; i < _rootJSON.size(); i++) {
 
@@ -166,7 +166,7 @@ void MainComponent::getPhilipsData() {
     //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
 }
 
-void MainComponent::grabRGBPushUpdate() {
+void rgbSlider_C::grabRGBPushUpdate() {
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
     for (int i = 0; i < _numLights; i++) {
@@ -181,8 +181,8 @@ void MainComponent::grabRGBPushUpdate() {
         DBG("Target Value: " + target);
 
         // Convert our native RGB values to pHueXY
-        MainComponent::RGB rgb;
-        MainComponent::XYBrightness xyb;
+        rgbSlider_C::RGB rgb;
+        rgbSlider_C::XYBrightness xyb;
         rgb.r = _rVal;
         rgb.g = _gVal;
         rgb.b = _bVal;
@@ -198,7 +198,7 @@ void MainComponent::grabRGBPushUpdate() {
     }
 }
 
-void MainComponent::pushUpdate(juce::var xyColor, juce::String target) {
+void rgbSlider_C::pushUpdate(juce::var xyColor, juce::String target) {
     // Make RESTful PUT call
     adamski::RestRequest::Response res = _req.put(target)
         .field("xy", xyColor)
@@ -207,13 +207,13 @@ void MainComponent::pushUpdate(juce::var xyColor, juce::String target) {
     DBG(res.bodyAsString);
 }
 
-void MainComponent::updateRootJSON() {
+void rgbSlider_C::updateRootJSON() {
     juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
     DBG(target);
     _rootJSON = pingAndReceive(target);
 }
 
-nlohmann::json MainComponent::pingAndReceive(juce::String target) {
+nlohmann::json rgbSlider_C::pingAndReceive(juce::String target) {
     // DBG(target); // Prints the target URL
     adamski::RestRequest::Response res = _req.get(target).execute();
 
@@ -223,7 +223,7 @@ nlohmann::json MainComponent::pingAndReceive(juce::String target) {
     return json;
 }
 
-int MainComponent::getNumLights() {
+int rgbSlider_C::getNumLights() {
     return _rootJSON.size();
 }
 
@@ -232,7 +232,7 @@ int MainComponent::getNumLights() {
 EVERYTHING BELOW THIS LINE IS FOR DEBUG PURPOSES ONLY
 
 */
-void MainComponent::resetColor() {
+void rgbSlider_C::resetColor() {
     juce::var xyColor;
     xyColor.append(_OGxVal);
     xyColor.append(_OGyVal);

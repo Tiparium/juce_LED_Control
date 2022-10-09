@@ -1,7 +1,7 @@
 /*
   ==============================================================================
     NOTE:
-        TODO:
+        BTODO:
             Currently all data pushing happens through this file.
             This should ONLY be the rgb sliders. PHue data pushes should happen elsewhere.
             Handle it.

@@ -17,7 +17,6 @@
 */
 
 #include <JuceHeader.h>
-#include "MainComponent.h"
 #include "main_C.h"
 
 //==============================================================================

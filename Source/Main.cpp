@@ -1,5 +1,10 @@
 /*
   ==============================================================================
+     
+     BTODOs:
+        - Get NODEMCU talking to this program (Need some kind of webserver library)
+        - Color Triangle
+        - Favorites Bar &/ Persistency
 
      An application which allows control over both Philips Hue LEDS,
      and "dumb" LEDS attached to an Arduino or NodeMCU
@@ -11,6 +16,7 @@
         For processing RGB to HXY: (DRPCD)  https://github.com/enwi/hueplusplus
 
      Legend::All tags should be in .h files
+        BTODO:  Long term feature goal
         TODO:   A thing to do
         DRPCD:  A depricated featuer I'm keeping for now
         RMVD:   A removed feature stored externally
@@ -32,11 +38,6 @@ public:
             centreWithSize(500, 500);
             // setBounds (50, 50, 100, 100);
             // setBoundsRelative ((0.25f / 2), (0.25f / 2), 0.75f, 0.75f);
-
-
-            // DRPCD
-            //MainComponent *main = new MainComponent();
-            //setContentOwned(main, false);
 
             // Messin Round
             Main_C *main_C = new Main_C();

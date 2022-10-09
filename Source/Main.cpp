@@ -17,6 +17,9 @@
         For processing RGB to HXY: (DRPCD)  https://github.com/enwi/hueplusplus
 
      Legend::All tags should be in .h files
+        _C:     A component file.
+        _B:     A backend infrastucture file.
+        _D:     A data file.
         BTODO:  Long term feature goal
         TODO:   A thing to do
         DRPCD:  A depricated featuer I'm keeping for now

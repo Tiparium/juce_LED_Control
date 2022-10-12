@@ -19,8 +19,8 @@
 #include <fstream>
 #include <iostream>  
 #include <string>  
-#include "rest_request.h"
-#include "nlohmann/json.hpp"
+#include "../RestRequest/rest_request.h"
+#include "../json/include/nlohmann/json.hpp"
 #include "../resources/params.h" // Replace with custom params file
 
 //==============================================================================

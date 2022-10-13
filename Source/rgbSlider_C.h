@@ -16,12 +16,8 @@
 #include <fstream>
 #include <iostream>  
 #include <string>  
-#include "../RestRequest/rest_request.h"
-#include "../json/include/nlohmann/json.hpp"
-#include "../resources/params.h" // Replace with custom params file
 
 #include "../Source/RestHandler_B.h"
-#include "../Source/rgbStructs_D.h"
 
 //==============================================================================
 

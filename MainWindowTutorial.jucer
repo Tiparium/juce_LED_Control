@@ -27,8 +27,6 @@
           <FILE id="xfBMQA" name="paramsTemplate.cpp" compile="1" resource="0"
                 file="Source/paramsTemplate.cpp"/>
         </GROUP>
-        <FILE id="KzkReK" name="rgbStructs_D.cpp" compile="1" resource="0"
-              file="Source/rgbStructs_D.cpp"/>
         <FILE id="xzv8iE" name="rgbStructs_D.h" compile="0" resource="0" file="Source/rgbStructs_D.h"/>
       </GROUP>
       <FILE id="KxwyBf" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

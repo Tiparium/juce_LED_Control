@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    main_C.h
+    Main_C.h
     Created: 9 Oct 2022 12:05:31am
     Author:  Tiparium
 
@@ -11,8 +11,8 @@
 */
 
 #include <JuceHeader.h>
-#include "RestHandler_B.h"
-#include "rgbSlider_C.h"
+#include "RestHandler.h"
+#include "RGBSlider.h"
 
 class Main_C : public juce::Component
 {
@@ -24,8 +24,8 @@ public:
     void resized() override;
 
 private:
-    RestHandler_B _restHandler;
-    rgbSlider_C _rgbSliders;
+    RestHandler _restHandler;
+    RGBSlider _RGBSliders;
 };
 
 #pragma once

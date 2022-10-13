@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    rgbStructs.h
+    RGBStructs_D.h
     Created: 12 Oct 2022 6:03:05pm
     Author:  Tiparium
 

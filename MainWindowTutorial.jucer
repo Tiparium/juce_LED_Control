@@ -6,19 +6,24 @@
   <MAINGROUP id="fCxj2T" name="LED CONTROL">
     <GROUP id="{216EAAD5-2819-DE20-19C6-696F2D2282F5}" name="Source">
       <GROUP id="{BB0A579E-5E01-0A5A-A2D1-432E586D3039}" name="FRONT (_C)">
+        <GROUP id="{6DB810CF-8930-4F6C-518B-066FD5999B4F}" name="favorites">
+          <FILE id="IKSWnx" name="FavoritesBar.cpp" compile="1" resource="0"
+                file="Source/FavoritesBar.cpp"/>
+          <FILE id="Nl6v75" name="FavoritesBar.h" compile="0" resource="0" file="Source/FavoritesBar.h"/>
+          <FILE id="N8JnZs" name="FavoritesSlot.cpp" compile="1" resource="0"
+                file="Source/FavoritesSlot.cpp"/>
+          <FILE id="PIQMbs" name="FavoritesSlot.h" compile="0" resource="0" file="Source/FavoritesSlot.h"/>
+        </GROUP>
         <GROUP id="{5897D99A-A494-787D-AC49-E96C4EF5AD5C}" name="host">
-          <FILE id="G7uQat" name="main_C.cpp" compile="1" resource="0" file="Source/main_C.cpp"/>
-          <FILE id="p4ojv3" name="main_C.h" compile="0" resource="0" file="Source/main_C.h"/>
+          <FILE id="G7uQat" name="Main_C.cpp" compile="1" resource="0" file="Source/Main_C.cpp"/>
+          <FILE id="p4ojv3" name="Main_C.h" compile="0" resource="0" file="Source/Main_C.h"/>
         </GROUP>
-        <GROUP id="{4BADC8D4-4947-0886-F4E6-3EADC87BCF33}" name="rgbSliders">
-          <FILE id="Ar8s73" name="rgbSlider_C.cpp" compile="1" resource="0" file="Source/rgbSlider_C.cpp"/>
-          <FILE id="RZ3uSS" name="rgbSlider_C.h" compile="0" resource="0" file="Source/rgbSlider_C.h"/>
-        </GROUP>
+        <FILE id="Ar8s73" name="RGBSlider.cpp" compile="1" resource="0" file="Source/RGBSlider.cpp"/>
+        <FILE id="RZ3uSS" name="RGBSlider.h" compile="0" resource="0" file="Source/RGBSlider.h"/>
       </GROUP>
       <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">
-        <FILE id="Ziwc16" name="RestHandler_B.cpp" compile="1" resource="0"
-              file="Source/RestHandler_B.cpp"/>
-        <FILE id="QDADO0" name="RestHandler_B.h" compile="0" resource="0" file="Source/RestHandler_B.h"/>
+        <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
+        <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
       </GROUP>
       <GROUP id="{DE97DC9E-93A9-A6FE-6639-B4A1FEBB698D}" name="DATA (_D)">
         <GROUP id="{83858997-F1F4-EFCC-44B0-A35F4DEFE340}" name="params">
@@ -27,7 +32,7 @@
           <FILE id="xfBMQA" name="paramsTemplate.cpp" compile="1" resource="0"
                 file="Source/paramsTemplate.cpp"/>
         </GROUP>
-        <FILE id="xzv8iE" name="rgbStructs_D.h" compile="0" resource="0" file="Source/rgbStructs_D.h"/>
+        <FILE id="xzv8iE" name="RGBStructs.h" compile="0" resource="0" file="Source/RGBStructs.h"/>
       </GROUP>
       <FILE id="KxwyBf" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
     </GROUP>

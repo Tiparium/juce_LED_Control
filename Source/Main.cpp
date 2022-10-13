@@ -5,7 +5,7 @@
         - Get NODEMCU talking to this program (Need some kind of webserver library)
         - Color Triangle
         - Favorites Bar &/ Persistency
-        - Seperate RGB Sliders from pHue API functionality (See rgbSlider_C.h)
+        - Seperate RGB Sliders from pHue API functionality (See RGBSlider.h)
 
      An application which allows control over both Philips Hue LEDS,
      and "dumb" LEDS attached to an Arduino or NodeMCU
@@ -28,7 +28,7 @@
 */
 
 #include <JuceHeader.h>
-#include "main_C.h"
+#include "Main_C.h"
 
 //==============================================================================
 class MainWindowTutorialApplication  : public juce::JUCEApplication

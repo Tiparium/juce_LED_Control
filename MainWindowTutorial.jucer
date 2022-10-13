@@ -15,7 +15,11 @@
           <FILE id="RZ3uSS" name="rgbSlider_C.h" compile="0" resource="0" file="Source/rgbSlider_C.h"/>
         </GROUP>
       </GROUP>
-      <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)"/>
+      <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">
+        <FILE id="XmVDVb" name="restHandler_B.cpp" compile="1" resource="0"
+              file="Source/restHandler_B.cpp"/>
+        <FILE id="PsftKW" name="restHandler_B.h" compile="0" resource="0" file="Source/restHandler_B.h"/>
+      </GROUP>
       <GROUP id="{DE97DC9E-93A9-A6FE-6639-B4A1FEBB698D}" name="DATA (_D)">
         <GROUP id="{83858997-F1F4-EFCC-44B0-A35F4DEFE340}" name="params">
           <FILE id="fUaqt7" name="params.cpp" compile="1" resource="0" file="Source/params.cpp"/>

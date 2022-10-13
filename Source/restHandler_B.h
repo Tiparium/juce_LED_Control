@@ -61,5 +61,4 @@ private:
     // For resetting to original color settings
     float _OGxVal;
     float _OGyVal;
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RestHandler_B)
 };

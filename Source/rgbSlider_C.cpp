@@ -181,8 +181,8 @@ void rgbSlider_C::grabRGBPushUpdate() {
         DBG("Target Value: " + target);
 
         // Convert our native RGB values to pHueXY
-        rgbSlider_C::RGB rgb;
-        rgbSlider_C::XYBrightness xyb;
+        RGB rgb;
+        XYBrightness xyb;
         rgb.r = _rVal;
         rgb.g = _gVal;
         rgb.b = _bVal;

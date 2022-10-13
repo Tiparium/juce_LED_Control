@@ -12,27 +12,29 @@
 #include "rgbSlider_C.h"
 
 //==============================================================================
-rgbSlider_C::rgbSlider_C()
+rgbSlider_C::rgbSlider_C(RestHandler_B& restHandler)
 {
-    _req.header("Content-Type", "application/json");
-    _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
+    //_req.header("Content-Type", "application/json");
+    //_req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
 
-    _httpTarget = params::_httpTarget;
-    _apiTarget = params::_apiTarget;
-    _apiGetTarget = params::_apiGetTarget;
-    _apiPutTarget = params::_apiPutTarget;
+    _restHandler = restHandler;
 
-    rgbSlider_C::updateRootJSON();
-    _numLights = rgbSlider_C::_rootJSON.size();
+    //_httpTarget = params::_httpTarget;
+    //_apiTarget = params::_apiTarget;
+    //_apiGetTarget = params::_apiGetTarget;
+    //_apiPutTarget = params::_apiPutTarget;
 
-    // These aren't needed for the app to run, just for resetColor()
-    _OGxVal = _rootJSON["1"]["state"]["xy"][0];
-    _OGyVal = _rootJSON["1"]["state"]["xy"][1];
+    //rgbSlider_C::updateRootJSON();
+    //_numLights = rgbSlider_C::_rootJSON.size();
+
+    //// These aren't needed for the app to run, just for resetColor()
+    //_OGxVal = _rootJSON["1"]["state"]["xy"][0];
+    //_OGyVal = _rootJSON["1"]["state"]["xy"][1];
 }
 
 rgbSlider_C::~rgbSlider_C()
 {
-    resetColor();
+    // resetColor();
 }
 
 void rgbSlider_C::paint(juce::Graphics& g)
@@ -40,7 +42,7 @@ void rgbSlider_C::paint(juce::Graphics& g)
     setSize(600, 400);
     size();
     g.drawRect(getLocalBounds(), 1);
-    g.fillAll(juce::Colour(_rVal, _gVal, _bVal)); // Set the color of the window to be the current RGB value
+    g.fillAll(juce::Colour(_restHandler.getR(), _restHandler.getG(), _restHandler.getB())); // Set the color of the window to be the current RGB value
 
     g.setColour(juce::Colours::grey);
 
@@ -80,7 +82,8 @@ void rgbSlider_C::paint(juce::Graphics& g)
     _bSlider.addListener(this);
     // *Blue Slider
 
-    if (_gVal > 180 || (_gVal > 150 && _bVal > 150)) {
+    // Color Correct Slider Labels
+    if (_restHandler.getG() > 180 || (_restHandler.getG() > 150 && _restHandler.getB() > 150)) {
         g.setColour(juce::Colours::black);
 
         _rLabel.setColour(juce::Label::textColourId, juce::Colours::black);
@@ -105,7 +108,6 @@ void rgbSlider_C::paint(juce::Graphics& g)
         juce::Justification::centred, true);
 
     // Mucking Around
-    addAndMakeVisible(_testBoi);
 }
 
 void rgbSlider_C::resized()
@@ -123,7 +125,6 @@ void rgbSlider_C::resized()
     // *Resize Sliders
 
     // Mucking Around
-    _testBoi.setBounds(getWidth() / 2 - 50, getHeight() / 2 - 25, 100, 50);
 }
 
 void rgbSlider_C::size() {
@@ -133,122 +134,122 @@ void rgbSlider_C::size() {
 // Runs when slider value is changed
 void rgbSlider_C::sliderValueChanged(juce::Slider* slider) {
     if (slider == &_rSlider) {
-        _rVal = _rSlider.getValue();
+        _restHandler.setR(_rSlider.getValue());
     }
     else if (slider == &_gSlider) {
-        _gVal = _gSlider.getValue();
+        _restHandler.setG(_gSlider.getValue());
     }
     else {
-        _bVal = _bSlider.getValue();
+        _restHandler.setB(_bSlider.getValue());
     }
 }
 
 // Runs when mouse is lifted from a slider
 void rgbSlider_C::sliderDragEnded(juce::Slider* slider) {
-    // rgbSlider_C::getPhilipsData();
-    rgbSlider_C::grabRGBPushUpdate();
+    // _restHandler.getPhilipsData();
+    _restHandler.grabRGBPushUpdate();
 }
-
-void rgbSlider_C::getPhilipsData() {
-
-    for (int i = 0; i < _rootJSON.size(); i++) {
-
-        std::string it = std::to_string(i + 1);
-
-        DBG(_rootJSON.size());
-
-        float test = _rootJSON[it]["state"]["xy"][1];
-
-        DBG(test);
-    }
-
-    //DBG(res.bodyAsString); // Prints the full response as JSON (not pretty)
-    //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
-}
-
-void rgbSlider_C::grabRGBPushUpdate() {
-    juce::String putTarget = _apiPutTarget;
-    juce::String target = "";
-    for (int i = 0; i < _numLights; i++) {
-
-        // Build a target URL unique to each pHue LED
-        putTarget = putTarget.substring(0, _apiPutSplit) +
-            std::to_string(i + 1) +
-            putTarget.substring(_apiPutSplit + 1, putTarget.length());
-
-        target = _httpTarget + _apiTarget + putTarget;
-
-        DBG("Target Value: " + target);
-
-        // Convert our native RGB values to pHueXY
-        RGB rgb;
-        XYBrightness xyb;
-        rgb.r = _rVal;
-        rgb.g = _gVal;
-        rgb.b = _bVal;
-        xyb = rgb.toXY();
-
-        // Push our new pHueXY values to a juce::obj for RESTful call
-        juce::var xyColor;
-        xyColor.append(xyb.xy.x);
-        xyColor.append(xyb.xy.y);
-
-        // Perform RESTful call
-        pushUpdate(xyColor, target);
-    }
-}
-
-void rgbSlider_C::pushUpdate(juce::var xyColor, juce::String target) {
-    // Make RESTful PUT call
-    adamski::RestRequest::Response res = _req.put(target)
-        .field("xy", xyColor)
-        .execute();
-
-    DBG(res.bodyAsString);
-}
-
-void rgbSlider_C::updateRootJSON() {
-    juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
-    DBG(target);
-    _rootJSON = pingAndReceive(target);
-}
-
-nlohmann::json rgbSlider_C::pingAndReceive(juce::String target) {
-    // DBG(target); // Prints the target URL
-    adamski::RestRequest::Response res = _req.get(target).execute();
-
-    juce::String resBody = res.bodyAsString;
-    // json::jobject result = json::jobject::parse(resBody.toStdString());
-    nlohmann::json json = nlohmann::json::parse(resBody.toStdString());
-    return json;
-}
-
-int rgbSlider_C::getNumLights() {
-    return _rootJSON.size();
-}
-
-/**
-
-EVERYTHING BELOW THIS LINE IS FOR DEBUG PURPOSES ONLY
-
-*/
-void rgbSlider_C::resetColor() {
-    juce::var xyColor;
-    xyColor.append(_OGxVal);
-    xyColor.append(_OGyVal);
-
-    juce::String putTarget = _apiPutTarget;
-    juce::String target = "";
-
-    for (int i = 0; i < _numLights; i++) {
-        int it = i + 1;
-        // Build a target URL unique to each pHue LED
-        putTarget = putTarget.substring(0, _apiPutSplit) +
-            std::to_string(i + 1) +
-            putTarget.substring(_apiPutSplit + 1, putTarget.length());
-
-        target = _httpTarget + _apiTarget + putTarget;
-
-        pushUpdate(xyColor, target);
-    }
-}
+//
+//void rgbSlider_C::getPhilipsData() {
+//
+//    for (int i = 0; i < _rootJSON.size(); i++) {
+//
+//        std::string it = std::to_string(i + 1);
+//
+//        DBG(_rootJSON.size());
+//
+//        float test = _rootJSON[it]["state"]["xy"][1];
+//
+//        DBG(test);
+//    }
+//
+//    //DBG(res.bodyAsString); // Prints the full response as JSON (not pretty)
+//    //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
+//}
+//
+//void rgbSlider_C::grabRGBPushUpdate() {
+//    juce::String putTarget = _apiPutTarget;
+//    juce::String target = "";
+//    for (int i = 0; i < _numLights; i++) {
+//
+//        // Build a target URL unique to each pHue LED
+//        putTarget = putTarget.substring(0, _apiPutSplit) +
+//            std::to_string(i + 1) +
+//            putTarget.substring(_apiPutSplit + 1, putTarget.length());
+//
+//        target = _httpTarget + _apiTarget + putTarget;
+//
+//        DBG("Target Value: " + target);
+//
+//        // Convert our native RGB values to pHueXY
+//        RGB rgb;
+//        XYBrightness xyb;
+//        rgb.r = _restHandler.getR();
+//        rgb.g = _restHandler.getG();
+//        rgb.b = _restHandler.getB();
+//        xyb = rgb.toXY();
+//
+//        // Push our new pHueXY values to a juce::obj for RESTful call
+//        juce::var xyColor;
+//        xyColor.append(xyb.xy.x);
+//        xyColor.append(xyb.xy.y);
+//
+//        // Perform RESTful call
+//        pushUpdate(xyColor, target);
+//    }
+//}
+//
+//void rgbSlider_C::pushUpdate(juce::var xyColor, juce::String target) {
+//    // Make RESTful PUT call
+//    adamski::RestRequest::Response res = _req.put(target)
+//        .field("xy", xyColor)
+//        .execute();
+//
+//    DBG(res.bodyAsString);
+//}
+//
+//void rgbSlider_C::updateRootJSON() {
+//    juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
+//    DBG(target);
+//    _rootJSON = pingAndReceive(target);
+//}
+//
+//nlohmann::json rgbSlider_C::pingAndReceive(juce::String target) {
+//    // DBG(target); // Prints the target URL
+//    adamski::RestRequest::Response res = _req.get(target).execute();
+//
+//    juce::String resBody = res.bodyAsString;
+//    // json::jobject result = json::jobject::parse(resBody.toStdString());
+//    nlohmann::json json = nlohmann::json::parse(resBody.toStdString());
+//    return json;
+//}
+//
+//int rgbSlider_C::getNumLights() {
+//    return _rootJSON.size();
+//}
+//
+///**
+//
+//EVERYTHING BELOW THIS LINE IS FOR DEBUG PURPOSES ONLY
+//
+//*/
+//void rgbSlider_C::resetColor() {
+//    juce::var xyColor;
+//    xyColor.append(_OGxVal);
+//    xyColor.append(_OGyVal);
+//
+//    juce::String putTarget = _apiPutTarget;
+//    juce::String target = "";
+//
+//    for (int i = 0; i < _numLights; i++) {
+//        int it = i + 1;
+//        // Build a target URL unique to each pHue LED
+//        putTarget = putTarget.substring(0, _apiPutSplit) +
+//            std::to_string(i + 1) +
+//            putTarget.substring(_apiPutSplit + 1, putTarget.length());
+//
+//        target = _httpTarget + _apiTarget + putTarget;
+//
+//        pushUpdate(xyColor, target);
+//    }
+//}

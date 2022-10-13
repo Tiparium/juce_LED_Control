@@ -12,8 +12,10 @@
 #include "main_C.h"
 
 
-Main_C::Main_C() {
-
+Main_C::Main_C() :
+    _restHandler(),
+    _rgbSliders(_restHandler)
+{
 }
 
 Main_C::~Main_C() {

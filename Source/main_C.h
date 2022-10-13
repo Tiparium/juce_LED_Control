@@ -11,6 +11,7 @@
 */
 
 #include <JuceHeader.h>
+#include "RestHandler_B.h"
 #include "rgbSlider_C.h"
 
 class Main_C : public juce::Component
@@ -23,6 +24,7 @@ public:
     void resized() override;
 
 private:
+    RestHandler_B _restHandler;
     rgbSlider_C _rgbSliders;
 };
 

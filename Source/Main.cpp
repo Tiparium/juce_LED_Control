@@ -43,10 +43,9 @@ public:
             // setBounds (50, 50, 100, 100);
             // setBoundsRelative ((0.25f / 2), (0.25f / 2), 0.75f, 0.75f);
 
-            // Messin Round
+            // Host
             Main_C *main_C = new Main_C();
             setContentOwned(main_C, false);
-            // * Messin Round
 
             setUsingNativeTitleBar (true);
 #if JUCE_IOS || JUCE_ANDROID

@@ -29,7 +29,6 @@ public:
 
     void paint(juce::Graphics&) override;
     void resized() override;
-    void size();
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
 

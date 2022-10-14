@@ -24,7 +24,7 @@ RGBSlider::~RGBSlider()
 void RGBSlider::paint(juce::Graphics& g)
 {
     setSize(600, 400);
-    size();
+    setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
     g.drawRect(getLocalBounds(), 1);
     g.fillAll(juce::Colour(_restHandler.getR(), _restHandler.getG(), _restHandler.getB())); // Set the color of the window to be the current RGB value
 
@@ -88,17 +88,13 @@ void RGBSlider::paint(juce::Graphics& g)
     }
 
     g.setFont(30.0f);
-    g.drawText(_currentSizeAsString, getLocalBounds(),
-        juce::Justification::centred, true);
 
     // Mucking Around
 }
 
 void RGBSlider::resized()
 {
-    size();
-    _currentSizeAsString = juce::String (getWidth()) + " x " + juce::String (getHeight());
-
+    setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
     int height = getHeight() - getHeight() / 1.5;
 
     const int border = 100;
@@ -109,10 +105,6 @@ void RGBSlider::resized()
     // *Resize Sliders
 
     // Mucking Around
-}
-
-void RGBSlider::size() {
-    setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
 }
 
 // Runs when slider value is changed

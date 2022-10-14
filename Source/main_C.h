@@ -10,9 +10,12 @@
   ==============================================================================
 */
 
+#pragma once
+
 #include <JuceHeader.h>
 #include "RestHandler.h"
 #include "RGBSlider.h"
+#include "FavoritesBar.h"
 
 class Main_C : public juce::Component
 {
@@ -24,8 +27,7 @@ public:
     void resized() override;
 
 private:
-    RestHandler _restHandler;
-    RGBSlider _RGBSliders;
+    RestHandler     _restHandler;
+    RGBSlider       _RGBSliders;
+    FavoritesBar    _FavoritesBar;
 };
-
-#pragma once

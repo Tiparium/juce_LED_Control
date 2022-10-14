@@ -16,7 +16,8 @@
 
 Main_C::Main_C() :
     _restHandler(),
-    _RGBSliders(_restHandler)
+    _RGBSliders(_restHandler),
+    _FavoritesBar(_restHandler)
 {
 }
 
@@ -31,6 +32,12 @@ void Main_C::paint(juce::Graphics& g) {
     g.fillAll(juce::Colours::red);
     addAndMakeVisible(_RGBSliders);
     _RGBSliders.setBounds(0, 0, juce::Component::getHeight(), juce::Component::getWidth());
+
+    // Create & draw Favirotes Bar
+    g.drawRect(getLocalBounds(), 1);
+    g.fillAll(juce::Colours::blue);
+    addAndMakeVisible(_FavoritesBar);
+    _FavoritesBar.setBounds(0, 0, juce::Component::getHeight(), juce::Component::getWidth());
 
 }
 

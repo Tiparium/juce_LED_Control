@@ -29,5 +29,5 @@ public:
 private:
     RestHandler     _restHandler;
     RGBSlider       _RGBSliders;
-    FavoritesBar    _FavoritesBar;
+    // avoritesBar    _FavoritesBar;
 };

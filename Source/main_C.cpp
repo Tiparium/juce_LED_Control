@@ -16,8 +16,8 @@
 
 Main_C::Main_C() :
     _restHandler(),
-    _RGBSliders(_restHandler)
-    //,    _FavoritesBar(_restHandler)
+    _RGBSliders(_restHandler),
+    _FavoritesBar(_restHandler)
 {
 }
 
@@ -27,20 +27,15 @@ Main_C::~Main_C() {
 
 void Main_C::paint(juce::Graphics& g) {
 
-    // Create and draw all three RGB sliders as a subcomponent
+    // Create root rectangle
     g.drawRect(getLocalBounds(), 1);
-    g.fillAll(juce::Colours::red);
+    g.fillAll(juce::Colours::blue);
+
+    // Create & draw Favorites Bar
+    addAndMakeVisible(_FavoritesBar);
+    _FavoritesBar.setBoundsOnScreen();
+
+    // Create and draw all three RGB sliders
     addAndMakeVisible(_RGBSliders);
-    _RGBSliders.setBounds(0, 0, juce::Component::getHeight(), juce::Component::getWidth());
-
-    // Create & draw Favirotes Bar
-    //g.drawRect(getLocalBounds(), 1);
-    //g.fillAll(juce::Colours::blue);
-    //addAndMakeVisible(_FavoritesBar);
-    //_FavoritesBar.setBounds(0, 0, juce::Component::getHeight(), juce::Component::getWidth());
-
-}
-
-void Main_C::resized() {
-
+    _RGBSliders.setBoundsOnScreen();
 }

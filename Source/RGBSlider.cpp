@@ -24,7 +24,9 @@ RGBSlider::~RGBSlider()
 void RGBSlider::paint(juce::Graphics& g)
 {
     setSize(600, 400);
-    setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+    
+    setBoundsOnScreen();
+
     g.drawRect(getLocalBounds(), 1);
     g.fillAll(juce::Colour(_restHandler.getR(), _restHandler.getG(), _restHandler.getB())); // Set the color of the window to be the current RGB value
 
@@ -94,7 +96,7 @@ void RGBSlider::paint(juce::Graphics& g)
 
 void RGBSlider::resized()
 {
-    setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+    setBoundsOnScreen();
     int height = getHeight() - getHeight() / 1.5;
 
     const int border = 100;
@@ -124,4 +126,8 @@ void RGBSlider::sliderValueChanged(juce::Slider* slider) {
 void RGBSlider::sliderDragEnded(juce::Slider* slider) {
     // _restHandler.getPhilipsData();
     _restHandler.grabRGBPushUpdate();
+}
+
+void RGBSlider::setBoundsOnScreen() {
+    setBoundsRelative(0.0f, 0.2f, 1.0f, 0.8f);
 }

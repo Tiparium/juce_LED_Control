@@ -23,11 +23,12 @@ public:
     Main_C();
     ~Main_C() override;
 
+    // Drawing Logic
     void paint(juce::Graphics&) override;
-    void resized() override;
+    // void resized() override; // Add this back if needed
 
 private:
     RestHandler     _restHandler;
     RGBSlider       _RGBSliders;
-    // avoritesBar    _FavoritesBar;
+    FavoritesBar    _FavoritesBar;
 };

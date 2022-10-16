@@ -32,6 +32,8 @@ public:
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
 
+    void setBoundsOnScreen();
+
 private:
     juce::String _currentSizeAsString;
 

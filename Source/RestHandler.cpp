@@ -1,6 +1,9 @@
 /*
   ==============================================================================
 
+    NOTES:
+        TODO: Restructure this class. Function Call names make very little sense.
+
     RestHandler.cpp
     Created: 12 Oct 2022 9:20:59pm
     Author:  Tiparium

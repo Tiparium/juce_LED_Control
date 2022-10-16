@@ -11,9 +11,10 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+#include "../Source/RGBStructs.h"
 class FavoritesSlot : public juce::Component,
-                      public juce::ChangeBroadcaster,
+                      public juce::ChangeBroadcaster, // May be DRPCD
+                      //public juce::MessageListener,
                       public juce::Button::Listener
 {
 
@@ -22,7 +23,7 @@ public:
     FavoritesSlot::FavoritesSlot();
     FavoritesSlot::~FavoritesSlot();
 
-    void buttonClicked(juce::Button* button);
+    void buttonClicked(juce::Button* button) override;
 
     juce::uint8 getR();
     juce::uint8 getG();

@@ -15,7 +15,9 @@
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
 
-class FavoritesBar : public juce::Component, juce::ChangeListener{
+class FavoritesBar : public juce::Component,
+                     public juce::ChangeListener
+{
 public:
 
     FavoritesBar::FavoritesBar(RestHandler& RestHandler);

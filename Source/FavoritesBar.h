@@ -15,21 +15,21 @@
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
 
-class FavoritesBar : public juce::Component
+class FavoritesBar : public juce::Component,
+                     public juce::Button::Listener
 {
 public:
 
     FavoritesBar::FavoritesBar(RestHandler& RestHandler);
     FavoritesBar::~FavoritesBar();
 
-    void changeListenerCallback(juce::ChangeBroadcaster* src);
+    void buttonClicked(juce::Button* button) override;
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
     // void resized() override; // Add this back if needed
     void setBoundsOnScreen();
 private:
-
     std::vector<FavoritesSlot*> _favSlots;
     juce::uint8 _tempR;
     juce::uint8 _tempG;

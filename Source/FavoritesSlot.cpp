@@ -10,7 +10,8 @@
 
 #include "FavoritesSlot.h"
 
-FavoritesSlot::FavoritesSlot() {
+FavoritesSlot::FavoritesSlot()
+{
     _button.addListener(this);
 }
 
@@ -28,11 +29,7 @@ void FavoritesSlot::buttonClicked(juce::Button* button) {
         juce::String debugStr = rBit + "\n" + gBit + "\n" + bBit + "\n";
         DBG(debugStr);
     }
-
-    RGB rgbToSend;
-    rgbToSend.r = _R;
-    rgbToSend.g = _G;
-    rgbToSend.b = _B;
+    RGB rgb = grabCurrentRGB();
 }
 
 juce::uint8 FavoritesSlot::getR() {
@@ -44,13 +41,21 @@ juce::uint8 FavoritesSlot::getG() {
 juce::uint8 FavoritesSlot::getB() {
     return _B;
 }
+juce::Button& FavoritesSlot::getButton() {
+    return _button;
+}
 
-void FavoritesSlot::grabCurrentRGB() {
 
+RGB FavoritesSlot::grabCurrentRGB() {
+    RGB rgb;
+    rgb.r = _R;
+    rgb.g = _G;
+    rgb.b = _B;
+    return rgb;
 }
 
 void FavoritesSlot::paint(juce::Graphics& g) {
-    _button.setBoundsRelative(0.0f, 0.0f, 0.5f, 1.0f);
+    _button.setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
     addAndMakeVisible(_button);
 }
 

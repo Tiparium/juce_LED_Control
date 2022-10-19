@@ -12,10 +12,20 @@
 
 FavoritesBar::FavoritesBar(RestHandler& RestHandler) {
     _restHandler = RestHandler;
-
     // Trying a vector of favSlots to be iterated over
-    FavoritesSlot *slot = new FavoritesSlot();
+    FavoritesSlot* slot = new FavoritesSlot();
+    FavoritesSlot* slotTwo = new FavoritesSlot();
+    FavoritesSlot* slotThree = new FavoritesSlot();
+    FavoritesSlot* slotFour = new FavoritesSlot();
     _favSlots.push_back(slot);
+    _favSlots.push_back(slotTwo);
+    _favSlots.push_back(slotThree);
+    _favSlots.push_back(slotFour);
+
+    slot->getButton().addListener(this);
+    slotTwo->getButton().addListener(this);
+    slotThree->getButton().addListener(this);
+    slotFour->getButton().addListener(this);
 }
 
 FavoritesBar::~FavoritesBar() {
@@ -24,28 +34,13 @@ FavoritesBar::~FavoritesBar() {
     }
 }
 
-void FavoritesBar::changeListenerCallback(juce::ChangeBroadcaster* src) {
-
-    // TODO: Set this to an actual thing later. Right now this will just print some stuff to show it worked.
-    _restHandler.getPhilipsData();
-    juce::uint8 r = -1;
-    juce::uint8 g = -1;
-    juce::uint8 b = -1;
-
-    // TODO MAKE THIS WORK.
+void FavoritesBar::buttonClicked(juce::Button* button) {
+    RGB rgb;
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
-        juce::String debugStr = "Did Not Work :(";
-        if (src == *&_favSlots[i]) {
-            r = _favSlots[i]->getR();
-            g = _favSlots[i]->getG();
-            b = _favSlots[i]->getB();
-            juce::String rBit = "R: " + r;
-            juce::String gBit = " G: " + g;
-            juce::String bBit = " B: " + b;
-            debugStr = rBit + gBit + bBit;
-        }
-        DBG(debugStr);
+        if (button == &_favSlots[i]->getButton());
+        rgb = _favSlots[i]->grabCurrentRGB();
     }
+    DBG("Button Has Been Clicked!");
 }
 
 void FavoritesBar::paint(juce::Graphics& g) {
@@ -54,13 +49,14 @@ void FavoritesBar::paint(juce::Graphics& g) {
     g.fillAll(juce::Colours::darkorange);
 
     // Try drawing a temp FavoritesSlot
+    int numSlots = _favSlots.size();
+    float relativePos   = 0.0f;
+    float relativeWidth = getWidth() / numSlots;
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
         addAndMakeVisible(*&_favSlots[i]);
-        _favSlots[i]->setBoundsOnScreen();
+        _favSlots[i]->setBounds(relativePos, 0, relativeWidth, getHeight());
+        relativePos += relativeWidth;
     }
-
-    //addAndMakeVisible(_testSlot);
-    //_testSlot.setBoundsOnScreen();
 }
 
 void FavoritesBar::setBoundsOnScreen() {

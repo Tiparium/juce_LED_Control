@@ -12,12 +12,15 @@
 
 #include <JuceHeader.h>
 #include "../Source/RGBStructs.h"
+
 class FavoritesSlot : public juce::Component,
                       public juce::ChangeBroadcaster, // May be DRPCD
                       //public juce::MessageListener,
                       public juce::Button::Listener
 {
-
+// GUIDE (DELETE THIS)
+    // A = FavoritesBar
+    // Z = FavoritesSlot
 public:
 
     FavoritesSlot::FavoritesSlot();
@@ -28,8 +31,9 @@ public:
     juce::uint8 getR();
     juce::uint8 getG();
     juce::uint8 getB();
+    juce::Button& getButton();
 
-    void grabCurrentRGB();
+    RGB grabCurrentRGB();
 
     // Drawing Logic
     void paint(juce::Graphics&) override;

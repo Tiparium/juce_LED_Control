@@ -33,23 +33,23 @@ struct XYBrightness
 };
 struct RGB
 {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
+    uint8_t _r;
+    uint8_t _g;
+    uint8_t _b;
 
-    bool operator==(const RGB& other) const { return r == other.r && g == other.g && b == other.b; }
+    bool operator==(const RGB& other) const { return _r == other._r && _g == other._g && _b == other._b; }
     bool operator!=(const RGB& other) const { return !(*this == other); }
 
     XYBrightness RGB::toXY() const
     {
-        if (r == 0 && g == 0 && b == 0)
+        if (_r == 0 && _g == 0 && _b == 0)
         {
             // Return white with minimum brightness
             return XYBrightness{ XY {0.32272673f, 0.32902291f}, 0.f };
         }
-        const float red = r / 255.f;
-        const float green = g / 255.f;
-        const float blue = b / 255.f;
+        const float red = _r / 255.f;
+        const float green = _g / 255.f;
+        const float blue = _b / 255.f;
 
         const float redCorrected = (red > 0.04045f) ? pow((red + 0.055f) / (1.0f + 0.055f), 2.4f) : (red / 12.92f);
         const float greenCorrected = (green > 0.04045f) ? pow((green + 0.055f) / (1.0f + 0.055f), 2.4f) : (green / 12.92f);
@@ -106,5 +106,20 @@ struct RGB
         return RGB{ static_cast<uint8_t>(std::round(std::max(0.f, rScaled))),
             static_cast<uint8_t>(std::round(std::max(0.f, gScaled))),
             static_cast<uint8_t>(std::round(std::max(0.f, bScaled))) };
+    }
+
+    void RGB::setVals(juce::uint8 r, juce::uint8 g, juce::uint8 b) {
+        _r = r;
+        _g = g;
+        _b = b;
+    }
+
+    // For debug purposes
+    juce::String RGB::toString() {
+        juce::String r = "R: " + std::to_string(RGB::_r);
+        juce::String g = "G: " + std::to_string(RGB::_g);
+        juce::String b = "B: " + std::to_string(RGB::_b);
+        juce::String nl = "\n";
+        return nl + r + nl + g + nl + b + nl;
     }
 };

@@ -13,27 +13,17 @@
 #include <JuceHeader.h>
 #include "../Source/RGBStructs.h"
 
-class FavoritesSlot : public juce::Component,
-                      public juce::ChangeBroadcaster, // May be DRPCD
-                      //public juce::MessageListener,
-                      public juce::Button::Listener
+class FavoritesSlot : public juce::Component
 {
-// GUIDE (DELETE THIS)
-    // A = FavoritesBar
-    // Z = FavoritesSlot
 public:
 
     FavoritesSlot::FavoritesSlot();
     FavoritesSlot::~FavoritesSlot();
 
-    void buttonClicked(juce::Button* button) override;
+    RGB getRGB();
+    void setRGB(RGB rgb);
 
-    juce::uint8 getR();
-    juce::uint8 getG();
-    juce::uint8 getB();
     juce::Button& getButton();
-
-    RGB grabCurrentRGB();
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
@@ -41,9 +31,7 @@ public:
     void setBoundsOnScreen();
 
 private:
-    juce::uint8 _R = 55;
-    juce::uint8 _G = 55;
-    juce::uint8 _B = 55;
+    RGB _rgb;
 
     juce::TextButton _button = juce::TextButton("Hello World!");
 };

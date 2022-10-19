@@ -69,9 +69,9 @@ void RestHandler::grabRGBPushUpdate() {
         // Convert our native RGB values to pHueXY
         RGB rgb;
         XYBrightness xyb;
-        rgb.r = _rVal;
-        rgb.g = _gVal;
-        rgb.b = _bVal;
+        rgb._r = _rVal;
+        rgb._g = _gVal;
+        rgb._b = _bVal;
         xyb = rgb.toXY();
 
         // Push our new pHueXY values to a juce::obj for RESTful call

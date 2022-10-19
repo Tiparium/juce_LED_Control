@@ -12,46 +12,22 @@
 
 FavoritesSlot::FavoritesSlot()
 {
-    _button.addListener(this);
+    _rgb._r = 0;
+    _rgb._g = 0;
+    _rgb._b = 0;
 }
 
-FavoritesSlot::~FavoritesSlot() {
-    _button.removeListener(this);
+FavoritesSlot::~FavoritesSlot(){}
+
+RGB FavoritesSlot::getRGB() {
+    return _rgb;
+}
+void FavoritesSlot::setRGB(RGB rgb) {
+    _rgb = rgb;
 }
 
-void FavoritesSlot::buttonClicked(juce::Button* button) {
-    bool dbg = true;
-
-    if (dbg) {
-        juce::String rBit = "Slot R: " + juce::String(_R);
-        juce::String gBit = "Slot G: " + juce::String(_G);
-        juce::String bBit = "Slot B: " + juce::String(_B);
-        juce::String debugStr = rBit + "\n" + gBit + "\n" + bBit + "\n";
-        DBG(debugStr);
-    }
-    RGB rgb = grabCurrentRGB();
-}
-
-juce::uint8 FavoritesSlot::getR() {
-    return _R;
-}
-juce::uint8 FavoritesSlot::getG() {
-    return _G;
-}
-juce::uint8 FavoritesSlot::getB() {
-    return _B;
-}
 juce::Button& FavoritesSlot::getButton() {
     return _button;
-}
-
-
-RGB FavoritesSlot::grabCurrentRGB() {
-    RGB rgb;
-    rgb.r = _R;
-    rgb.g = _G;
-    rgb.b = _B;
-    return rgb;
 }
 
 void FavoritesSlot::paint(juce::Graphics& g) {

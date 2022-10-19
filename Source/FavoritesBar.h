@@ -15,8 +15,7 @@
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
 
-class FavoritesBar : public juce::Component,
-                     public juce::ChangeListener
+class FavoritesBar : public juce::Component
 {
 public:
 
@@ -31,8 +30,6 @@ public:
     void setBoundsOnScreen();
 private:
 
-    // These are for testing stuff, delete later
-    FavoritesSlot _testSlot;
     std::vector<FavoritesSlot*> _favSlots;
     juce::uint8 _tempR;
     juce::uint8 _tempG;

@@ -14,12 +14,14 @@ FavoritesBar::FavoritesBar(RestHandler& RestHandler) {
     _restHandler = RestHandler;
 
     // Trying a vector of favSlots to be iterated over
-    _favSlots.push_back(&_testSlot);
-    _testSlot.addChangeListener(this);
+    FavoritesSlot *slot = new FavoritesSlot();
+    _favSlots.push_back(slot);
 }
 
 FavoritesBar::~FavoritesBar() {
-    _testSlot.removeChangeListener(this);
+    for (unsigned int i = 0; i < _favSlots.size(); i++) {
+        delete(_favSlots[i]);
+    }
 }
 
 void FavoritesBar::changeListenerCallback(juce::ChangeBroadcaster* src) {
@@ -52,8 +54,13 @@ void FavoritesBar::paint(juce::Graphics& g) {
     g.fillAll(juce::Colours::darkorange);
 
     // Try drawing a temp FavoritesSlot
-    addAndMakeVisible(_testSlot);
-    _testSlot.setBoundsOnScreen();
+    for (unsigned int i = 0; i < _favSlots.size(); i++) {
+        addAndMakeVisible(*&_favSlots[i]);
+        _favSlots[i]->setBoundsOnScreen();
+    }
+
+    //addAndMakeVisible(_testSlot);
+    //_testSlot.setBoundsOnScreen();
 }
 
 void FavoritesBar::setBoundsOnScreen() {

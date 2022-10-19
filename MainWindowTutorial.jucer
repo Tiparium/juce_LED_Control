@@ -32,6 +32,8 @@
           <FILE id="xfBMQA" name="paramsTemplate.cpp" compile="1" resource="0"
                 file="Source/paramsTemplate.cpp"/>
         </GROUP>
+        <FILE id="kUQbPZ" name="RGBMessage.cpp" compile="1" resource="0" file="Source/RGBMessage.cpp"/>
+        <FILE id="gTwx2k" name="RGBMessage.h" compile="0" resource="0" file="Source/RGBMessage.h"/>
         <FILE id="xzv8iE" name="RGBStructs.h" compile="0" resource="0" file="Source/RGBStructs.h"/>
       </GROUP>
       <FILE id="KxwyBf" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>

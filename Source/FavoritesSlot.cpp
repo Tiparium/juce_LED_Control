@@ -19,16 +19,20 @@ FavoritesSlot::~FavoritesSlot() {
 }
 
 void FavoritesSlot::buttonClicked(juce::Button* button) {
+    bool dbg = true;
+
+    if (dbg) {
+        juce::String rBit = "Slot R: " + juce::String(_R);
+        juce::String gBit = "Slot G: " + juce::String(_G);
+        juce::String bBit = "Slot B: " + juce::String(_B);
+        juce::String debugStr = rBit + "\n" + gBit + "\n" + bBit + "\n";
+        DBG(debugStr);
+    }
+
     RGB rgbToSend;
     rgbToSend.r = _R;
     rgbToSend.g = _G;
     rgbToSend.b = _B;
-
-    juce::String rBit = "Slot R: " + juce::String(_R);
-    juce::String gBit = "Slot G: " + juce::String(_G);
-    juce::String bBit = "Slot B: " + juce::String(_B);
-    juce::String debugStr = rBit + "\n" + gBit + "\n" + bBit + "\n";
-    DBG(debugStr);
 }
 
 juce::uint8 FavoritesSlot::getR() {

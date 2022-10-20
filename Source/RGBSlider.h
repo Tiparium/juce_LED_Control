@@ -18,6 +18,7 @@
 #include <string>  
 
 #include "../Source/RestHandler.h"
+#include "../Source/RGBStructs.h"
 
 //==============================================================================
 
@@ -35,9 +36,7 @@ public:
     void setBoundsOnScreen();
 
     //  G/S
-    juce::Slider& getRSlider();
-    juce::Slider& getGSlider();
-    juce::Slider& getBSlider();
+    void setSliderValues(RGB rgb);
     //* G/S
 
 private:

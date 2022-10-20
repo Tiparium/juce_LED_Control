@@ -24,12 +24,16 @@ RGBSlider::~RGBSlider()
 void RGBSlider::paint(juce::Graphics& g)
 {
     setSize(600, 400);
-    
     setBoundsOnScreen();
-
     g.drawRect(getLocalBounds(), 1);
-    g.fillAll(juce::Colour(_restHandler.getR(), _restHandler.getG(), _restHandler.getB())); // Set the color of the window to be the current RGB value
 
+    // Generate a corrected color & excract rgb components
+    RGB correctedRGB = _restHandler.getRGB().colorCorrect();
+    juce::uint8 cR = correctedRGB._r;
+    juce::uint8 cG = correctedRGB._g;
+    juce::uint8 cB = correctedRGB._b;
+
+    g.fillAll(juce::Colour(cR, cG, cB)); // Set the color of the window to be the corrected RGB value
     g.setColour(juce::Colours::grey);
 
     // Red Slider
@@ -67,27 +71,15 @@ void RGBSlider::paint(juce::Graphics& g)
     _bLabel.attachToComponent(&_bSlider, true);
     _bSlider.addListener(this);
     // *Blue Slider
-
-    // Color Correct Slider Labels
-    if (_restHandler.getG() > 180 || (_restHandler.getG() > 150 && _restHandler.getB() > 150)) {
-        g.setColour(juce::Colours::black);
-
-        _rLabel.setColour(juce::Label::textColourId, juce::Colours::black);
-        _rSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
-        _gLabel.setColour(juce::Label::textColourId, juce::Colours::black);
-        _gSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
-        _bLabel.setColour(juce::Label::textColourId, juce::Colours::black);
-        _bSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
-    }
-    else {
-        g.setColour(juce::Colours::white);
-        _rLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-        _rSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::white);
-        _gLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-        _gSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::white);
-        _bLabel.setColour(juce::Label::textColourId, juce::Colours::white);
-        _bSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::white);
-    }
+    
+    // Set labels to black
+    g.setColour(juce::Colours::black);
+    _rLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    _rSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
+    _gLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    _gSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
+    _bLabel.setColour(juce::Label::textColourId, juce::Colours::black);
+    _bSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
 
     g.setFont(30.0f);
 
@@ -133,7 +125,9 @@ void RGBSlider::setBoundsOnScreen() {
 }
 
 // Getters / Setters
-juce::Slider& RGBSlider::getRSlider() { return _rSlider; }
-juce::Slider& RGBSlider::getGSlider() { return _gSlider; }
-juce::Slider& RGBSlider::getBSlider() { return _bSlider; }
+void RGBSlider::setSliderValues(RGB rgb) {
+    _rSlider.setValue(rgb._r);
+    _gSlider.setValue(rgb._g);
+    _bSlider.setValue(rgb._b);
+}
 //* Getters / Setters

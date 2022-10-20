@@ -42,8 +42,8 @@ void FavoritesBar::buttonClicked(juce::Button* button) {
         if (button == &_favSlots[i]->getButton()) {
             if (!_favSlots[i]->state) {
                 // Assign button values & Color
-                RGB hRGB = _restHandler.getRGB();
-                _favSlots[i]->setRGB(hRGB);
+                RGB hRGB = _restHandler.getRGB().colorCorrect();
+                _favSlots[i]->setRGB(_restHandler.getRGB());
                 _favSlots[i]->getButton().setColour(
                     juce::TextButton::ColourIds::buttonColourId , juce::Colour(hRGB._r, hRGB._g, hRGB._b));
                 _favSlots[i]->state = true;
@@ -52,9 +52,7 @@ void FavoritesBar::buttonClicked(juce::Button* button) {
             else {
                 rgb = _favSlots[i]->getRGB();
                 _restHandler.takeColorPushUpdate(rgb);
-                _rgbSliders.getRSlider().setValue(rgb._r);
-                _rgbSliders.getGSlider().setValue(rgb._g);
-                _rgbSliders.getBSlider().setValue(rgb._b);
+                _rgbSliders.setSliderValues(rgb);
                 return;
             }
         }

@@ -127,6 +127,18 @@ struct RGB
         _b = b;
     }
 
+    // For displaying accurate colors on screen
+    RGB RGB::colorCorrect() {
+        if (_r == 0 && _g == 0 && _b == 0) { return RGB(255, 255, 255); }
+        RGB out = RGB(_r, _g, _b);
+        while (out._r < 255 && out._g < 255 && out._b < 255) {
+            if (_r > 0) { out._r++; }
+            if (_g > 0) { out._g++; }
+            if (_b > 0) { out._b++; }
+        }
+        return out;
+    }
+
     // For debug purposes
     juce::String RGB::toString() {
         juce::String r = "R: " + std::to_string(RGB::_r);

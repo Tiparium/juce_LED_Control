@@ -13,6 +13,7 @@
 FavoritesBar::FavoritesBar(RestHandler& RestHandler) {
 
     _restHandler = RestHandler;
+
     // Literally everything below this line is temporary & only for debugging purposes
     RGB zeros;
     zeros.setVals(0, 0, 0);

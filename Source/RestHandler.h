@@ -5,6 +5,9 @@
     Created: 12 Oct 2022 9:20:59pm
     Author:  Tiparium
 
+    This class is responsible for communicating with the pHue RestAPI
+    Data is also stored representing the current overall colorstate of the program
+
   ==============================================================================
 */
 
@@ -27,8 +30,8 @@ public:
     void pushXYBToPHue(juce::var xyColor, juce::String target);
 
     void updateRootJSON();
-    void resetColor(); // Reset lights to color they were at time of app being opened
-    // G/S
+    
+    //  G/S
     void setRGB(RGB rgb);
     RGB getRGB();
     void setR(juce::uint8 val);
@@ -39,6 +42,9 @@ public:
     juce::uint8 getB();
     int getNumLights();
     //* G/S
+    //  Debug
+    void resetColor(); // Reset lights to color they were at time of app being opened
+    //* Debug
 private:
 
     // Represents the current RGB state of all lights
@@ -57,7 +63,7 @@ private:
     nlohmann::json _rootJSON;
 
     // Derived from _rootJSON
-    int _numLights = -1;
+    int _numLights;
 
     // For making API calls
     adamski::RestRequest _req;

@@ -34,6 +34,12 @@ public:
 
     void setBoundsOnScreen();
 
+    //  G/S
+    juce::Slider& getRSlider();
+    juce::Slider& getGSlider();
+    juce::Slider& getBSlider();
+    //* G/S
+
 private:
     juce::String _currentSizeAsString;
 

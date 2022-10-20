@@ -101,9 +101,9 @@ void RGBSlider::resized()
 
     const int border = 100;
     // Resize Sliders
-    _rSlider.setBounds(border, height, getWidth() - border, 20);
-    _gSlider.setBounds(border, height + 20, getWidth() - border, 20);
-    _bSlider.setBounds(border, height + 40, getWidth() - border, 20);
+    _rSlider.setBounds(border, height, getWidth() - 2*border, 20);
+    _gSlider.setBounds(border, height + 20, getWidth() - 2*border, 20);
+    _bSlider.setBounds(border, height + 40, getWidth() - 2*border, 20);
     // *Resize Sliders
 
     // Mucking Around
@@ -131,3 +131,9 @@ void RGBSlider::sliderDragEnded(juce::Slider* slider) {
 void RGBSlider::setBoundsOnScreen() {
     setBoundsRelative(0.0f, 0.2f, 1.0f, 0.8f);
 }
+
+// Getters / Setters
+juce::Slider& RGBSlider::getRSlider() { return _rSlider; }
+juce::Slider& RGBSlider::getGSlider() { return _gSlider; }
+juce::Slider& RGBSlider::getBSlider() { return _bSlider; }
+//* Getters / Setters

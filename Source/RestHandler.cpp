@@ -1,8 +1,7 @@
 /*
   ==============================================================================
 
-    NOTES:
-        TODO: Restructure this class. Function Call names make very little sense.
+    NOTES: None :)
 
     RestHandler.cpp
     Created: 12 Oct 2022 9:20:59pm
@@ -91,6 +90,25 @@ void RestHandler::updateRootJSON() {
     _rootJSON = json;
 }
 
+// Getters / Setters
+void RestHandler::setRGB(RGB rgb) {
+    _rVal = rgb._r;
+    _gVal = rgb._g;
+    _bVal = rgb._b;
+}
+RGB  RestHandler::getRGB() {
+    RGB rgb = RGB(_rVal, _gVal, _bVal);
+    return rgb;
+}
+void RestHandler::setR(juce::uint8 val) { _rVal = val; }
+void RestHandler::setG(juce::uint8 val) {_gVal = val;}
+void RestHandler::setB(juce::uint8 val) {_bVal = val;}
+juce::uint8 RestHandler::getR() { return _rVal;}
+juce::uint8 RestHandler::getG() { return _gVal;}
+juce::uint8 RestHandler::getB() { return _bVal;}
+int RestHandler::getNumLights() {return _rootJSON.size();}
+//* Getters / Setters
+
 /**
 EVERYTHING BELOW THIS LINE IS FOR DEBUG PURPOSES ONLY
 */
@@ -114,22 +132,3 @@ void RestHandler::resetColor() {
         pushXYBToPHue(xyColor, target);
     }
 }
-
-// Getters / Setters
-void RestHandler::setRGB(RGB rgb) {
-    _rVal = rgb._r;
-    _gVal = rgb._g;
-    _bVal = rgb._b;
-}
-RGB  RestHandler::getRGB() {
-    RGB rgb = RGB(_rVal, _gVal, _bVal);
-    return rgb;
-}
-void RestHandler::setR(juce::uint8 val) { _rVal = val; }
-void RestHandler::setG(juce::uint8 val) {_gVal = val;}
-void RestHandler::setB(juce::uint8 val) {_bVal = val;}
-juce::uint8 RestHandler::getR() { return _rVal;}
-juce::uint8 RestHandler::getG() { return _gVal;}
-juce::uint8 RestHandler::getB() { return _bVal;}
-int RestHandler::getNumLights() {return _rootJSON.size();}
-//* Getters / Setters

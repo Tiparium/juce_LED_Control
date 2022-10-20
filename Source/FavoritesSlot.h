@@ -27,7 +27,6 @@ public:
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
-    // void resized() override; // Add this back if needed
     void setBoundsOnScreen();
 
     bool state = false;

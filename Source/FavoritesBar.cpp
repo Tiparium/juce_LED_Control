@@ -10,26 +10,14 @@
 
 #include "FavoritesBar.h"
 
-FavoritesBar::FavoritesBar(RestHandler& restHandler):
-    _restHandler(restHandler)
+FavoritesBar::FavoritesBar(RestHandler& restHandler, RGBSlider& rgbSliders):
+    _restHandler(restHandler),
+    _rgbSliders(rgbSliders)
 {
-
-    // Literally everything below this line is temporary & only for debugging purposes
-    RGB red(255, 0, 0);
-    RGB green(0, 255, 0);
-    RGB blue(0, 0, 255);
-    RGB white(255, 255, 255);
-
     FavoritesSlot* slot = new FavoritesSlot();
     FavoritesSlot* slotTwo = new FavoritesSlot();
     FavoritesSlot* slotThree = new FavoritesSlot();
     FavoritesSlot* slotFour = new FavoritesSlot();
-
-    slot->setRGB(red);
-    slotTwo->setRGB(green);
-    slotThree->setRGB(blue);
-    slotFour->setRGB(white);
-
 
     _favSlots.push_back(slot);
     _favSlots.push_back(slotTwo);
@@ -64,6 +52,9 @@ void FavoritesBar::buttonClicked(juce::Button* button) {
             else {
                 rgb = _favSlots[i]->getRGB();
                 _restHandler.takeColorPushUpdate(rgb);
+                _rgbSliders.getRSlider().setValue(rgb._r);
+                _rgbSliders.getGSlider().setValue(rgb._g);
+                _rgbSliders.getBSlider().setValue(rgb._b);
                 return;
             }
         }
@@ -74,7 +65,6 @@ void FavoritesBar::buttonClicked(juce::Button* button) {
 void FavoritesBar::paint(juce::Graphics& g) {
     // Fill in background color
     g.drawRect(getLocalBounds(), 1);
-    g.fillAll(juce::Colours::darkorange);
 
     // Try drawing a temp FavoritesSlot
     int numSlots = _favSlots.size();

@@ -17,12 +17,12 @@
 Main_C::Main_C() :
     _restHandler(),
     _RGBSliders(_restHandler),
-    _FavoritesBar(_restHandler)
+    _FavoritesBar(_restHandler, _RGBSliders)
 {
 }
 
-Main_C::~Main_C() {
-
+Main_C::~Main_C()
+{
 }
 
 void Main_C::paint(juce::Graphics& g) {

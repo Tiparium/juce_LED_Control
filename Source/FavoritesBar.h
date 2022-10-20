@@ -14,24 +14,25 @@
 
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
+#include "../Source/RGBSlider.h"
 
 class FavoritesBar : public juce::Component,
                      public juce::Button::Listener
 {
 public:
 
-    FavoritesBar::FavoritesBar(RestHandler& restHandler);
+    FavoritesBar::FavoritesBar(RestHandler& restHandler, RGBSlider& rgbSliders);
     FavoritesBar::~FavoritesBar();
 
     void buttonClicked(juce::Button* button) override;
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
-    // void resized() override; // Add this back if needed
     void setBoundsOnScreen();
 private:
     std::vector<FavoritesSlot*> _favSlots;
 
     // Talk to the handler
     RestHandler& _restHandler;
+    RGBSlider& _rgbSliders;
 };

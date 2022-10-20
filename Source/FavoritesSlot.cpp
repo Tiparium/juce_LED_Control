@@ -16,7 +16,6 @@ FavoritesSlot::FavoritesSlot()
     _rgb._g = 0;
     _rgb._b = 0;
 }
-
 FavoritesSlot::~FavoritesSlot(){}
 
 RGB FavoritesSlot::getRGB() {

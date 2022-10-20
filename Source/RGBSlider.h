@@ -46,7 +46,7 @@ private:
     juce::Slider _bSlider;
 
     // Talk to the handler
-    RestHandler _restHandler;
+    RestHandler& _restHandler;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RGBSlider)
 };

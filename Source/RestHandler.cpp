@@ -23,6 +23,10 @@ RestHandler::RestHandler() {
     _apiGetTarget = params::_apiGetTarget;
     _apiPutTarget = params::_apiPutTarget;
 
+    _rVal = 0;
+    _gVal = 0;
+    _bVal = 0;
+
     RestHandler::updateRootJSON();
     _numLights = RestHandler::_rootJSON.size();
 
@@ -35,24 +39,12 @@ RestHandler::~RestHandler() {
     resetColor();
 }
 
-void RestHandler::getPhilipsData() {
-
-    for (int i = 0; i < _rootJSON.size(); i++) {
-
-        std::string it = std::to_string(i + 1);
-
-        DBG(_rootJSON.size());
-
-        float test = _rootJSON[it]["state"]["xy"][1];
-
-        DBG(test);
-    }
-
-    //DBG(res.bodyAsString); // Prints the full response as JSON (not pretty)
-    //DBG(res.result.getErrorMessage()); // Prints any errors that may occur
+void RestHandler::takeColorPushUpdate(RGB rgb) {
+    setRGB(rgb);
+    grabColorPushUpdate();
 }
 
-void RestHandler::grabRGBPushUpdate() {
+void RestHandler::grabColorPushUpdate() {
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
     for (int i = 0; i < _numLights; i++) {
@@ -67,24 +59,20 @@ void RestHandler::grabRGBPushUpdate() {
         DBG("Target Value: " + target);
 
         // Convert our native RGB values to pHueXY
-        RGB rgb;
-        XYBrightness xyb;
-        rgb._r = _rVal;
-        rgb._g = _gVal;
-        rgb._b = _bVal;
-        xyb = rgb.toXY();
-
-        // Push our new pHueXY values to a juce::obj for RESTful call
-        juce::var xyColor;
-        xyColor.append(xyb.xy.x);
-        xyColor.append(xyb.xy.y);
-
-        // Perform RESTful call
-        pushUpdate(xyColor, target);
+        RGB rgb(_rVal, _gVal, _bVal);
+        pushRGBToPHue(rgb, target);
     }
 }
 
-void RestHandler::pushUpdate(juce::var xyColor, juce::String target) {
+void RestHandler::pushRGBToPHue(RGB rgb, juce::String target) {
+    XYBrightness xyb = rgb.toXY();
+    juce::var xyColor;
+    xyColor.append(xyb.xy.x);
+    xyColor.append(xyb.xy.y);
+    pushXYBToPHue(xyColor, target);
+}
+
+void RestHandler::pushXYBToPHue(juce::var xyColor, juce::String target) {
     // Make RESTful PUT call
     adamski::RestRequest::Response res = _req.put(target)
         .field("xy", xyColor)
@@ -95,22 +83,12 @@ void RestHandler::pushUpdate(juce::var xyColor, juce::String target) {
 
 void RestHandler::updateRootJSON() {
     juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
-    DBG(target);
-    _rootJSON = pingAndReceive(target);
-}
-
-nlohmann::json RestHandler::pingAndReceive(juce::String target) {
-    // DBG(target); // Prints the target URL
     adamski::RestRequest::Response res = _req.get(target).execute();
 
     juce::String resBody = res.bodyAsString;
-    // json::jobject result = json::jobject::parse(resBody.toStdString());
     nlohmann::json json = nlohmann::json::parse(resBody.toStdString());
-    return json;
-}
-
-int RestHandler::getNumLights() {
-    return _rootJSON.size();
+    DBG(target);
+    _rootJSON = json;
 }
 
 /**
@@ -133,15 +111,25 @@ void RestHandler::resetColor() {
 
         target = _httpTarget + _apiTarget + putTarget;
 
-        pushUpdate(xyColor, target);
+        pushXYBToPHue(xyColor, target);
     }
 }
 
 // Getters / Setters
+void RestHandler::setRGB(RGB rgb) {
+    _rVal = rgb._r;
+    _gVal = rgb._g;
+    _bVal = rgb._b;
+}
+RGB  RestHandler::getRGB() {
+    RGB rgb = RGB(_rVal, _gVal, _bVal);
+    return rgb;
+}
 void RestHandler::setR(juce::uint8 val) { _rVal = val; }
 void RestHandler::setG(juce::uint8 val) {_gVal = val;}
 void RestHandler::setB(juce::uint8 val) {_bVal = val;}
 juce::uint8 RestHandler::getR() { return _rVal;}
 juce::uint8 RestHandler::getG() { return _gVal;}
 juce::uint8 RestHandler::getB() { return _bVal;}
+int RestHandler::getNumLights() {return _rootJSON.size();}
 //* Getters / Setters

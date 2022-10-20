@@ -10,29 +10,25 @@
 
 #include "FavoritesBar.h"
 
-FavoritesBar::FavoritesBar(RestHandler& RestHandler) {
-
-    _restHandler = RestHandler;
+FavoritesBar::FavoritesBar(RestHandler& restHandler):
+    _restHandler(restHandler)
+{
 
     // Literally everything below this line is temporary & only for debugging purposes
-    RGB zeros;
-    zeros.setVals(0, 0, 0);
-    RGB twentyFives;
-    twentyFives.setVals(25, 25, 25);
-    RGB fifties;
-    fifties.setVals(50, 50, 50);
-    RGB eightyTwos;
-    eightyTwos.setVals(82, 82, 82);
+    RGB red(255, 0, 0);
+    RGB green(0, 255, 0);
+    RGB blue(0, 0, 255);
+    RGB white(255, 255, 255);
 
     FavoritesSlot* slot = new FavoritesSlot();
     FavoritesSlot* slotTwo = new FavoritesSlot();
     FavoritesSlot* slotThree = new FavoritesSlot();
     FavoritesSlot* slotFour = new FavoritesSlot();
 
-    slot->setRGB(zeros);
-    slotTwo->setRGB(twentyFives);
-    slotThree->setRGB(fifties);
-    slotFour->setRGB(eightyTwos);
+    slot->setRGB(red);
+    slotTwo->setRGB(green);
+    slotThree->setRGB(blue);
+    slotFour->setRGB(white);
 
 
     _favSlots.push_back(slot);
@@ -54,22 +50,25 @@ FavoritesBar::~FavoritesBar() {
 
 void FavoritesBar::buttonClicked(juce::Button* button) {
     RGB rgb;
-    juce::String ith;
-    juce::String message;
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
         if (button == &_favSlots[i]->getButton()) {
-            rgb = _favSlots[i]->getRGB();
-            ith = std::to_string(i);
-            message = "th Button Has Been Clicked!";
-            break;
-        }
-        else {
-            ith = "";
-            message = "Something Went Wrong :(";
+            if (!_favSlots[i]->state) {
+                // Assign button values & Color
+                RGB hRGB = _restHandler.getRGB();
+                _favSlots[i]->setRGB(hRGB);
+                _favSlots[i]->getButton().setColour(
+                    juce::TextButton::ColourIds::buttonColourId , juce::Colour(hRGB._r, hRGB._g, hRGB._b));
+                _favSlots[i]->state = true;
+                return;
+            }
+            else {
+                rgb = _favSlots[i]->getRGB();
+                _restHandler.takeColorPushUpdate(rgb);
+                return;
+            }
         }
     }
-    juce::String debug = ith + message + rgb.toString();
-    DBG(debug);
+    DBG("Something went wrong: This loop should never fully terminate.");
 }
 
 void FavoritesBar::paint(juce::Graphics& g) {

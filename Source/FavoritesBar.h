@@ -20,7 +20,7 @@ class FavoritesBar : public juce::Component,
 {
 public:
 
-    FavoritesBar::FavoritesBar(RestHandler& RestHandler);
+    FavoritesBar::FavoritesBar(RestHandler& restHandler);
     FavoritesBar::~FavoritesBar();
 
     void buttonClicked(juce::Button* button) override;
@@ -31,10 +31,7 @@ public:
     void setBoundsOnScreen();
 private:
     std::vector<FavoritesSlot*> _favSlots;
-    juce::uint8 _tempR;
-    juce::uint8 _tempG;
-    juce::uint8 _tempB;
 
     // Talk to the handler
-    RestHandler _restHandler;
+    RestHandler& _restHandler;
 };

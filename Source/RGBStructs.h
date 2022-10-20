@@ -33,6 +33,19 @@ struct XYBrightness
 };
 struct RGB
 {
+    // Initialize all values to 0
+    RGB() {
+        _r = 0;
+        _g = 0;
+        _b = 0;
+    }
+    // Initialize all values to values
+    RGB(juce::uint8 r, juce::uint8 g, juce::uint8 b) {
+        _r = r;
+        _g = g;
+        _b = b;
+    }
+
     uint8_t _r;
     uint8_t _g;
     uint8_t _b;

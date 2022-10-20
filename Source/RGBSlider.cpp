@@ -12,9 +12,9 @@
 #include "RGBSlider.h"
 
 //==============================================================================
-RGBSlider::RGBSlider(RestHandler& restHandler)
+RGBSlider::RGBSlider(RestHandler& restHandler):
+    _restHandler(restHandler)
 {
-    _restHandler = restHandler;
 }
 
 RGBSlider::~RGBSlider()
@@ -120,12 +120,12 @@ void RGBSlider::sliderValueChanged(juce::Slider* slider) {
     else {
         _restHandler.setB(_bSlider.getValue());
     }
+    DBG("Sliders Changed");
 }
 
 // Runs when mouse is lifted from a slider
 void RGBSlider::sliderDragEnded(juce::Slider* slider) {
-    // _restHandler.getPhilipsData();
-    _restHandler.grabRGBPushUpdate();
+    _restHandler.grabColorPushUpdate();
 }
 
 void RGBSlider::setBoundsOnScreen() {

@@ -30,8 +30,9 @@ public:
     // void resized() override; // Add this back if needed
     void setBoundsOnScreen();
 
+    bool state = false;
+
 private:
     RGB _rgb;
-
-    juce::TextButton _button = juce::TextButton("Hello World!");
+    juce::TextButton _button;
 };

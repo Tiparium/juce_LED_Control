@@ -20,27 +20,31 @@ public:
     RestHandler();
     ~RestHandler();
 
-    void getPhilipsData();
-    void grabRGBPushUpdate();
-    void pushUpdate(juce::var xyColor, juce::String target);
+    void takeColorPushUpdate(RGB rgb);
+    void grabColorPushUpdate();
+
+    void pushRGBToPHue(RGB rgb, juce::String target);
+    void pushXYBToPHue(juce::var xyColor, juce::String target);
+
     void updateRootJSON();
-    nlohmann::json pingAndReceive(juce::String target);
-    int getNumLights();
     void resetColor(); // Reset lights to color they were at time of app being opened
     // G/S
+    void setRGB(RGB rgb);
+    RGB getRGB();
     void setR(juce::uint8 val);
     void setG(juce::uint8 val);
     void setB(juce::uint8 val);
     juce::uint8 getR();
     juce::uint8 getG();
     juce::uint8 getB();
+    int getNumLights();
     //* G/S
 private:
 
     // Represents the current RGB state of all lights
-    juce::uint8 _rVal = 0;
-    juce::uint8 _gVal = 0;
-    juce::uint8 _bVal = 0;
+    juce::uint8 _rVal;
+    juce::uint8 _gVal;
+    juce::uint8 _bVal;
 
     // Combine these for a full callable RESTful URL
     juce::String _httpTarget;

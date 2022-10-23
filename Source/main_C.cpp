@@ -139,25 +139,31 @@ void Main_C::paint(juce::Graphics& g) {
     _bSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
 
     g.setFont(30.0f);
-    // Resize Sliders
-    int height = getHeight() - getHeight() / 1.5;
-    const int border = 100;
-    _rSlider.setBounds(border, height, getWidth() - 2 * border, 20);
-    _gSlider.setBounds(border, height + 20, getWidth() - 2 * border, 20);
-    _bSlider.setBounds(border, height + 40, getWidth() - 2 * border, 20);
-    //* Resize Sliders
     //* RGBSliders
 
-    // Try drawing a temp FavoritesSlot
+    // Sizing Occurs below this line. Use these three variables to resize all items as needed.
+    float relativePos;
+    float relativeWidth;
+    float relativeHeight;
+
+    // Draw and size FavoritesSlots
     int numSlots = _favSlots.size();
-    float relativePos = 0.0f;
-    float relativeWidth = getWidth() / numSlots;
+    relativePos = 0.0f;
+    relativeWidth = getWidth() / numSlots;
+    relativeHeight = getHeight() / 7;
     for (int i = 0; i < _favSlots.size(); i++) {
         addAndMakeVisible(_favSlots[i]);
-        _favSlots[i]->setBounds(relativePos, 0, relativeWidth, 50);
+        _favSlots[i]->setBounds(relativePos, 0, relativeWidth, relativeHeight);
         relativePos += relativeWidth;
     }
-    //* FavoritesBar
+
+    // Size RGBSliders
+    relativeHeight = getHeight() / 2;
+    relativePos = 100;
+    _rSlider.setBounds(relativePos, relativeHeight, getWidth() - 2 * relativePos, 20);
+    _gSlider.setBounds(relativePos, relativeHeight + 20, getWidth() - 2 * relativePos, 20);
+    _bSlider.setBounds(relativePos, relativeHeight + 40, getWidth() - 2 * relativePos, 20);
+
     g.fillAll(juce::Colour(cR, cG, cB));
 }
 

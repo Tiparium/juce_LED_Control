@@ -13,22 +13,44 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "RestHandler.h"
-#include "RGBSlider.h"
-#include "FavoritesBar.h"
+#include "../Source/RestHandler.h"
+#include "../Source/FavoritesSlot.h"
 
-class Main_C : public juce::Component
+class Main_C : public juce::Component,
+               public juce::Slider::Listener,
+               public juce::Button::Listener
 {
 public:
     Main_C();
     ~Main_C() override;
 
+    // RGBSliders
+    void sliderValueChanged(juce::Slider* slider) override;
+    void sliderDragEnded(juce::Slider* slider) override;
+
+    // FavoritesBar
+    void buttonClicked(juce::Button* button) override;
+
     // Drawing Logic
     void paint(juce::Graphics&) override;
-    // void resized() override; // Add this back if needed
+    void resized() override;
+    //  G/S
+    void setSliderValues(RGB rgb);
 
 private:
+
+    // RGBSliders
+    juce::Label _rLabel;
+    juce::Label _gLabel;
+    juce::Label _bLabel;
+    juce::Slider _rSlider;
+    juce::Slider _gSlider;
+    juce::Slider _bSlider;
+    //* RGBSliders
+
+    // FavoritesBar
+    std::vector<FavoritesSlot*> _favSlots;
+
+    // Talk to the Handler
     RestHandler     _restHandler;
-    RGBSlider       _RGBSliders;
-    FavoritesBar    _FavoritesBar;
 };

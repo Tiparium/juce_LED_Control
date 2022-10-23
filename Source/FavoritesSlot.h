@@ -17,6 +17,7 @@ class FavoritesSlot : public juce::Component
 {
 public:
 
+    FavoritesSlot::FavoritesSlot(RGB rgb);
     FavoritesSlot::FavoritesSlot();
     FavoritesSlot::~FavoritesSlot();
 
@@ -27,7 +28,6 @@ public:
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
-    void setBoundsOnScreen();
 
     bool state = false;
 

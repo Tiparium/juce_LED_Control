@@ -9,12 +9,17 @@
 */
 
 #include "FavoritesSlot.h"
-
-FavoritesSlot::FavoritesSlot()
-{
+FavoritesSlot::FavoritesSlot() {
     _rgb._r = 0;
     _rgb._g = 0;
     _rgb._b = 0;
+}
+
+FavoritesSlot::FavoritesSlot(RGB rgb)
+{
+    _rgb._r = rgb._r;
+    _rgb._g = rgb._g;
+    _rgb._b = rgb._b;
 }
 FavoritesSlot::~FavoritesSlot(){}
 
@@ -30,10 +35,6 @@ juce::Button& FavoritesSlot::getButton() {
 }
 
 void FavoritesSlot::paint(juce::Graphics& g) {
-    _button.setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
     addAndMakeVisible(_button);
-}
-
-void FavoritesSlot::setBoundsOnScreen() {
-    setBoundsRelative(0.0f, 0.0f, 1.0f, 1.0f);
+    _button.setBoundsRelative(0, 0, 1, 1);
 }

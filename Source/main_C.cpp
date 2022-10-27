@@ -86,6 +86,15 @@ void Main_C::buttonClicked(juce::Button* button) {
                 return;
             }
         }
+        // TODO: Fix this crashing when delete is called on the final element of the list
+        else if (button == &_favSlots[i]->getButton(1)) {
+            _favSlots[i]->getButton(0).removeListener(this);
+            _favSlots[i]->getButton(1).removeListener(this);
+            removeChildComponent(_favSlots[i]);
+            FavoritesSlot* temp = _favSlots[i];
+            _favSlots.erase(_favSlots.begin() + i);
+            delete temp;
+        }
     }
     DBG("Something went wrong: This loop should never fully terminate.");
 }

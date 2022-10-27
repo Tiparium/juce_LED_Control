@@ -24,7 +24,7 @@ public:
     RGB getRGB();
     void setRGB(RGB rgb);
 
-    juce::Button& getButton();
+    juce::Button& getButton(int button);
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
@@ -33,5 +33,6 @@ public:
 
 private:
     RGB _rgb;
-    juce::TextButton _button;
+    juce::TextButton _favButton;
+    juce::TextButton _delButton;
 };

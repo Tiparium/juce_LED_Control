@@ -30,11 +30,15 @@ void FavoritesSlot::setRGB(RGB rgb) {
     _rgb = rgb;
 }
 
-juce::Button& FavoritesSlot::getButton() {
-    return _button;
+juce::Button& FavoritesSlot::getButton(int button) {
+    if (button == 0) return _favButton;
+    if (button == 1) return _delButton;
+    DBG("You shouldn't be here");
 }
 
 void FavoritesSlot::paint(juce::Graphics& g) {
-    addAndMakeVisible(_button);
-    _button.setBoundsRelative(0, 0, 1, 1);
+    addAndMakeVisible(_favButton);
+    _favButton.setBoundsRelative(0, 0, 1, 1);
+    addAndMakeVisible(_delButton);
+    _delButton.setBoundsRelative(0.75f, 0.0f, 0.25f, 0.25f);
 }

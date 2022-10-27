@@ -27,16 +27,22 @@ Main_C::Main_C() :
     _favSlots.push_back(slotThree);
     _favSlots.push_back(slotFour);
 
-    slot->getButton().addListener(this);
-    slotTwo->getButton().addListener(this);
-    slotThree->getButton().addListener(this);
-    slotFour->getButton().addListener(this);
+    slot->getButton(0).addListener(this);
+    slotTwo->getButton(0).addListener(this);
+    slotThree->getButton(0).addListener(this);
+    slotFour->getButton(0).addListener(this);
+
+    slot->getButton(1).addListener(this);
+    slotTwo->getButton(1).addListener(this);
+    slotThree->getButton(1).addListener(this);
+    slotFour->getButton(1).addListener(this);
 }
 
 Main_C::~Main_C()
 {
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
-        _favSlots[i]->getButton().removeListener(this);
+        _favSlots[i]->getButton(0).removeListener(this);
+        _favSlots[i]->getButton(1).removeListener(this);
         delete(_favSlots[i]);
     }
 }
@@ -63,12 +69,12 @@ void Main_C::sliderDragEnded(juce::Slider* slider) {
 void Main_C::buttonClicked(juce::Button* button) {
     RGB rgb;
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
-        if (button == &_favSlots[i]->getButton()) {
+        if (button == &_favSlots[i]->getButton(0)) {
             if (!_favSlots[i]->state) {
                 // Assign button values & Color
                 RGB hRGB = _restHandler.getRGB().colorCorrect();
                 _favSlots[i]->setRGB(_restHandler.getRGB());
-                _favSlots[i]->getButton().setColour(
+                _favSlots[i]->getButton(0).setColour(
                     juce::TextButton::ColourIds::buttonColourId, juce::Colour(hRGB._r, hRGB._g, hRGB._b));
                 _favSlots[i]->state = true;
                 return;

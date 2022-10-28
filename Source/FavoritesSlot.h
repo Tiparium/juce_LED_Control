@@ -18,7 +18,6 @@ class FavoritesSlot : public juce::Component
 public:
 
     FavoritesSlot::FavoritesSlot(RGB rgb);
-    FavoritesSlot::FavoritesSlot();
     FavoritesSlot::~FavoritesSlot();
 
     RGB getRGB();

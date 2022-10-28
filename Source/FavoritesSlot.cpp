@@ -9,14 +9,10 @@
 */
 
 #include "FavoritesSlot.h"
-FavoritesSlot::FavoritesSlot() {
-    _rgb._r = 0;
-    _rgb._g = 0;
-    _rgb._b = 0;
-}
 
 FavoritesSlot::FavoritesSlot(RGB rgb)
 {
+    _delButton.setButtonText("X");
     _rgb._r = rgb._r;
     _rgb._g = rgb._g;
     _rgb._b = rgb._b;

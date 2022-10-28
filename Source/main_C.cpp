@@ -152,7 +152,14 @@ void Main_C::paint(juce::Graphics& g) {
     addAndMakeVisible(_newFavButton);
     float newFavButtonWidth = getWidth() / 10;
     float favBarHeight = getHeight() / 7;
-    _newFavButton.setBounds(0, 0, newFavButtonWidth, getHeight() / 7);
+    if (_favSlots.size() > 0) {
+        _newFavButton.setBounds(0, 0, newFavButtonWidth, getHeight() / 7);
+        _newFavButton.setButtonText("+");
+    }
+    else {
+        _newFavButton.setBounds(0, 0, getWidth(), getHeight() / 7);
+        _newFavButton.setButtonText("Click Here to Create a Favorite");
+    }
 
 
     // Draw and size FavoritesSlots

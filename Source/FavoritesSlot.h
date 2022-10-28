@@ -29,8 +29,6 @@ public:
     // Drawing Logic
     void paint(juce::Graphics&) override;
 
-    bool state = false;
-
 private:
     RGB _rgb;
     juce::TextButton _favButton;

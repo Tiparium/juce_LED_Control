@@ -50,6 +50,7 @@ private:
 
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
+    juce::TextButton _newFavButton;
 
     // Talk to the Handler
     RestHandler     _restHandler;

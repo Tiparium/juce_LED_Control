@@ -17,29 +17,12 @@
 Main_C::Main_C() :
     _restHandler()
 {
-    FavoritesSlot* slot = new FavoritesSlot();
-    FavoritesSlot* slotTwo = new FavoritesSlot();
-    FavoritesSlot* slotThree = new FavoritesSlot();
-    FavoritesSlot* slotFour = new FavoritesSlot();
-
-    _favSlots.push_back(slot);
-    _favSlots.push_back(slotTwo);
-    _favSlots.push_back(slotThree);
-    _favSlots.push_back(slotFour);
-
-    slot->getButton(0).addListener(this);
-    slotTwo->getButton(0).addListener(this);
-    slotThree->getButton(0).addListener(this);
-    slotFour->getButton(0).addListener(this);
-
-    slot->getButton(1).addListener(this);
-    slotTwo->getButton(1).addListener(this);
-    slotThree->getButton(1).addListener(this);
-    slotFour->getButton(1).addListener(this);
+    _newFavButton.addListener(this);
 }
 
 Main_C::~Main_C()
 {
+    _newFavButton.removeListener(this);
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
         _favSlots[i]->getButton(0).removeListener(this);
         _favSlots[i]->getButton(1).removeListener(this);
@@ -68,25 +51,24 @@ void Main_C::sliderDragEnded(juce::Slider* slider) {
 
 void Main_C::buttonClicked(juce::Button* button) {
     RGB rgb;
-    for (unsigned int i = 0; i < _favSlots.size(); i++) {
+    RGB hRGB = _restHandler.getRGB().colorCorrect();
+    // Create new Favorite Slot
+    if (button == &_newFavButton) {
+        FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
+        _favSlots.push_back(newSlot);
+        newSlot->getButton(0).addListener(this);
+        newSlot->getButton(1).addListener(this);
+        return;
+    }
+    for (unsigned int i = 0; i < _favSlots.size(); i++) {\
+        // Call Favorite Slot
         if (button == &_favSlots[i]->getButton(0)) {
-            if (!_favSlots[i]->state) {
-                // Assign button values & Color
-                RGB hRGB = _restHandler.getRGB().colorCorrect();
-                _favSlots[i]->setRGB(_restHandler.getRGB());
-                _favSlots[i]->getButton(0).setColour(
-                    juce::TextButton::ColourIds::buttonColourId, juce::Colour(hRGB._r, hRGB._g, hRGB._b));
-                _favSlots[i]->state = true;
-                return;
-            }
-            else {
-                rgb = _favSlots[i]->getRGB();
-                _restHandler.takeColorPushUpdate(rgb);
-                setSliderValues(rgb);
-                return;
-            }
+            rgb = _favSlots[i]->getRGB();
+            _restHandler.takeColorPushUpdate(rgb);
+            setSliderValues(rgb);
+            return;
         }
-        // TODO: Fix this crashing when delete is called on the final element of the list
+        // Delete Favorite Slot
         else if (button == &_favSlots[i]->getButton(1)) {
             _favSlots[i]->getButton(0).removeListener(this);
             _favSlots[i]->getButton(1).removeListener(this);
@@ -94,6 +76,7 @@ void Main_C::buttonClicked(juce::Button* button) {
             FavoritesSlot* temp = _favSlots[i];
             _favSlots.erase(_favSlots.begin() + i);
             delete temp;
+            return;
         }
     }
     DBG("Something went wrong: This loop should never fully terminate.");
@@ -101,7 +84,9 @@ void Main_C::buttonClicked(juce::Button* button) {
 
 void Main_C::paint(juce::Graphics& g) {
     g.drawRect(getLocalBounds(), 1);
-
+    float relativePos;
+    float relativeWidth;
+    float relativeHeight;
     // Generate a corrected color & excract rgb components
     RGB correctedRGB = _restHandler.getRGB().colorCorrect();
     juce::uint8 cR = correctedRGB._r;
@@ -154,23 +139,6 @@ void Main_C::paint(juce::Graphics& g) {
     _bSlider.setColour(juce::Slider::ColourIds::textBoxTextColourId, juce::Colours::black);
 
     g.setFont(30.0f);
-    //* RGBSliders
-
-    // Sizing Occurs below this line. Use these three variables to resize all items as needed.
-    float relativePos;
-    float relativeWidth;
-    float relativeHeight;
-
-    // Draw and size FavoritesSlots
-    int numSlots = _favSlots.size();
-    relativePos = 0.0f;
-    relativeWidth = getWidth() / numSlots;
-    relativeHeight = getHeight() / 7;
-    for (int i = 0; i < _favSlots.size(); i++) {
-        addAndMakeVisible(_favSlots[i]);
-        _favSlots[i]->setBounds(relativePos, 0, relativeWidth, relativeHeight);
-        relativePos += relativeWidth;
-    }
 
     // Size RGBSliders
     relativeHeight = getHeight() / 2;
@@ -178,6 +146,25 @@ void Main_C::paint(juce::Graphics& g) {
     _rSlider.setBounds(relativePos, relativeHeight, getWidth() - 2 * relativePos, 20);
     _gSlider.setBounds(relativePos, relativeHeight + 20, getWidth() - 2 * relativePos, 20);
     _bSlider.setBounds(relativePos, relativeHeight + 40, getWidth() - 2 * relativePos, 20);
+    //* RGBSliders
+
+    // Create Fav button
+    addAndMakeVisible(_newFavButton);
+    float newFavButtonWidth = getWidth() / 10;
+    float favBarHeight = getHeight() / 7;
+    _newFavButton.setBounds(0, 0, newFavButtonWidth, getHeight() / 7);
+
+
+    // Draw and size FavoritesSlots
+    int numSlots = _favSlots.size();
+    relativePos = newFavButtonWidth;
+    relativeWidth = (getWidth() - newFavButtonWidth) / numSlots;
+    relativeHeight = getHeight() / 7;
+    for (int i = 0; i < _favSlots.size(); i++) {
+        addAndMakeVisible(_favSlots[i]);
+        _favSlots[i]->setBounds(relativePos, 0, relativeWidth, favBarHeight);
+        relativePos += relativeWidth;
+    }
 
     g.fillAll(juce::Colour(cR, cG, cB));
 }

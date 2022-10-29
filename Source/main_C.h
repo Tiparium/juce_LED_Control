@@ -13,6 +13,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "../Source/PersistenceJSONHandler.h"
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
 
@@ -51,6 +52,7 @@ private:
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
-    // Talk to the Handler
-    RestHandler     _restHandler;
+    // Talk to the Handlers
+    RestHandler             _restHandler;
+    PersistenceJSONHandler  _favsHandler;
 };

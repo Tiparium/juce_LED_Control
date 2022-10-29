@@ -15,9 +15,11 @@
 
 
 Main_C::Main_C() :
-    _restHandler()
+    _restHandler(),
+    _favsHandler()
 {
     _newFavButton.addListener(this);
+    _favsHandler.getFavSlots();
 }
 
 Main_C::~Main_C()

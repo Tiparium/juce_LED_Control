@@ -17,6 +17,10 @@
         </GROUP>
       </GROUP>
       <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">
+        <FILE id="eIlGpi" name="persistenceJSONHandler.cpp" compile="1" resource="0"
+              file="Source/persistenceJSONHandler.cpp"/>
+        <FILE id="MHuczW" name="persistenceJSONHandler.h" compile="0" resource="0"
+              file="Source/persistenceJSONHandler.h"/>
         <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
         <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
       </GROUP>

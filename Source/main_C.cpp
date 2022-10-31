@@ -16,26 +16,41 @@
 
 Main_C::Main_C() :
     _restHandler(),
-    _favsHandler("../../resources/favSlots.json", "favSlots")
+    _favsHandler("../../resources/favSlots.json")
 {
     nlohmann::json jsonFromFile = _favsHandler.readJSONFromFile();
-
-    DBG("---------------------------------");
-    DBG(jsonFromFile.dump());
-    DBG("---------------------------------");
-
+    for (auto i = 0; i < jsonFromFile.size(); i++) {
+        RGB newRGB = RGB(jsonFromFile[i]["r"], jsonFromFile[i]["g"], jsonFromFile[i]["b"]);
+        RGB hRGB = newRGB.colorCorrect();
+        FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
+        _favSlots.push_back(newSlot);
+        newSlot->getButton(0).addListener(this);
+        newSlot->getButton(1).addListener(this);
+    }
     _newFavButton.addListener(this);
 }
 
 Main_C::~Main_C()
 {
-    DBG(_favSlots.size());
+    nlohmann::json jsonToFile = nlohmann::json::array();
     _newFavButton.removeListener(this);
+    for (auto i = 0; i < _favSlots.size(); i++) {
+        nlohmann::json favSlotJSON;
+        RGB favSlotRGB = _favSlots[i]->getRGB();
+        favSlotJSON["r"] = favSlotRGB._r;
+        favSlotJSON["g"] = favSlotRGB._g;
+        favSlotJSON["b"] = favSlotRGB._b;
+        jsonToFile.push_back(favSlotJSON);
+    }
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
         _favSlots[i]->getButton(0).removeListener(this);
         _favSlots[i]->getButton(1).removeListener(this);
+
         delete _favSlots[i];
     }
+    DBG("JSON TO PUSH TO FILE: " + jsonToFile.dump());
+    _favsHandler.saveJSONToFile(jsonToFile);
+
 }
 
 // Runs when slider value is changed

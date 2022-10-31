@@ -10,14 +10,12 @@
 
 #include "persistenceJSONHandler.h"
 
-PersistenceJSONHandler::PersistenceJSONHandler(juce::String path, juce::String rootName)
+PersistenceJSONHandler::PersistenceJSONHandler(juce::String path)
+    : _path(path)
 {
-    _rootName = rootName;
-    _path = path;
 }
 PersistenceJSONHandler::~PersistenceJSONHandler()
 {
-    _rootName = getRootName();
 }
 
 nlohmann::json PersistenceJSONHandler::readJSONFromFile()
@@ -30,12 +28,8 @@ nlohmann::json PersistenceJSONHandler::readJSONFromFile()
 
 void PersistenceJSONHandler::saveJSONToFile(nlohmann::json jsonIn)
 {
+    nlohmann::json newFileContents = jsonIn;
     std::ofstream file(_path.toStdString());
-    file << jsonIn;
+    file << newFileContents;
     file.close();
-}
-
-juce::String PersistenceJSONHandler::getRootName()
-{
-    return _rootName;
 }

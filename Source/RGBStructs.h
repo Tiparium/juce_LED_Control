@@ -14,7 +14,8 @@
 #pragma once
 #include <JuceHeader.h>
 
-// I definitely didn't steal these structs. Nope.
+// I definitely didn't steal these structs. Nope. (Credit to Moritz Wirger, @enwi on github)
+// Some of my own modifications have been added.
 struct XY
 {
     float x;

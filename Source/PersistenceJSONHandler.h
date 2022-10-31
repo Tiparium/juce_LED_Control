@@ -18,13 +18,11 @@
 class PersistenceJSONHandler
 {
 public:
-    PersistenceJSONHandler(juce::String path, juce::String rootName);
+    PersistenceJSONHandler(juce::String path);
     ~PersistenceJSONHandler();
 
     nlohmann::json readJSONFromFile();
     void saveJSONToFile(nlohmann::json jsonIn);
-    
-    juce::String getRootName();
 
 private:
     juce::String _path;

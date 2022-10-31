@@ -10,19 +10,23 @@
 
 #pragma once
 
-#include <../JuceLibraryCode/JuceHeader.h>
 #include <fstream>
+
+#include <../JuceLibraryCode/JuceHeader.h>
 #include "../json/include/nlohmann/json.hpp"
 
 class PersistenceJSONHandler
 {
 public:
-    PersistenceJSONHandler();
+    PersistenceJSONHandler(juce::String path, juce::String rootName);
     ~PersistenceJSONHandler();
 
-    nlohmann::json getFavSlots();
-    void setFavSlots(nlohmann::json jsonIn);
+    nlohmann::json readJSONFromFile();
+    void saveJSONToFile(nlohmann::json jsonIn);
+    
+    juce::String getRootName();
 
 private:
-    nlohmann::json _favSlots;
+    juce::String _path;
+    juce::String _rootName;
 };

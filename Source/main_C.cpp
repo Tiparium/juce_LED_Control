@@ -16,19 +16,25 @@
 
 Main_C::Main_C() :
     _restHandler(),
-    _favsHandler()
+    _favsHandler("../../resources/favSlots.json", "favSlots")
 {
+    nlohmann::json jsonFromFile = _favsHandler.readJSONFromFile();
+
+    DBG("---------------------------------");
+    DBG(jsonFromFile.dump());
+    DBG("---------------------------------");
+
     _newFavButton.addListener(this);
-    _favsHandler.getFavSlots();
 }
 
 Main_C::~Main_C()
 {
+    DBG(_favSlots.size());
     _newFavButton.removeListener(this);
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
         _favSlots[i]->getButton(0).removeListener(this);
         _favSlots[i]->getButton(1).removeListener(this);
-        delete(_favSlots[i]);
+        delete _favSlots[i];
     }
 }
 

@@ -13,7 +13,8 @@
 #include <JuceHeader.h>
 #include "RestHandler.h"
 
-RestHandler::RestHandler() {
+RestHandler::RestHandler()
+{
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
 
@@ -34,16 +35,19 @@ RestHandler::RestHandler() {
     _OGyVal = _rootJSON["1"]["state"]["xy"][1];
 }
 
-RestHandler::~RestHandler() {
+RestHandler::~RestHandler()
+{
     resetColor();
 }
 
-void RestHandler::takeColorPushUpdate(RGB rgb) {
+void RestHandler::takeColorPushUpdate(RGB rgb)
+{
     setRGB(rgb);
     grabColorPushUpdate();
 }
 
-void RestHandler::grabColorPushUpdate() {
+void RestHandler::grabColorPushUpdate()
+{
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
     for (int i = 0; i < _numLights; i++) {

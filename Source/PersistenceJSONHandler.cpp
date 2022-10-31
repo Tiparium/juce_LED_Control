@@ -10,20 +10,32 @@
 
 #include "persistenceJSONHandler.h"
 
-PersistenceJSONHandler::PersistenceJSONHandler()
+PersistenceJSONHandler::PersistenceJSONHandler(juce::String path, juce::String rootName)
 {
-    std::ifstream f("../../resources/favSlots.json");
-    _favSlots = nlohmann::json::parse(f);
-    DBG(_favSlots.dump());
+    _rootName = rootName;
+    _path = path;
 }
-PersistenceJSONHandler::~PersistenceJSONHandler() {}
-
-nlohmann::json PersistenceJSONHandler::getFavSlots()
+PersistenceJSONHandler::~PersistenceJSONHandler()
 {
-    return _favSlots;
+    _rootName = getRootName();
 }
 
-void PersistenceJSONHandler::setFavSlots(nlohmann::json jsonIn)
+nlohmann::json PersistenceJSONHandler::readJSONFromFile()
 {
+    std::ifstream file(_path.toStdString());
+    nlohmann::json temp = nlohmann::json::parse(file);
+    file.close();
+    return temp;
+}
 
+void PersistenceJSONHandler::saveJSONToFile(nlohmann::json jsonIn)
+{
+    std::ofstream file(_path.toStdString());
+    file << jsonIn;
+    file.close();
+}
+
+juce::String PersistenceJSONHandler::getRootName()
+{
+    return _rootName;
 }

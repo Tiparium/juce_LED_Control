@@ -10,7 +10,7 @@
 
 #include "FavoritesSlot.h"
 
-FavoritesSlot::FavoritesSlot(RGB rgb)
+FavoritesSlot::FavoritesSlot(TIP_RGB rgb)
 {
     _delButton.setButtonText("X");
     _rgb.r = rgb.r;
@@ -20,10 +20,10 @@ FavoritesSlot::FavoritesSlot(RGB rgb)
 }
 FavoritesSlot::~FavoritesSlot(){}
 
-RGB FavoritesSlot::getRGB() {
+TIP_RGB FavoritesSlot::getRGB() {
     return _rgb;
 }
-void FavoritesSlot::setRGB(RGB rgb) {
+void FavoritesSlot::setRGB(TIP_RGB rgb) {
     _rgb = rgb;
 }
 

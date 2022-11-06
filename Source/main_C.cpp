@@ -10,9 +10,7 @@
   ==============================================================================
 */
 
-
 #include "Main_C.h"
-
 
 Main_C::Main_C() :
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
@@ -20,8 +18,8 @@ Main_C::Main_C() :
 {
     nlohmann::json jsonFromFile = _favsHandler.readJSONFromFile();
     for (auto i = 0; i < jsonFromFile.size(); i++) {
-        RGB newRGB = RGB(jsonFromFile[i]["r"], jsonFromFile[i]["g"], jsonFromFile[i]["b"]);
-        RGB hRGB = newRGB.colorCorrect();
+        TIP_RGB newRGB = TIP_RGB(jsonFromFile[i]["r"], jsonFromFile[i]["g"], jsonFromFile[i]["b"]);
+        TIP_RGB hRGB = newRGB.colorCorrect();
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
         _favSlots.push_back(newSlot);
         newSlot->getButton(0).addListener(this);
@@ -36,7 +34,7 @@ Main_C::~Main_C()
     _newFavButton.removeListener(this);
     for (auto i = 0; i < _favSlots.size(); i++) {
         nlohmann::json favSlotJSON;
-        RGB favSlotRGB = _favSlots[i]->getRGB();
+        TIP_RGB favSlotRGB = _favSlots[i]->getRGB();
         favSlotJSON["r"] = favSlotRGB.r;
         favSlotJSON["g"] = favSlotRGB.g;
         favSlotJSON["b"] = favSlotRGB.b;
@@ -73,8 +71,8 @@ void Main_C::sliderDragEnded(juce::Slider* slider) {
 }
 
 void Main_C::buttonClicked(juce::Button* button) {
-    RGB rgb;
-    RGB hRGB = _pHueRestHandler.getRGB().colorCorrect();
+    TIP_RGB rgb;
+    TIP_RGB hRGB = _pHueRestHandler.getRGB().colorCorrect();
     // Create new Favorite Slot
     if (button == &_newFavButton) {
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
@@ -111,7 +109,7 @@ void Main_C::paint(juce::Graphics& g) {
     float relativeWidth;
     float relativeHeight;
     // Generate a corrected color & excract rgb components
-    RGB correctedRGB = _pHueRestHandler.getRGB().colorCorrect();
+    TIP_RGB correctedRGB = _pHueRestHandler.getRGB().colorCorrect();
     juce::uint8 cR = correctedRGB.r;
     juce::uint8 cG = correctedRGB.g;
     juce::uint8 cB = correctedRGB.b;
@@ -203,7 +201,7 @@ void Main_C::resized() {
 }
 
 // Getters / Setters
-void Main_C::setSliderValues(RGB rgb) {
+void Main_C::setSliderValues(TIP_RGB rgb) {
     _rSlider.setValue(rgb.r);
     _gSlider.setValue(rgb.g);
     _bSlider.setValue(rgb.b);

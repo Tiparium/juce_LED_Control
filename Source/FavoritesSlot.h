@@ -17,11 +17,11 @@ class FavoritesSlot : public juce::Component
 {
 public:
 
-    FavoritesSlot::FavoritesSlot(RGB rgb);
+    FavoritesSlot::FavoritesSlot(TIP_RGB rgb);
     FavoritesSlot::~FavoritesSlot();
 
-    RGB getRGB();
-    void setRGB(RGB rgb);
+    TIP_RGB getRGB();
+    void setRGB(TIP_RGB rgb);
 
     juce::Button& getButton(int button);
 
@@ -29,7 +29,7 @@ public:
     void paint(juce::Graphics&) override;
 
 private:
-    RGB _rgb;
+    TIP_RGB _rgb;
     juce::TextButton _favButton;
     juce::TextButton _delButton;
 };

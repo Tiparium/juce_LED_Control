@@ -39,7 +39,7 @@ RestHandler::~RestHandler()
     resetColor();
 }
 
-void RestHandler::takeColorPushUpdate(RGB rgb)
+void RestHandler::takeColorPushUpdate(TIP_RGB rgb)
 {
     setRGB(rgb);
     grabColorPushUpdate();
@@ -61,13 +61,13 @@ void RestHandler::grabColorPushUpdate()
         DBG("Target Value: " + target);
 
         // Convert our native RGB values to pHueXY
-        RGB rgb(_rVal, _gVal, _bVal);
+        TIP_RGB rgb(_rVal, _gVal, _bVal);
         pushRGBToPHue(rgb, target);
     }
 }
 
-void RestHandler::pushRGBToPHue(RGB rgb, juce::String target) {
-    XYBrightness xyb = rgb.toXY();
+void RestHandler::pushRGBToPHue(TIP_RGB rgb, juce::String target) {
+    TIP_XYB xyb = rgb.toXY();
     juce::var xyColor;
     xyColor.append(xyb.xy.x);
     xyColor.append(xyb.xy.y);
@@ -99,13 +99,13 @@ void RestHandler::updateRootJSON() {
 }
 
 // Getters / Setters
-void RestHandler::setRGB(RGB rgb) {
+void RestHandler::setRGB(TIP_RGB rgb) {
     _rVal = rgb.r;
     _gVal = rgb.g;
     _bVal = rgb.b;
 }
-RGB  RestHandler::getRGB() {
-    RGB rgb = RGB(_rVal, _gVal, _bVal);
+TIP_RGB  RestHandler::getRGB() {
+    TIP_RGB rgb = TIP_RGB(_rVal, _gVal, _bVal);
     return rgb;
 }
 void RestHandler::setR(juce::uint8 val) { _rVal = val; }
@@ -143,8 +143,8 @@ void RestHandler::resetColor() {
 
 void RestHandler::printXY()
 {
-    RGB rgb = getRGB();
-    XYBrightness xyb = rgb.toXY();
+    TIP_RGB rgb = getRGB();
+    TIP_XYB xyb = rgb.toXY();
     juce::String x = "X: " + std::to_string(xyb.xy.x) + "\n";
     juce::String y = "Y: " + std::to_string(xyb.xy.y) + "\n";
     DBG(x + y);

@@ -18,22 +18,23 @@
 #include "../json/include/nlohmann/json.hpp"
 #include "../resources/params.h" // Replace with custom params file
 
+
 class RestHandler{
 public:
     RestHandler(juce::String http, juce::String api, juce::String get, juce::String put);
     ~RestHandler();
 
-    void takeColorPushUpdate(RGB rgb);
+    void takeColorPushUpdate(TIP_RGB rgb);
     void grabColorPushUpdate();
 
-    void pushRGBToPHue(RGB rgb, juce::String target);
+    void pushRGBToPHue(TIP_RGB rgb, juce::String target);
     void pushXYBToPHue(juce::var xyColor, juce::String target);
 
     void updateRootJSON();
     
     //  G/S
-    void setRGB(RGB rgb);
-    RGB getRGB();
+    void setRGB(TIP_RGB rgb);
+    TIP_RGB getRGB();
     void setR(juce::uint8 val);
     void setG(juce::uint8 val);
     void setB(juce::uint8 val);

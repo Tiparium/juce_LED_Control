@@ -40,7 +40,7 @@ public:
     void paint(juce::Graphics&) override;
     void resized() override;
     //  G/S
-    void setSliderValues(RGB rgb);
+    void setSliderValues(TIP_RGB rgb);
 private:
 
     // RGBSliders

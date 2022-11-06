@@ -13,6 +13,7 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
+    _dumbRGBHandler(),
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {

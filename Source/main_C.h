@@ -18,8 +18,7 @@
 #include "../Source/PersistenceJSONHandler.h"
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
-
-#include "./crow.h"
+#include "../Source/NodeMCUHandler.h"
 
 class Main_C : public juce::Component,
                public juce::Slider::Listener,
@@ -56,6 +55,7 @@ private:
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
     // Talk to the Handlers
+    NodeMCUHandler          _dumbRGBHandler;
     RestHandler             _pHueRestHandler;
     PersistenceJSONHandler  _favsHandler;
 };

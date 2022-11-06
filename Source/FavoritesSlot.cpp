@@ -13,10 +13,10 @@
 FavoritesSlot::FavoritesSlot(RGB rgb)
 {
     _delButton.setButtonText("X");
-    _rgb._r = rgb._r;
-    _rgb._g = rgb._g;
-    _rgb._b = rgb._b;
-    _favButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_rgb._r, _rgb._g, rgb._b));
+    _rgb.r = rgb.r;
+    _rgb.g = rgb.g;
+    _rgb.b = rgb.b;
+    _favButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_rgb.r, _rgb.g, rgb.b));
 }
 FavoritesSlot::~FavoritesSlot(){}
 

@@ -34,36 +34,36 @@ struct XYBrightness
 };
 struct RGB
 {
+    uint8_t r;
+    uint8_t g;
+    uint8_t b;
     // Initialize all values to 0
     RGB() {
-        _r = 0;
-        _g = 0;
-        _b = 0;
+        r = 0;
+        g = 0;
+        b = 0;
     }
     // Initialize all values to values
-    RGB(juce::uint8 r, juce::uint8 g, juce::uint8 b) {
-        _r = r;
-        _g = g;
-        _b = b;
+    RGB(juce::uint8 rIn, juce::uint8 gIn, juce::uint8 bIn) {
+        r = rIn;
+        g = gIn;
+        b = bIn;
     }
 
-    uint8_t _r;
-    uint8_t _g;
-    uint8_t _b;
-
-    bool operator==(const RGB& other) const { return _r == other._r && _g == other._g && _b == other._b; }
+    bool operator==(const RGB& other) const { return r == other.r && g == other.g && b == other.b; }
     bool operator!=(const RGB& other) const { return !(*this == other); }
 
+    // Converting between formats
     XYBrightness RGB::toXY() const
     {
-        if (_r == 0 && _g == 0 && _b == 0)
+        if (r == 0 && g == 0 && b == 0)
         {
             // Return white with minimum brightness
             return XYBrightness{ XY {0.32272673f, 0.32902291f}, 0.f };
         }
-        const float red = _r / 255.f;
-        const float green = _g / 255.f;
-        const float blue = _b / 255.f;
+        const float red = r / 255.f;
+        const float green = g / 255.f;
+        const float blue = b / 255.f;
 
         const float redCorrected = (red > 0.04045f) ? pow((red + 0.055f) / (1.0f + 0.055f), 2.4f) : (red / 12.92f);
         const float greenCorrected = (green > 0.04045f) ? pow((green + 0.055f) / (1.0f + 0.055f), 2.4f) : (green / 12.92f);
@@ -123,28 +123,28 @@ struct RGB
     }
 
     void RGB::setVals(juce::uint8 r, juce::uint8 g, juce::uint8 b) {
-        _r = r;
-        _g = g;
-        _b = b;
+        r = r;
+        g = g;
+        b = b;
     }
 
     // For displaying accurate colors on screen
     RGB RGB::colorCorrect() {
-        if (_r == 0 && _g == 0 && _b == 0) { return RGB(255, 255, 255); }
-        RGB out = RGB(_r, _g, _b);
-        while (out._r < 255 && out._g < 255 && out._b < 255) {
-            if (_r > 0) { out._r++; }
-            if (_g > 0) { out._g++; }
-            if (_b > 0) { out._b++; }
+        if (r == 0 && g == 0 && b == 0) { return RGB(255, 255, 255); }
+        RGB out = RGB(r, g, b);
+        while (out.r < 255 && out.g < 255 && out.b < 255) {
+            if (r > 0) { out.r++; }
+            if (g > 0) { out.g++; }
+            if (b > 0) { out.b++; }
         }
         return out;
     }
 
     // For debug purposes
     juce::String RGB::toString() {
-        juce::String r = "R: " + std::to_string(RGB::_r);
-        juce::String g = "G: " + std::to_string(RGB::_g);
-        juce::String b = "B: " + std::to_string(RGB::_b);
+        juce::String r = "R: " + std::to_string(RGB::r);
+        juce::String g = "G: " + std::to_string(RGB::g);
+        juce::String b = "B: " + std::to_string(RGB::b);
         juce::String nl = "\n";
         return nl + r + nl + g + nl + b + nl;
     }

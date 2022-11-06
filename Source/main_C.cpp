@@ -15,7 +15,7 @@
 
 
 Main_C::Main_C() :
-    _restHandler(),
+    _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
     nlohmann::json jsonFromFile = _favsHandler.readJSONFromFile();
@@ -37,9 +37,9 @@ Main_C::~Main_C()
     for (auto i = 0; i < _favSlots.size(); i++) {
         nlohmann::json favSlotJSON;
         RGB favSlotRGB = _favSlots[i]->getRGB();
-        favSlotJSON["r"] = favSlotRGB._r;
-        favSlotJSON["g"] = favSlotRGB._g;
-        favSlotJSON["b"] = favSlotRGB._b;
+        favSlotJSON["r"] = favSlotRGB.r;
+        favSlotJSON["g"] = favSlotRGB.g;
+        favSlotJSON["b"] = favSlotRGB.b;
         jsonToFile.push_back(favSlotJSON);
     }
     for (unsigned int i = 0; i < _favSlots.size(); i++) {
@@ -56,25 +56,25 @@ Main_C::~Main_C()
 // Runs when slider value is changed
 void Main_C::sliderValueChanged(juce::Slider* slider) {
     if (slider == &_rSlider) {
-        _restHandler.setR(_rSlider.getValue());
+        _pHueRestHandler.setR(_rSlider.getValue());
     }
     else if (slider == &_gSlider) {
-        _restHandler.setG(_gSlider.getValue());
+        _pHueRestHandler.setG(_gSlider.getValue());
     }
     else {
-        _restHandler.setB(_bSlider.getValue());
+        _pHueRestHandler.setB(_bSlider.getValue());
     }
     repaint();
 }
 
 // Runs when mouse is lifted from a slider
 void Main_C::sliderDragEnded(juce::Slider* slider) {
-    _restHandler.grabColorPushUpdate();
+    _pHueRestHandler.grabColorPushUpdate();
 }
 
 void Main_C::buttonClicked(juce::Button* button) {
     RGB rgb;
-    RGB hRGB = _restHandler.getRGB().colorCorrect();
+    RGB hRGB = _pHueRestHandler.getRGB().colorCorrect();
     // Create new Favorite Slot
     if (button == &_newFavButton) {
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
@@ -87,7 +87,7 @@ void Main_C::buttonClicked(juce::Button* button) {
         // Call Favorite Slot
         if (button == &_favSlots[i]->getButton(0)) {
             rgb = _favSlots[i]->getRGB();
-            _restHandler.takeColorPushUpdate(rgb);
+            _pHueRestHandler.takeColorPushUpdate(rgb);
             setSliderValues(rgb);
             return;
         }
@@ -111,10 +111,10 @@ void Main_C::paint(juce::Graphics& g) {
     float relativeWidth;
     float relativeHeight;
     // Generate a corrected color & excract rgb components
-    RGB correctedRGB = _restHandler.getRGB().colorCorrect();
-    juce::uint8 cR = correctedRGB._r;
-    juce::uint8 cG = correctedRGB._g;
-    juce::uint8 cB = correctedRGB._b;
+    RGB correctedRGB = _pHueRestHandler.getRGB().colorCorrect();
+    juce::uint8 cR = correctedRGB.r;
+    juce::uint8 cG = correctedRGB.g;
+    juce::uint8 cB = correctedRGB.b;
 
     // Red Slider
     addAndMakeVisible(_rSlider);
@@ -204,8 +204,8 @@ void Main_C::resized() {
 
 // Getters / Setters
 void Main_C::setSliderValues(RGB rgb) {
-    _rSlider.setValue(rgb._r);
-    _gSlider.setValue(rgb._g);
-    _bSlider.setValue(rgb._b);
+    _rSlider.setValue(rgb.r);
+    _gSlider.setValue(rgb.g);
+    _bSlider.setValue(rgb.b);
 }
 //* Getters / Setters

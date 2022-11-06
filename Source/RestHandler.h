@@ -20,7 +20,7 @@
 
 class RestHandler{
 public:
-    RestHandler();
+    RestHandler(juce::String http, juce::String api, juce::String get, juce::String put);
     ~RestHandler();
 
     void takeColorPushUpdate(RGB rgb);
@@ -44,6 +44,7 @@ public:
     //* G/S
     //  Debug
     void resetColor(); // Reset lights to color they were at time of app being opened
+    void printXY();
     //* Debug
 private:
 

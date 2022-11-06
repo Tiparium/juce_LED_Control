@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="gRy5h5" name="LED CONTROL" projectType="guiapp" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
-              cppLanguageStandard="17" version="0.1.5" headerPath="../../json/include&#10;../../JuceLibraryCode&#10;../../hueplusplus/include/hueplusplus&#10;../../RestRequest">
+              cppLanguageStandard="17" version="0.1.5" headerPath="../../json/include&#10;../../JuceLibraryCode&#10;../../hueplusplus/include/hueplusplus&#10;../../RestRequest&#10;&#10;../../../../../libs/vcpkg/installed/x86-windows/include">
   <MAINGROUP id="fCxj2T" name="LED CONTROL">
     <GROUP id="{216EAAD5-2819-DE20-19C6-696F2D2282F5}" name="Source">
       <GROUP id="{BB0A579E-5E01-0A5A-A2D1-432E586D3039}" name="FRONT (_C)">
@@ -17,12 +17,14 @@
         </GROUP>
       </GROUP>
       <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">
+        <GROUP id="{203BC7B9-C78E-408A-55D1-0239B2933963}" name="restHandlers">
+          <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
+          <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
+        </GROUP>
         <FILE id="eIlGpi" name="PersistenceJSONHandler.cpp" compile="1" resource="0"
               file="Source/PersistenceJSONHandler.cpp"/>
         <FILE id="MHuczW" name="PersistenceJSONHandler.h" compile="0" resource="0"
               file="Source/PersistenceJSONHandler.h"/>
-        <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
-        <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
       </GROUP>
       <GROUP id="{DE97DC9E-93A9-A6FE-6639-B4A1FEBB698D}" name="DATA (_D)">
         <GROUP id="{83858997-F1F4-EFCC-44B0-A35F4DEFE340}" name="params">

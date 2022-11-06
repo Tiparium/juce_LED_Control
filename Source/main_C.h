@@ -13,9 +13,13 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include <string>
+
 #include "../Source/PersistenceJSONHandler.h"
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
+
+#include "./crow.h"
 
 class Main_C : public juce::Component,
                public juce::Slider::Listener,
@@ -37,7 +41,6 @@ public:
     void resized() override;
     //  G/S
     void setSliderValues(RGB rgb);
-
 private:
 
     // RGBSliders
@@ -53,6 +56,6 @@ private:
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
     // Talk to the Handlers
-    RestHandler             _restHandler;
+    RestHandler             _pHueRestHandler;
     PersistenceJSONHandler  _favsHandler;
 };

@@ -13,22 +13,21 @@
 #include <JuceHeader.h>
 #include "RestHandler.h"
 
-RestHandler::RestHandler()
+RestHandler::RestHandler(juce::String http, juce::String api, juce::String get, juce::String put)
 {
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
 
-    _httpTarget = params::_httpTarget;
-    _apiTarget = params::_apiTarget;
-    _apiGetTarget = params::_apiGetTarget;
-    _apiPutTarget = params::_apiPutTarget;
+    _httpTarget = http;
+    _apiTarget = api;
+    _apiGetTarget = get;
+    _apiPutTarget = put;
 
     _rVal = 0;
     _gVal = 0;
     _bVal = 0;
 
-    RestHandler::updateRootJSON();
-    _numLights = RestHandler::_rootJSON.size();
+    updateRootJSON();
 
     // These aren't needed for the app to run, just for resetColor()
     _OGxVal = _rootJSON["1"]["state"]["xy"][0];
@@ -81,7 +80,11 @@ void RestHandler::pushXYBToPHue(juce::var xyColor, juce::String target) {
         .field("xy", xyColor)
         .execute();
 
-    DBG(res.bodyAsString);
+    bool debug = true;
+    if (debug) { 
+        printXY();
+        DBG(res.bodyAsString);
+    }
 }
 
 void RestHandler::updateRootJSON() {
@@ -92,13 +95,14 @@ void RestHandler::updateRootJSON() {
     nlohmann::json json = nlohmann::json::parse(resBody.toStdString());
     DBG(target);
     _rootJSON = json;
+    _numLights = _rootJSON.size();
 }
 
 // Getters / Setters
 void RestHandler::setRGB(RGB rgb) {
-    _rVal = rgb._r;
-    _gVal = rgb._g;
-    _bVal = rgb._b;
+    _rVal = rgb.r;
+    _gVal = rgb.g;
+    _bVal = rgb.b;
 }
 RGB  RestHandler::getRGB() {
     RGB rgb = RGB(_rVal, _gVal, _bVal);
@@ -135,4 +139,13 @@ void RestHandler::resetColor() {
 
         pushXYBToPHue(xyColor, target);
     }
+}
+
+void RestHandler::printXY()
+{
+    RGB rgb = getRGB();
+    XYBrightness xyb = rgb.toXY();
+    juce::String x = "X: " + std::to_string(xyb.xy.x) + "\n";
+    juce::String y = "Y: " + std::to_string(xyb.xy.y) + "\n";
+    DBG(x + y);
 }

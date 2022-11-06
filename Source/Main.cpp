@@ -40,8 +40,6 @@ public:
         MainWindow(juce:: String name) : DocumentWindow(name, juce::Colours::goldenrod, DocumentWindow::allButtons)
         {
             centreWithSize(500, 500);
-            // setBounds (50, 50, 100, 100);
-            // setBoundsRelative ((0.25f / 2), (0.25f / 2), 0.75f, 0.75f);
 
             // Host
             Main_C *main_C = new Main_C();

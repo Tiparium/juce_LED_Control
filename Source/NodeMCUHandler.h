@@ -13,11 +13,21 @@
 
 #include "./crow.h"
 
-class NodeMCUHandler
+class NodeMCUHandler : public juce::Thread
 {
 public:
-    NodeMCUHandler();
-    ~NodeMCUHandler();
+    NodeMCUHandler() : Thread("NodeMCUThread") {};
+    void stopNodeMCUHandler(float timeout);
 private:
-    crow::SimpleApp app;
+    crow::SimpleApp _app;
+    void run() override {
+        CROW_ROUTE(_app, "/")([&]() {
+            return "Hello World";
+        });
+        _app.port(18080).multithreaded().run();
+        while (!threadShouldExit()) {
+            int i = 0;
+            sleep(10);
+        }
+    }
 };

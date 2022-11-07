@@ -17,6 +17,7 @@ Main_C::Main_C() :
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
+    // Handle Persistence
     nlohmann::json jsonFromFile = _favsHandler.readJSONFromFile();
     for (auto i = 0; i < jsonFromFile.size(); i++) {
         TIP_RGB newRGB = TIP_RGB(jsonFromFile[i]["r"], jsonFromFile[i]["g"], jsonFromFile[i]["b"]);
@@ -27,10 +28,14 @@ Main_C::Main_C() :
         newSlot->getButton(1).addListener(this);
     }
     _newFavButton.addListener(this);
+
+    // Handle Threads
+    _dumbRGBHandler.startThread();
 }
 
 Main_C::~Main_C()
 {
+    // Handle Persistence
     nlohmann::json jsonToFile = nlohmann::json::array();
     _newFavButton.removeListener(this);
     for (auto i = 0; i < _favSlots.size(); i++) {
@@ -50,6 +55,8 @@ Main_C::~Main_C()
     DBG("JSON TO PUSH TO FILE: " + jsonToFile.dump());
     _favsHandler.saveJSONToFile(jsonToFile);
 
+    // Handle Threads
+    _dumbRGBHandler.stopNodeMCUHandler(100.0f);
 }
 
 // Runs when slider value is changed

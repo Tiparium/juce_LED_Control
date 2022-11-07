@@ -2,7 +2,7 @@
   ==============================================================================
 
     NodeMCUHandler.cpp
-    Created: 6 Nov 2022 12:19:12pm
+    Created: 6 Nov 2022 4:16:12pm
     Author:  Tiparium
 
   ==============================================================================
@@ -10,15 +10,11 @@
 
 #include "NodeMCUHandler.h"
 
-NodeMCUHandler::NodeMCUHandler()
+void NodeMCUHandler::stopNodeMCUHandler(float timeout)
 {
-    CROW_ROUTE(app, "/")([]() {
-        return "Hello World!";
-    });
-    app.port(18080).multithreaded().run();
-}
+    // Anything which must be done with the webserver before stopping it, do it here.
 
-NodeMCUHandler::~NodeMCUHandler()
-{
-    app.stop();
+
+    _app.multithreaded().stop();
+    stopThread(timeout);
 }

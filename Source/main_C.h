@@ -55,7 +55,7 @@ private:
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
     // Talk to the Handlers
-    NodeMCUHandler          _dumbRGBHandler;
+    NodeMCUHandler         _dumbRGBHandler;
     RestHandler             _pHueRestHandler;
     PersistenceJSONHandler  _favsHandler;
 };

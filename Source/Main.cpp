@@ -73,7 +73,6 @@ public:
     //==============================================================================
     void initialise (const juce::String& commandLine) override
     {
-        
         mainWindow.reset(new MainWindow(getApplicationName() + " " + getApplicationVersion()));
     }
 

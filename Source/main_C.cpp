@@ -13,7 +13,7 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
-    _dumbRGBHandler(),
+    // _dumbRGBHandler(),
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
@@ -30,8 +30,14 @@ Main_C::Main_C() :
     _newFavButton.addListener(this);
 
     // Handle Threads
-    _dumbRGBHandler.setRGB(TIP_RGB(0.0f, 0.0f, 0.0f));
-    _dumbRGBHandler.startThread();
+    // _dumbRGBHandler.setRGB(TIP_RGB(0.0f, 0.0f, 0.0f));
+    // _dumbRGBHandler.startThread();
+
+    MultiClientChat mcc("0.0.0.0", 8080);
+    if (mcc.init() != 0) {
+        return;
+    }
+    mcc.run();
 }
 
 Main_C::~Main_C()
@@ -57,7 +63,7 @@ Main_C::~Main_C()
     _favsHandler.saveJSONToFile(jsonToFile);
 
     // Handle Threads
-    _dumbRGBHandler.stopNodeMCUHandler(100.0f);
+    // _dumbRGBHandler.stopNodeMCUHandler(100.0f);
 }
 
 // Runs when slider value is changed
@@ -77,7 +83,7 @@ void Main_C::sliderValueChanged(juce::Slider* slider) {
 // Runs when mouse is lifted from a slider
 void Main_C::sliderDragEnded(juce::Slider* slider) {
     _pHueRestHandler.grabColorPushUpdate();
-    _dumbRGBHandler.setRGB(TIP_RGB(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue()));
+    // _dumbRGBHandler.setRGB(TIP_RGB(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue()));
 }
 
 void Main_C::buttonClicked(juce::Button* button) {
@@ -97,7 +103,7 @@ void Main_C::buttonClicked(juce::Button* button) {
             rgb = _favSlots[i]->getRGB();
             _pHueRestHandler.takeColorPushUpdate(rgb);
             setSliderValues(rgb);
-            _dumbRGBHandler.setRGB(rgb);
+            // _dumbRGBHandler.setRGB(rgb);
             return;
         }
         // Delete Favorite Slot

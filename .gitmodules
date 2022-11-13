@@ -7,6 +7,6 @@
 [submodule "hueplusplus"]
 	path = hueplusplus
 	url = https://github.com/enwi/hueplusplus.git
-[submodule "p2psc"]
-	path = p2psc
-	url = https://github.com/taylorconor/p2psc.git
+[submodule "barebones-webserver"]
+	path = barebones-webserver
+	url = https://github.com/codehoose/barebones-webserver.git

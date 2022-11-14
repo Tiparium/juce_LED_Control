@@ -29,10 +29,6 @@ Main_C::Main_C() :
     }
     _newFavButton.addListener(this);
 
-    // Handle Threads
-    // _dumbRGBHandler.setRGB(TIP_RGB(0.0f, 0.0f, 0.0f));
-    // _dumbRGBHandler.startThread();
-
     MultiClientChat mcc("0.0.0.0", 8080);
     if (mcc.init() != 0) {
         return;

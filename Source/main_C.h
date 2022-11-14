@@ -20,8 +20,6 @@
 #include "../Source/FavoritesSlot.h"
 #include "../Source/NodeMCUHandler.h"
 
-#include "../barebones-webserver/bbws/MultiClientChat.h"
-
 class Main_C : public juce::Component,
                public juce::Slider::Listener,
                public juce::Button::Listener
@@ -57,7 +55,7 @@ private:
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
     // Talk to the Handlers
-    // NodeMCUHandler         _dumbRGBHandler;
+    NodeMCUHandler         _dumbRGBHandler;
     RestHandler             _pHueRestHandler;
     PersistenceJSONHandler  _favsHandler;
 };

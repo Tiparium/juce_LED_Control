@@ -13,7 +13,7 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
-    // _dumbRGBHandler(),
+    _dumbRGBHandler(),
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
@@ -29,11 +29,9 @@ Main_C::Main_C() :
     }
     _newFavButton.addListener(this);
 
-    MultiClientChat mcc("0.0.0.0", 8080);
-    if (mcc.init() != 0) {
-        return;
-    }
-    mcc.run();
+    // Handle Threads
+    // _dumbRGBHandler.setRGB(TIP_RGB(0.0f, 0.0f, 0.0f));
+    _dumbRGBHandler.startThread();
 }
 
 Main_C::~Main_C()
@@ -59,7 +57,7 @@ Main_C::~Main_C()
     _favsHandler.saveJSONToFile(jsonToFile);
 
     // Handle Threads
-    // _dumbRGBHandler.stopNodeMCUHandler(100.0f);
+    _dumbRGBHandler.stopNodeMCUHandler(100.0f);
 }
 
 // Runs when slider value is changed

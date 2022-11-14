@@ -13,12 +13,5 @@
 void NodeMCUHandler::stopNodeMCUHandler(float timeout)
 {
     // Anything which must be done with the webserver before stopping it, do it here.
-
-    _app.stop();
     stopThread(timeout);
-}
-
-void NodeMCUHandler::setRGB(TIP_RGB rgbIn)
-{
-    _rgb = rgbIn;
 }

@@ -11,40 +11,25 @@
 #pragma once
 #include <JuceHeader.h>
 
-#include "./crow.h"
-#include "../Source/RGBStructs.h"
+#include "../Source/MultiClientChat.h"
 
 class NodeMCUHandler : public juce::Thread
 {
 public:
-    NodeMCUHandler() : Thread("NodeMCUThread") {};
+    NodeMCUHandler() : Thread("NodeMCUThread") {}
+
     void stopNodeMCUHandler(float timeout);
-    void setRGB(TIP_RGB rgbIn);
+
 private:
-    crow::SimpleApp _app;
-    TIP_RGB _rgb;
     void run() override {
-        CROW_ROUTE(_app, "/rgb/")([&]() {
-            crow::json::wvalue val({
-                "r", _rgb.r,
-                "g", _rgb.g,
-                "b", _rgb.b
-            });
-            return val;
-        });
-        _app.port(18080).run();
-        while (!threadShouldExit()) {
+        MultiClientChat _mcc("0.0.0.0", 8080);
+        if (_mcc.init() != 0) {
+            return;
+        }
+        _mcc.run();
+        while (!threadShouldExit())
+        {
 
-            CROW_ROUTE(_app, "/rgb/")([&]() {
-                crow::json::wvalue val({
-                    "r", _rgb.r,
-                    "g", _rgb.g,
-                    "b", _rgb.b
-                });
-                return val;
-            });
-
-            sleep(10);
         }
     }
 };

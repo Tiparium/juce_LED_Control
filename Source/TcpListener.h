@@ -36,6 +36,8 @@ public:
 	// Run the listener
 	int run();
 
+	bool _shouldRun;
+
 protected:
 
 	// Handler for client connections

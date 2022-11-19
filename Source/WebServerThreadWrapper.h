@@ -5,6 +5,9 @@
     Created: 6 Nov 2022 12:19:12pm
     Author:  Tiparium
 
+    A basic wrapper around a WebServer instance.
+    The WebServer is run in it's own thread, and is shut down cleanly upon program close.
+
   ==============================================================================
 */
 
@@ -18,17 +21,17 @@ class WebServerThreadWrapper : public juce::Thread
 {
 public:
 
-    WebServerThreadWrapper(juce::String url, int port);
+    WebServerThreadWrapper();
     void stopBasicWebServer(float timeout);
 
 private:
-
-    juce::String        _url;
-    int                 _port;
+    const juce::String  _header = "http://";
+    const juce::String  _url  = "127.0.0.1";
+    int                 _port = 8080;
 
     volatile bool       _shouldRun;
-    WebServer           _mcc;
-    WebServerHandler    _handler;
+    WebServer           _mcc = WebServer(_url.toUTF8(), 8080, &_shouldRun);
+    WebServerHandler    _handler = WebServerHandler((_header + _url + ":" + juce::String(_port)).toUTF8());
 
     void run() override;
 };

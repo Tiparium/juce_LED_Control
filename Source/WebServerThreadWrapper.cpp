@@ -10,13 +10,9 @@
 
 #include "WebServerThreadWrapper.h"
 
-WebServerThreadWrapper::WebServerThreadWrapper(juce::String url, int port) :
-    _url(url),
-    _port(port),
+WebServerThreadWrapper::WebServerThreadWrapper() :
     _shouldRun(true),
-    Thread("WebServerThread"),
-    _mcc(_url.toStdString().c_str(), _port, &_shouldRun),
-    _handler(_url + ":" + juce::String(_port))
+    Thread("WebServerThread")
 {
 }
 

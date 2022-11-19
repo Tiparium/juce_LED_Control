@@ -1,9 +1,11 @@
 /*
   ==============================================================================
 
-    MultiClientChat.h
+    WebServer.h
     Created: 12 Nov 2022 3:43:03pm
     Author:  Sloan Kelly, modified by Tiparium
+
+	Host a basic WebServer on a given IP and Port.
 
   ==============================================================================
 */

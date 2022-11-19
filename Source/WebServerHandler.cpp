@@ -5,6 +5,9 @@
     Created: 18 Nov 2022 4:03:19pm
     Author:  Tiparium
 
+    Client side of WebServer, used for sending / receiving data from the Server
+    Also needed in order to shut the server down.
+
   ==============================================================================
 */
 

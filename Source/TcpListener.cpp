@@ -26,8 +26,7 @@ int TcpListener::init()
 	_socket = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socket == INVALID_SOCKET)
 	{
-		DBG("Failed to create a socket: Error Below");
-		DBG(WSAGetLastError());
+		bigDebug(false, "Failed to create a socket : Error: ", WSAGetLastError());
 		return WSAGetLastError();
 	}
 
@@ -39,16 +38,14 @@ int TcpListener::init()
 
 	if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == SOCKET_ERROR)
 	{
-		DBG("Failed to bind IP & port to Socket: Error Below");
-		DBG(WSAGetLastError());
+		bigDebug(false, "Failed to bind IP & port to Socket: Error: ", WSAGetLastError());
 		return WSAGetLastError();
 	}
 
 	// Tell Winsock the socket is for listening 
 	if (listen(_socket, SOMAXCONN) == SOCKET_ERROR)
 	{
-		DBG("Failed to tell WINSOCK socket is for listening: Error Below");
-		DBG(WSAGetLastError());
+		bigDebug(false, "Failed to tell WINSOCK socket is for listening: Error: ", WSAGetLastError());
 		return WSAGetLastError();
 	}
 
@@ -59,6 +56,8 @@ int TcpListener::init()
 	// It's important that this socket is added for our server or else we won't 'hear' incoming
 	// connections 
 	FD_SET(_socket, &_master);
+
+	bigDebug(true, "SUCCESS! SERVER IS ACTIVE!", 0);
 
 	return 0;
 }
@@ -164,3 +163,14 @@ void TcpListener::onMessageReceived(int clientSocket, const char* msg, int lengt
 {
 
 }
+
+//DBG
+void TcpListener::bigDebug(bool goodMessage, juce::String message, int error)
+{
+	juce::String borders = goodMessage ? "********************************************" : "---------------------------------------------";
+	for (int i = 0; i < 3; i++) { DBG(borders); }
+	DBG(message);
+	DBG(error);
+	for (int i = 0; i < 3; i++) { DBG(borders); }
+}
+//*DBG

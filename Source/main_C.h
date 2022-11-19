@@ -54,8 +54,9 @@ private:
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
+
     // Talk to the Handlers
-    WebServerThreadWrapper  _basicWebServer;
+    WebServerThreadWrapper  _webServerThreadWrapper;
     RestHandler             _pHueRestHandler;
     PersistenceJSONHandler  _favsHandler;
 };

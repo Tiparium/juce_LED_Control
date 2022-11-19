@@ -5,6 +5,7 @@
     Created: 11 Nov 2022 6:26:08pm
     Author:  Sloan Kelly, modified by Tiparium
 
+	Base class for TCP network shenanigans
     Courtesy of this toturial:
         https://www.youtube.com/watch?v=Kc1kwm1WyVM&t=1s&ab_channel=SloanKelly
 		Lots of modification to works friendly in a threaded environment by me.
@@ -55,6 +56,10 @@ protected:
 
 	// Broadcast a message from a client
 	void broadcastToClients(int sendingClient, const char* msg, int length);
+
+	//DBG
+	void bigDebug(bool goodMessage, juce::String message, int error);
+	//*DBG
 
 private:
 

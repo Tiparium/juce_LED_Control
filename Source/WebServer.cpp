@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    MultiClientChat.cpp
+    WebServer.cpp
     Created: 12 Nov 2022 3:43:03pm
     Author:  Sloan Kelly, modified by Tiparium
 
@@ -14,7 +14,7 @@
 void WebServer::onClientConnected(int clientSocket)
 {
 	// Send a welcome message to the connected client
-	std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
+	std::string welcomeMsg = "Success! Server is running.\r\n";
 	sendToClient(clientSocket, welcomeMsg.c_str(), welcomeMsg.size() + 1);
 }
 

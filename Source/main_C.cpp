@@ -13,7 +13,7 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
-    _basicWebServer("http://127.0.0.1", 8080),
+    _webServerThreadWrapper(),
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
@@ -30,7 +30,7 @@ Main_C::Main_C() :
     _newFavButton.addListener(this);
 
     // Handle Threads
-    _basicWebServer.startThread();
+    _webServerThreadWrapper.startThread();
 }
 
 Main_C::~Main_C()
@@ -56,7 +56,7 @@ Main_C::~Main_C()
     _favsHandler.saveJSONToFile(jsonToFile);
 
     // Handle Threads
-    _basicWebServer.stopBasicWebServer(3000.0f);
+    _webServerThreadWrapper.stopBasicWebServer(3000.0f);
 }
 
 // Runs when slider value is changed
@@ -76,7 +76,7 @@ void Main_C::sliderValueChanged(juce::Slider* slider) {
 // Runs when mouse is lifted from a slider
 void Main_C::sliderDragEnded(juce::Slider* slider) {
     _pHueRestHandler.grabColorPushUpdate();
-    // _basicWebServer.setRGB(TIP_RGB(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue()));
+    // _webServerThreadWrapper.setRGB(TIP_RGB(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue()));
 }
 
 void Main_C::buttonClicked(juce::Button* button) {
@@ -96,7 +96,7 @@ void Main_C::buttonClicked(juce::Button* button) {
             rgb = _favSlots[i]->getRGB();
             _pHueRestHandler.takeColorPushUpdate(rgb);
             setSliderValues(rgb);
-            // _basicWebServer.setRGB(rgb);
+            // _webServerThreadWrapper.setRGB(rgb);
             return;
         }
         // Delete Favorite Slot

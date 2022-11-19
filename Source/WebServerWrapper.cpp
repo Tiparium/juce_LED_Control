@@ -8,19 +8,19 @@
   ==============================================================================
 */
 
-#include "BasicWebServer.h"
+#include "WebServerWrapper.h"
 
-BasicWebServer::BasicWebServer(juce::String url, int port) :
+WebServerWrapper::WebServerWrapper(juce::String url, int port) :
     _url(url),
     _port(port),
     _shouldRun(true),
-    Thread("NodeMCUThread"),
+    Thread("WebServerThread"),
     _mcc(_url.toStdString().c_str(), _port, &_shouldRun),
     _handler(_url + ":" + juce::String(_port))
 {
 }
 
-void BasicWebServer::stopBasicWebServer(float timeout)
+void WebServerWrapper::stopBasicWebServer(float timeout)
 {
     _shouldRun = false;
     _handler.pingServer();
@@ -28,7 +28,7 @@ void BasicWebServer::stopBasicWebServer(float timeout)
     stopThread(timeout);
 }
 
-void BasicWebServer::run()
+void WebServerWrapper::run()
 {
     if (_mcc.init() != 0) {
         return;

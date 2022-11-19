@@ -8,22 +8,22 @@
   ==============================================================================
 */
 
-#include "MultiClientChat.h"
+#include "WebServer.h"
 #include <string>
 
-void MultiClientChat::onClientConnected(int clientSocket)
+void WebServer::onClientConnected(int clientSocket)
 {
 	// Send a welcome message to the connected client
 	std::string welcomeMsg = "Welcome to the Awesome Chat Server!\r\n";
 	sendToClient(clientSocket, welcomeMsg.c_str(), welcomeMsg.size() + 1);
 }
 
-void MultiClientChat::onClientDisconnected(int clientSocket)
+void WebServer::onClientDisconnected(int clientSocket)
 {
 
 }
 
-void MultiClientChat::onMessageReceived(int clientSocket, const char* msg, int length)
+void WebServer::onMessageReceived(int clientSocket, const char* msg, int length)
 {
 	broadcastToClients(clientSocket, msg, length);
 }

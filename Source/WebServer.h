@@ -11,11 +11,11 @@
 #pragma once
 #include "TcpListener.h"
 
-class MultiClientChat : public TcpListener
+class WebServer : public TcpListener
 {
 public:
 
-	MultiClientChat(const char* ipAddress, int port, volatile bool* shouldRun) :
+	WebServer(const char* ipAddress, int port, volatile bool* shouldRun) :
 		TcpListener(ipAddress, port, shouldRun) { }
 
 protected:

@@ -22,10 +22,10 @@
                 file="Source/WebServerHandler.cpp"/>
           <FILE id="lWdGm4" name="WebServerHandler.h" compile="0" resource="0"
                 file="Source/WebServerHandler.h"/>
-          <FILE id="kLSUEf" name="WebServerWrapper.cpp" compile="1" resource="0"
-                file="Source/WebServerWrapper.cpp"/>
-          <FILE id="sv2S72" name="WebServerWrapper.h" compile="0" resource="0"
-                file="Source/WebServerWrapper.h"/>
+          <FILE id="kLSUEf" name="WebServerThreadWrapper.cpp" compile="1" resource="0"
+                file="Source/WebServerThreadWrapper.cpp"/>
+          <FILE id="sv2S72" name="WebServerThreadWrapper.h" compile="0" resource="0"
+                file="Source/WebServerThreadWrapper.h"/>
           <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
           <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
           <FILE id="r0uZU8" name="WebServer.cpp" compile="1" resource="0" file="Source/WebServer.cpp"/>

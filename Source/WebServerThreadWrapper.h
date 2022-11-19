@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    WebServerWrapper.h
+    WebServerThreadWrapper.h
     Created: 6 Nov 2022 12:19:12pm
     Author:  Tiparium
 
@@ -14,11 +14,11 @@
 #include "../Source/WebServer.h"
 #include "../Source/WebServerHandler.h"
 
-class WebServerWrapper : public juce::Thread
+class WebServerThreadWrapper : public juce::Thread
 {
 public:
 
-    WebServerWrapper(juce::String url, int port);
+    WebServerThreadWrapper(juce::String url, int port);
     void stopBasicWebServer(float timeout);
 
 private:

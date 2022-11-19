@@ -1,16 +1,16 @@
 /*
   ==============================================================================
 
-    BasicWebServer.cpp
+    WebServerThreadWrapper.cpp
     Created: 6 Nov 2022 4:16:12pm
     Author:  Tiparium
 
   ==============================================================================
 */
 
-#include "WebServerWrapper.h"
+#include "WebServerThreadWrapper.h"
 
-WebServerWrapper::WebServerWrapper(juce::String url, int port) :
+WebServerThreadWrapper::WebServerThreadWrapper(juce::String url, int port) :
     _url(url),
     _port(port),
     _shouldRun(true),
@@ -20,7 +20,7 @@ WebServerWrapper::WebServerWrapper(juce::String url, int port) :
 {
 }
 
-void WebServerWrapper::stopBasicWebServer(float timeout)
+void WebServerThreadWrapper::stopBasicWebServer(float timeout)
 {
     _shouldRun = false;
     _handler.pingServer();
@@ -28,7 +28,7 @@ void WebServerWrapper::stopBasicWebServer(float timeout)
     stopThread(timeout);
 }
 
-void WebServerWrapper::run()
+void WebServerThreadWrapper::run()
 {
     if (_mcc.init() != 0) {
         return;

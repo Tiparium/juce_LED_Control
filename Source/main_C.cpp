@@ -56,7 +56,7 @@ Main_C::~Main_C()
     _favsHandler.saveJSONToFile(jsonToFile);
 
     // Handle Threads
-    _basicWebServer.stopBasicWebServer(100.0f);
+    _basicWebServer.stopBasicWebServer(3000.0f);
 }
 
 // Runs when slider value is changed

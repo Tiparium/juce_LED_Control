@@ -20,12 +20,22 @@ BasicWebServer::BasicWebServer(juce::String url, int port) :
 {
 }
 
-
-
 void BasicWebServer::stopBasicWebServer(float timeout)
 {
     _shouldRun = false;
     _handler.pingServer();
     // Anything which must be done with the webserver before stopping it, do it here.
     stopThread(timeout);
+}
+
+void BasicWebServer::run()
+{
+    if (_mcc.init() != 0) {
+        return;
+    }
+    _mcc.run();
+    while (!threadShouldExit())
+    {
+
+    }
 }

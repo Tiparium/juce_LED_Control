@@ -30,15 +30,5 @@ private:
     MultiClientChat     _mcc;
     WebServerHandler    _handler;
 
-    void run() override {
-        
-        if (_mcc.init() != 0) {
-            return;
-        }
-        _mcc.run();
-        while (!threadShouldExit())
-        {
-
-        }
-    }
+    void run() override;
 };

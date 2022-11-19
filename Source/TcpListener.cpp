@@ -23,8 +23,8 @@ int TcpListener::init()
 	}
 
 	// Create a socket
-	m_socket = socket(AF_INET, SOCK_STREAM, 0);
-	if (m_socket == INVALID_SOCKET)
+	_socket = socket(AF_INET, SOCK_STREAM, 0);
+	if (_socket == INVALID_SOCKET)
 	{
 		DBG("Failed to create a socket: Error Below");
 		DBG(WSAGetLastError());
@@ -34,10 +34,10 @@ int TcpListener::init()
 	// Bind the ip address and port to a socket
 	sockaddr_in hint;
 	hint.sin_family = AF_INET;
-	hint.sin_port = htons(m_port);
-	inet_pton(AF_INET, m_ipAddress, &hint.sin_addr);
+	hint.sin_port = htons(_port);
+	inet_pton(AF_INET, _ipAddress, &hint.sin_addr);
 
-	if (bind(m_socket, (sockaddr*)&hint, sizeof(hint)) == SOCKET_ERROR)
+	if (bind(_socket, (sockaddr*)&hint, sizeof(hint)) == SOCKET_ERROR)
 	{
 		DBG("Failed to bind IP & port to Socket: Error Below");
 		DBG(WSAGetLastError());
@@ -45,7 +45,7 @@ int TcpListener::init()
 	}
 
 	// Tell Winsock the socket is for listening 
-	if (listen(m_socket, SOMAXCONN) == SOCKET_ERROR)
+	if (listen(_socket, SOMAXCONN) == SOCKET_ERROR)
 	{
 		DBG("Failed to tell WINSOCK socket is for listening: Error Below");
 		DBG(WSAGetLastError());
@@ -53,23 +53,21 @@ int TcpListener::init()
 	}
 
 	// Create the master file descriptor set and zero it
-	FD_ZERO(&m_master);
+	FD_ZERO(&_master);
 
 	// Add our first socket that we're interested in interacting with; the listening socket!
 	// It's important that this socket is added for our server or else we won't 'hear' incoming
 	// connections 
-	FD_SET(m_socket, &m_master);
+	FD_SET(_socket, &_master);
 
 	return 0;
 }
 
 int TcpListener::run()
 {
-	// this will be changed by the \quit command (see below, bonus not in video!)
-
 	while (*_shouldRun)
 	{
-		fd_set copy = m_master;
+		fd_set copy = _master;
 		
 
 		// See who's talking to us
@@ -82,13 +80,13 @@ int TcpListener::run()
 			SOCKET sock = copy.fd_array[i];
 
 			// Is it an inbound communication?
-			if (sock == m_socket)
+			if (sock == _socket)
 			{
 				// Accept a new connection
-				SOCKET client = accept(m_socket, nullptr, nullptr);
+				SOCKET client = accept(_socket, nullptr, nullptr);
 
 				// Add the new connection to the list of connected clients
-				FD_SET(client, &m_master);
+				FD_SET(client, &_master);
 
 				onClientConnected(client);
 			}
@@ -104,7 +102,7 @@ int TcpListener::run()
 					// Drop the client
 					onClientDisconnected(sock);
 					closesocket(sock);
-					FD_CLR(sock, &m_master);
+					FD_CLR(sock, &_master);
 				}
 				else
 				{
@@ -116,16 +114,16 @@ int TcpListener::run()
 
 	// Remove the listening socket from the master file descriptor set and close it
 	// to prevent anyone else trying to connect.
-	FD_CLR(m_socket, &m_master);
-	closesocket(m_socket);
+	FD_CLR(_socket, &_master);
+	closesocket(_socket);
 
-	while (m_master.fd_count > 0)
+	while (_master.fd_count > 0)
 	{
 		// Get the socket number
-		SOCKET sock = m_master.fd_array[0];
+		SOCKET sock = _master.fd_array[0];
 
 		// Remove it from the master file list and close the socket
-		FD_CLR(sock, &m_master);
+		FD_CLR(sock, &_master);
 		closesocket(sock);
 	}
 
@@ -142,10 +140,10 @@ void TcpListener::sendToClient(int clientSocket, const char* msg, int length)
 
 void TcpListener::broadcastToClients(int sendingClient, const char* msg, int length)
 {
-	for (int i = 0; i < m_master.fd_count; i++)
+	for (int i = 0; i < _master.fd_count; i++)
 	{
-		SOCKET outSock = m_master.fd_array[i];
-		if (outSock != m_socket && outSock != sendingClient)
+		SOCKET outSock = _master.fd_array[i];
+		if (outSock != _socket && outSock != sendingClient)
 		{
 			sendToClient(outSock, msg, length);
 		}

@@ -3,11 +3,11 @@
 
     TcpListener.h
     Created: 11 Nov 2022 6:26:08pm
-    Author:  Tiparium
+    Author:  Sloan Kelly, modified by Tiparium
 
     Courtesy of this toturial:
         https://www.youtube.com/watch?v=Kc1kwm1WyVM&t=1s&ab_channel=SloanKelly
-
+		Lots of modification to works friendly in a threaded environment by me.
   ==============================================================================
 */
 
@@ -28,8 +28,8 @@ class TcpListener
 public:
 
 	TcpListener(const char* ipAddress, int port, volatile bool* shouldRun) :
-		m_ipAddress(ipAddress), 
-		m_port(port),
+		_ipAddress(ipAddress), 
+		_port(port),
 		_shouldRun(shouldRun)
 	{ }
 
@@ -59,8 +59,8 @@ protected:
 private:
 
 	volatile bool*  _shouldRun;
-	const char*		m_ipAddress;	// IP Address server will run on
-	int				m_port;			// Port # for the web service
-	int				m_socket;		// Internal FD for the listening socket
-	fd_set			m_master;		// Master file descriptor set
+	const char*		_ipAddress;	// IP Address server will run on
+	int				_port;			// Port # for the web service
+	int				_socket;		// Internal FD for the listening socket
+	fd_set			_master;		// Master file descriptor set
 };

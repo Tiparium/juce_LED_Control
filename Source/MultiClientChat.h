@@ -3,7 +3,7 @@
 
     MultiClientChat.h
     Created: 12 Nov 2022 3:43:03pm
-    Author:  Tiparium
+    Author:  Sloan Kelly, modified by Tiparium
 
   ==============================================================================
 */

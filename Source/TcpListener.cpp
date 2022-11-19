@@ -3,7 +3,7 @@
 
     TcpListener.cpp
     Created: 11 Nov 2022 6:26:08pm
-    Author:  Tiparium
+    Author:  Sloan Kelly, modified by Tiparium
 
   ==============================================================================
 */

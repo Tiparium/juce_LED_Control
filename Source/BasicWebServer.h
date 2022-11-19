@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    NodeMCUHandler.h
+    BasicWebServer.h
     Created: 6 Nov 2022 12:19:12pm
     Author:  Tiparium
 
@@ -12,17 +12,26 @@
 #include <JuceHeader.h>
 
 #include "../Source/MultiClientChat.h"
+#include "../Source/WebServerHandler.h"
 
-class NodeMCUHandler : public juce::Thread
+class BasicWebServer : public juce::Thread
 {
 public:
-    NodeMCUHandler() : Thread("NodeMCUThread") {}
 
-    void stopNodeMCUHandler(float timeout);
+    BasicWebServer(juce::String url, int port);
+    void stopBasicWebServer(float timeout);
 
 private:
+
+    juce::String        _url;
+    int                 _port;
+
+    volatile bool       _shouldRun;
+    MultiClientChat     _mcc;
+    WebServerHandler    _handler;
+
     void run() override {
-        MultiClientChat _mcc("0.0.0.0", 8080);
+        
         if (_mcc.init() != 0) {
             return;
         }

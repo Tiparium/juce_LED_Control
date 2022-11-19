@@ -18,10 +18,14 @@
       </GROUP>
       <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">
         <GROUP id="{203BC7B9-C78E-408A-55D1-0239B2933963}" name="restHandlers">
-          <FILE id="kLSUEf" name="NodeMCUHandler.cpp" compile="1" resource="0"
-                file="Source/NodeMCUHandler.cpp"/>
-          <FILE id="sv2S72" name="NodeMCUHandler.h" compile="0" resource="0"
-                file="Source/NodeMCUHandler.h"/>
+          <FILE id="vP46DZ" name="WebServerHandler.cpp" compile="1" resource="0"
+                file="Source/WebServerHandler.cpp"/>
+          <FILE id="lWdGm4" name="WebServerHandler.h" compile="0" resource="0"
+                file="Source/WebServerHandler.h"/>
+          <FILE id="kLSUEf" name="BasicWebServer.cpp" compile="1" resource="0"
+                file="Source/BasicWebServer.cpp"/>
+          <FILE id="sv2S72" name="BasicWebServer.h" compile="0" resource="0"
+                file="Source/BasicWebServer.h"/>
           <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
           <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
           <FILE id="r0uZU8" name="MultiClientChat.cpp" compile="1" resource="0"

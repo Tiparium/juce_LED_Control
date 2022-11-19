@@ -15,8 +15,8 @@ class MultiClientChat : public TcpListener
 {
 public:
 
-	MultiClientChat(const char* ipAddress, int port) :
-		TcpListener(ipAddress, port) { }
+	MultiClientChat(const char* ipAddress, int port, volatile bool* shouldRun) :
+		TcpListener(ipAddress, port, shouldRun) { }
 
 protected:
 

@@ -27,16 +27,17 @@ class TcpListener
 
 public:
 
-	TcpListener(const char* ipAddress, int port) :
-		m_ipAddress(ipAddress), m_port(port) { }
+	TcpListener(const char* ipAddress, int port, volatile bool* shouldRun) :
+		m_ipAddress(ipAddress), 
+		m_port(port),
+		_shouldRun(shouldRun)
+	{ }
 
 	// Initialize the listener
 	int init();
 
 	// Run the listener
 	int run();
-
-	bool _shouldRun;
 
 protected:
 
@@ -57,6 +58,7 @@ protected:
 
 private:
 
+	volatile bool*  _shouldRun;
 	const char*		m_ipAddress;	// IP Address server will run on
 	int				m_port;			// Port # for the web service
 	int				m_socket;		// Internal FD for the listening socket

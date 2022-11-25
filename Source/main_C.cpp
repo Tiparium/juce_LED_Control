@@ -13,7 +13,7 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
-    _webServerThreadWrapper(),
+    _nodeMCUServerHandler("http://10.0.0.104/setcolor"),
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
@@ -28,9 +28,6 @@ Main_C::Main_C() :
         newSlot->getButton(1).addListener(this);
     }
     _newFavButton.addListener(this);
-
-    // Handle Threads
-    _webServerThreadWrapper.startThread();
 }
 
 Main_C::~Main_C()
@@ -54,9 +51,6 @@ Main_C::~Main_C()
     }
     DBG("JSON TO PUSH TO FILE: " + jsonToFile.dump());
     _favsHandler.saveJSONToFile(jsonToFile);
-
-    // Handle Threads
-    _webServerThreadWrapper.stopBasicWebServer(3000.0f);
 }
 
 // Runs when slider value is changed
@@ -76,7 +70,8 @@ void Main_C::sliderValueChanged(juce::Slider* slider) {
 // Runs when mouse is lifted from a slider
 void Main_C::sliderDragEnded(juce::Slider* slider) {
     _pHueRestHandler.grabColorPushUpdate();
-    // _webServerThreadWrapper.setRGB(TIP_RGB(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue()));
+    TIP_RGB rgbToSend(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue());
+    _nodeMCUServerHandler.pushToServer(rgbToSend);
 }
 
 void Main_C::buttonClicked(juce::Button* button) {
@@ -94,9 +89,15 @@ void Main_C::buttonClicked(juce::Button* button) {
         // Call Favorite Slot
         if (button == &_favSlots[i]->getButton(0)) {
             rgb = _favSlots[i]->getRGB();
-            _pHueRestHandler.takeColorPushUpdate(rgb);
+
+            // Update UI
             setSliderValues(rgb);
-            // _webServerThreadWrapper.setRGB(rgb);
+
+            // Push colors to respective platforms
+            _pHueRestHandler.takeColorPushUpdate(rgb);
+            TIP_RGB rgbToSend(rgb);
+            _nodeMCUServerHandler.pushToServer(rgbToSend);
+
             return;
         }
         // Delete Favorite Slot

@@ -18,7 +18,7 @@
 #include "../Source/PersistenceJSONHandler.h"
 #include "../Source/RestHandler.h"
 #include "../Source/FavoritesSlot.h"
-#include "../Source/WebServerThreadWrapper.h"
+#include "../Source/WebServerHandler.h"
 
 class Main_C : public juce::Component,
                public juce::Slider::Listener,
@@ -56,7 +56,7 @@ private:
     juce::TextButton _newFavButton;
 
     // Talk to the Handlers
-    WebServerThreadWrapper  _webServerThreadWrapper;
+    WebServerHandler        _nodeMCUServerHandler;
     RestHandler             _pHueRestHandler;
     PersistenceJSONHandler  _favsHandler;
 };

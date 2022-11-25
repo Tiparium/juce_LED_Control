@@ -13,6 +13,9 @@
 #include <JuceHeader.h>
 
 #include "../RestRequest/rest_request.h"
+#include "../Source/RGBStructs.h"
+#include "../json/include/nlohmann/json.hpp"
+#include "../Source/RGBStructs.h"
 
 class WebServerHandler
 {
@@ -21,7 +24,7 @@ public:
     WebServerHandler(juce::String addr);
     ~WebServerHandler();
 
-    void pingServer();
+    void pushToServer(TIP_RGB rgb);
 
 private:
 

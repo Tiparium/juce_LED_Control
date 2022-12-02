@@ -21,7 +21,7 @@ class WebServerHandler
 {
 public:
 
-    WebServerHandler(juce::String addr);
+    WebServerHandler();
     ~WebServerHandler();
 
     void pushToServer(TIP_RGB rgb);
@@ -30,5 +30,5 @@ private:
 
     // For making API calls
     adamski::RestRequest    _req;
-    juce::String            _addr;
+    juce::String            _addr = "http://10.0.0.104/setcolor";
 };

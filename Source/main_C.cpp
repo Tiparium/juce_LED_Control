@@ -13,7 +13,7 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
-    _nodeMCUServerHandler("http://10.0.0.104/setcolor"),
+    _nodeMCUServerHandler(),
     _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {

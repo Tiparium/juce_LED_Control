@@ -14,8 +14,7 @@
 #include "WebServerHandler.h"
 
 
-WebServerHandler::WebServerHandler(juce::String addr):
-    _addr(addr)
+WebServerHandler::WebServerHandler()
 {
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));

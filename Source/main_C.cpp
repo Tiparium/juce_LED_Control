@@ -28,6 +28,7 @@ Main_C::Main_C() :
         newSlot->getButton(1).addListener(this);
     }
     _newFavButton.addListener(this);
+    _nodeMCUServerHandler.pushToServer(TIP_RGB(0, 0, 0).colorCorrect());
 }
 
 Main_C::~Main_C()
@@ -71,7 +72,7 @@ void Main_C::sliderValueChanged(juce::Slider* slider) {
 void Main_C::sliderDragEnded(juce::Slider* slider) {
     _pHueRestHandler.grabColorPushUpdate();
     TIP_RGB rgbToSend(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue());
-    _nodeMCUServerHandler.pushToServer(rgbToSend);
+    _nodeMCUServerHandler.pushToServer(rgbToSend.colorCorrect());
 }
 
 void Main_C::buttonClicked(juce::Button* button) {
@@ -95,8 +96,7 @@ void Main_C::buttonClicked(juce::Button* button) {
 
             // Push colors to respective platforms
             _pHueRestHandler.takeColorPushUpdate(rgb);
-            TIP_RGB rgbToSend(rgb);
-            _nodeMCUServerHandler.pushToServer(rgbToSend);
+            _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
             return;
         }

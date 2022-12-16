@@ -114,7 +114,8 @@ void RestHandler::setB(juce::uint8 val) {_bVal = val;}
 juce::uint8 RestHandler::getR() { return _rVal;}
 juce::uint8 RestHandler::getG() { return _gVal;}
 juce::uint8 RestHandler::getB() { return _bVal;}
-int RestHandler::getNumLights() {return _rootJSON.size();}
+int RestHandler::getNumLights() {return _numLights;}
+int* RestHandler::getRefNumLights() { return &_numLights; }
 //* Getters / Setters
 
 /**

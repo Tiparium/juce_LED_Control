@@ -42,6 +42,7 @@ public:
     juce::uint8 getG();
     juce::uint8 getB();
     int getNumLights();
+    int* getRefNumLights();
     //* G/S
     //  Debug
     void resetColor(); // Reset lights to color they were at time of app being opened

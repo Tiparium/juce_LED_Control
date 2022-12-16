@@ -37,6 +37,9 @@ public:
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
+    void paintFavorites(juce::Graphics&);
+    void paintSliders(juce::Graphics&);
+    void paintLEDSelector(juce::Graphics&);
     void resized() override;
     //  G/S
     void setSliderValues(TIP_RGB rgb);
@@ -54,6 +57,11 @@ private:
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;
+
+    // Individual pHue LED control
+    std::vector<juce::TextButton*> _pHueLEDPickers;
+    juce::TextButton               _allPHueLEDSButton;
+    int*                           _pHueLEDCount;
 
     // Talk to the Handlers
     WebServerHandler        _nodeMCUServerHandler;

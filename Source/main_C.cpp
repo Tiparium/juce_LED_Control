@@ -21,10 +21,10 @@ Main_C::Main_C() :
     _pHueLEDCount = _pHueRestHandler.getRefNumLights();
     _pHueLEDPickers.push_back(&_allPHueLEDSButton);
     _allPHueLEDSButton.addListener(this);
-    for (int i = 0; i < *_pHueLEDCount; i++)
+    for (int i = 1; i <= *_pHueLEDCount; i++)
     {
         _pHueLEDPickers.push_back(new juce::TextButton);
-        _pHueLEDPickers[i + 1]->addListener(this);
+        _pHueLEDPickers[i]->addListener(this);
     }
 
     // Handle Persistence
@@ -96,7 +96,20 @@ void Main_C::sliderDragEnded(juce::Slider* slider) {
     _nodeMCUServerHandler.pushToServer(rgbToSend.colorCorrect());
 }
 
-void Main_C::buttonClicked(juce::Button* button) {
+void Main_C::buttonClicked(juce::Button* button)
+{
+    bool check;
+    check = checkFavoritesButtons(button);
+    if (check) { return; }
+
+    check = checkLEDControlButtons(button);
+    if (check) { return; }
+
+    DBG("Something went wrong: An Unhandeled button has been pushed.");
+}
+
+bool Main_C::checkFavoritesButtons(juce::Button* button)
+{
     TIP_RGB rgb;
     TIP_RGB hRGB = _pHueRestHandler.getRGB().colorCorrect();
     // Create new Favorite Slot
@@ -105,9 +118,9 @@ void Main_C::buttonClicked(juce::Button* button) {
         _favSlots.push_back(newSlot);
         newSlot->getButton(0).addListener(this);
         newSlot->getButton(1).addListener(this);
-        return;
+        return true;
     }
-    for (unsigned int i = 0; i < _favSlots.size(); i++) {\
+    for (unsigned int i = 0; i < _favSlots.size(); i++) {
         // Call Favorite Slot
         if (button == &_favSlots[i]->getButton(0)) {
             rgb = _favSlots[i]->getRGB();
@@ -119,7 +132,7 @@ void Main_C::buttonClicked(juce::Button* button) {
             _pHueRestHandler.takeColorPushUpdate(rgb);
             _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
-            return;
+            return true;
         }
         // Delete Favorite Slot
         else if (button == &_favSlots[i]->getButton(1)) {
@@ -129,10 +142,24 @@ void Main_C::buttonClicked(juce::Button* button) {
             FavoritesSlot* temp = _favSlots[i];
             _favSlots.erase(_favSlots.begin() + i);
             delete temp;
-            return;
+            return true;
         }
     }
-    DBG("Something went wrong: An Unhandeled button has been pushed.");
+    return false;
+}
+
+bool Main_C::checkLEDControlButtons(juce::Button* button)
+{
+    if (button == &_allPHueLEDSButton) { _currentLight = 0; return true; }
+    for (int i = 1; i <= *_pHueLEDCount; i++)
+    {
+        if (button == _pHueLEDPickers[i])
+        {
+            _currentLight = i;
+            return true;
+        }
+    }
+    return false;
 }
 
 void Main_C::paint(juce::Graphics& g) {

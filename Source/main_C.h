@@ -32,8 +32,10 @@ public:
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
 
-    // FavoritesBar
+    // Button Logic
     void buttonClicked(juce::Button* button) override;
+    bool checkFavoritesButtons(juce::Button* button);
+    bool checkLEDControlButtons(juce::Button* button);
 
     // Drawing Logic
     void paint(juce::Graphics&) override;
@@ -62,6 +64,7 @@ private:
     std::vector<juce::TextButton*> _pHueLEDPickers;
     juce::TextButton               _allPHueLEDSButton;
     int*                           _pHueLEDCount;
+    int                            _currentLight = 0; // 0 for all lights active
 
     // Talk to the Handlers
     WebServerHandler        _nodeMCUServerHandler;

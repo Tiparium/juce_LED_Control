@@ -23,10 +23,6 @@ RestHandler::RestHandler(juce::String http, juce::String api, juce::String get, 
     _apiGetTarget = get;
     _apiPutTarget = put;
 
-    _rVal = 0;
-    _gVal = 0;
-    _bVal = 0;
-
     updateRootJSON();
 
     // These aren't needed for the app to run, just for resetColor()
@@ -39,51 +35,46 @@ RestHandler::~RestHandler()
     resetColor();
 }
 
-void RestHandler::takeColorPushUpdate(TIP_RGB rgb)
-{
-    setRGB(rgb);
-    grabColorPushUpdate();
-}
-
-void RestHandler::grabColorPushUpdate()
+void RestHandler::pushUpdate(TIP_RGB rgb, int lightID)
 {
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
-    for (int i = 0; i < _numLights; i++) {
 
-        // Build a target URL unique to each pHue LED
-        putTarget = putTarget.substring(0, _apiPutSplit) +
-            std::to_string(i + 1) +
-            putTarget.substring(_apiPutSplit + 1, putTarget.length());
+    // Build a target URL unique to LED
+    putTarget = putTarget.substring(0, _apiPutSplit) +
+        std::to_string(lightID) +
+        putTarget.substring(_apiPutSplit + 1, putTarget.length());
 
-        target = _httpTarget + _apiTarget + putTarget;
-
-        DBG("Target Value: " + target);
-
-        // Convert our native RGB values to pHueXY
-        TIP_RGB rgb(_rVal, _gVal, _bVal);
-        pushRGBToPHue(rgb, target);
+    if (lightID > _numLights)
+    {
+        DBG("Error, this light ID exceeds the available lights.");
+        return;
     }
-}
 
-void RestHandler::pushRGBToPHue(TIP_RGB rgb, juce::String target) {
+    target = _httpTarget + _apiTarget + putTarget;
+
     TIP_XYB xyb = rgb.toXY();
     juce::var xyColor;
     xyColor.append(xyb.xy.x);
     xyColor.append(xyb.xy.y);
-    pushXYBToPHue(xyColor, target);
-}
 
-void RestHandler::pushXYBToPHue(juce::var xyColor, juce::String target) {
     // Make RESTful PUT call
     adamski::RestRequest::Response res = _req.put(target)
         .field("xy", xyColor)
         .execute();
 
-    bool debug = true;
-    if (debug) { 
-        printXY();
+    bool debug = false;
+    if (debug) {
         DBG(res.bodyAsString);
+        DBG("Target Value: " + target);
+    }
+}
+
+void RestHandler::pushUpdateToMultipleLights(TIP_RGB rgb)
+{
+    for (int i = 1; i <= _numLights; i++)
+    {
+        pushUpdate(rgb, i);
     }
 }
 
@@ -99,21 +90,6 @@ void RestHandler::updateRootJSON() {
 }
 
 // Getters / Setters
-void RestHandler::setRGB(TIP_RGB rgb) {
-    _rVal = rgb.r;
-    _gVal = rgb.g;
-    _bVal = rgb.b;
-}
-TIP_RGB  RestHandler::getRGB() {
-    TIP_RGB rgb = TIP_RGB(_rVal, _gVal, _bVal);
-    return rgb;
-}
-void RestHandler::setR(juce::uint8 val) { _rVal = val; }
-void RestHandler::setG(juce::uint8 val) {_gVal = val;}
-void RestHandler::setB(juce::uint8 val) {_bVal = val;}
-juce::uint8 RestHandler::getR() { return _rVal;}
-juce::uint8 RestHandler::getG() { return _gVal;}
-juce::uint8 RestHandler::getB() { return _bVal;}
 int RestHandler::getNumLights() {return _numLights;}
 int* RestHandler::getRefNumLights() { return &_numLights; }
 //* Getters / Setters
@@ -138,15 +114,14 @@ void RestHandler::resetColor() {
 
         target = _httpTarget + _apiTarget + putTarget;
 
-        pushXYBToPHue(xyColor, target);
-    }
-}
+        // Make RESTful PUT call
+        adamski::RestRequest::Response res = _req.put(target)
+            .field("xy", xyColor)
+            .execute();
 
-void RestHandler::printXY()
-{
-    TIP_RGB rgb = getRGB();
-    TIP_XYB xyb = rgb.toXY();
-    juce::String x = "X: " + std::to_string(xyb.xy.x) + "\n";
-    juce::String y = "Y: " + std::to_string(xyb.xy.y) + "\n";
-    DBG(x + y);
+        bool debug = false;
+        if (debug) {
+            DBG(res.bodyAsString);
+        }
+    }
 }

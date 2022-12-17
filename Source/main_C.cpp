@@ -77,23 +77,18 @@ Main_C::~Main_C()
 
 // Runs when slider value is changed
 void Main_C::sliderValueChanged(juce::Slider* slider) {
-    if (slider == &_rSlider) {
-        _pHueRestHandler.setR(_rSlider.getValue());
-    }
-    else if (slider == &_gSlider) {
-        _pHueRestHandler.setG(_gSlider.getValue());
-    }
-    else {
-        _pHueRestHandler.setB(_bSlider.getValue());
-    }
+
+    _rgb.r = _rSlider.getValue();
+    _rgb.g = _gSlider.getValue();
+    _rgb.b = _bSlider.getValue();
+
     repaint();
 }
 
 // Runs when mouse is lifted from a slider
 void Main_C::sliderDragEnded(juce::Slider* slider) {
-    _pHueRestHandler.grabColorPushUpdate();
-    TIP_RGB rgbToSend(_rSlider.getValue(), _gSlider.getValue(), _bSlider.getValue());
-    _nodeMCUServerHandler.pushToServer(rgbToSend.colorCorrect());
+    _pHueRestHandler.pushUpdateToMultipleLights(_rgb);
+    _nodeMCUServerHandler.pushToServer(_rgb.colorCorrect());
 }
 
 void Main_C::buttonClicked(juce::Button* button)
@@ -111,7 +106,7 @@ void Main_C::buttonClicked(juce::Button* button)
 bool Main_C::checkFavoritesButtons(juce::Button* button)
 {
     TIP_RGB rgb;
-    TIP_RGB hRGB = _pHueRestHandler.getRGB().colorCorrect();
+    TIP_RGB hRGB = _rgb.colorCorrect();
     // Create new Favorite Slot
     if (button == &_newFavButton) {
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
@@ -129,7 +124,7 @@ bool Main_C::checkFavoritesButtons(juce::Button* button)
             setSliderValues(rgb);
 
             // Push colors to respective platforms
-            _pHueRestHandler.takeColorPushUpdate(rgb);
+            _pHueRestHandler.pushUpdateToMultipleLights(rgb);
             _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
             return true;
@@ -165,7 +160,7 @@ bool Main_C::checkLEDControlButtons(juce::Button* button)
 void Main_C::paint(juce::Graphics& g) {
     g.drawRect(getLocalBounds(), 1);
     // Generate a corrected color & excract rgb components
-    TIP_RGB correctedRGB = _pHueRestHandler.getRGB().colorCorrect();
+    TIP_RGB correctedRGB = _rgb.colorCorrect();
     juce::uint8 cR = correctedRGB.r;
     juce::uint8 cG = correctedRGB.g;
     juce::uint8 cB = correctedRGB.b;

@@ -56,6 +56,8 @@ private:
     juce::Slider _bSlider;
     //* RGBSliders
 
+    TIP_RGB _rgb;
+
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
     juce::TextButton _newFavButton;

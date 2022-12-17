@@ -24,36 +24,18 @@ public:
     RestHandler(juce::String http, juce::String api, juce::String get, juce::String put);
     ~RestHandler();
 
-    void takeColorPushUpdate(TIP_RGB rgb);
-    void grabColorPushUpdate();
-
-    void pushRGBToPHue(TIP_RGB rgb, juce::String target);
-    void pushXYBToPHue(juce::var xyColor, juce::String target);
-
+    void pushUpdate(TIP_RGB rgb, int lightID);
+    void pushUpdateToMultipleLights(TIP_RGB rgb);
     void updateRootJSON();
     
     //  G/S
-    void setRGB(TIP_RGB rgb);
-    TIP_RGB getRGB();
-    void setR(juce::uint8 val);
-    void setG(juce::uint8 val);
-    void setB(juce::uint8 val);
-    juce::uint8 getR();
-    juce::uint8 getG();
-    juce::uint8 getB();
     int getNumLights();
     int* getRefNumLights();
     //* G/S
     //  Debug
     void resetColor(); // Reset lights to color they were at time of app being opened
-    void printXY();
     //* Debug
 private:
-
-    // Represents the current RGB state of all lights
-    juce::uint8 _rVal;
-    juce::uint8 _gVal;
-    juce::uint8 _bVal;
 
     // Combine these for a full callable RESTful URL
     juce::String _httpTarget;

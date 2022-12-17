@@ -6,7 +6,6 @@
     Author:  Tiparium
 
     This class is responsible for communicating with the pHue RestAPI
-    Data is also stored representing the current overall colorstate of the program
 
   ==============================================================================
 */

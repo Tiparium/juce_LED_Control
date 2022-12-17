@@ -29,8 +29,8 @@ public:
     void updateRootJSON();
     
     //  G/S
-    int getNumLights();
-    int* getRefNumLights();
+    int             getNumLights();
+    juce::String    getLightNameByID(int id);
 
     //  Debug
     void resetColor(); // Reset lights to color they were at time of app being opened

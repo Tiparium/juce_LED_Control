@@ -104,8 +104,11 @@ void RestHandler::updateRootJSON() {
 }
 
 // Getters / Setters
-int RestHandler::getNumLights() {return _numLights;}
-int* RestHandler::getRefNumLights() { return &_numLights; }
+int             RestHandler::getNumLights() {return _numLights;}
+juce::String    RestHandler::getLightNameByID(int id)
+{
+    return _rootJSON[std::to_string(id)]["name"];
+}
 //* Getters / Setters
 
 /**

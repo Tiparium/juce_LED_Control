@@ -37,11 +37,13 @@ public:
     bool checkFavoritesButtons(juce::Button* button);
     bool checkLEDControlButtons(juce::Button* button);
 
+    bool checkLEDControlButtonState(); // Returns true if all LED control buttons are active
+
     // Drawing Logic
     void paint(juce::Graphics&) override;
     void paintFavorites(juce::Graphics&);
     void paintSliders(juce::Graphics&);
-    void paintLEDSelector(juce::Graphics&);
+    void paintLEDControlButtons(juce::Graphics&);
     void resized() override;
 
     //  G/S
@@ -65,8 +67,7 @@ private:
 
     // Individual pHue LED control
     std::vector<juce::TextButton*> _pHueLEDPickers;
-    juce::TextButton               _allPHueLEDSButton;
-    int*                           _pHueLEDCount;
+    juce::TextButton               _toggleAllLEDControlButton;
     std::vector<bool>              _listeningLights;
 
     // Talk to the Handlers

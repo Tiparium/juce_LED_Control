@@ -18,14 +18,13 @@ Main_C::Main_C() :
     _favsHandler("../../resources/favSlots.json")
 {
     // Individual LED controls
-    _pHueLEDCount = _pHueRestHandler.getRefNumLights();
-    _pHueLEDPickers.push_back(&_allPHueLEDSButton);
-    _allPHueLEDSButton.addListener(this);
-    for (int i = 1; i <= *_pHueLEDCount; i++)
+    _toggleAllLEDControlButton.addListener(this);
+    for (int i = 0; i < _pHueRestHandler.getNumLights(); i++)
     {
         _pHueLEDPickers.push_back(new juce::TextButton);
         _pHueLEDPickers[i]->addListener(this);
         _listeningLights.push_back(true); // TODO - Save this state, don't just init everything to true
+        DBG(i);
     }
 
     // Handle Persistence
@@ -49,8 +48,8 @@ Main_C::~Main_C()
     nlohmann::json jsonToFile = nlohmann::json::array();
 
     // Destroy LED picker
-    _allPHueLEDSButton.removeListener(this);
-    for (int i = 1; i < _pHueLEDPickers.size(); i++)
+    _toggleAllLEDControlButton.removeListener(this);
+    for (int i = 0; i < _pHueLEDPickers.size(); i++)
     {
         _pHueLEDPickers[i]->removeListener(this);
         delete _pHueLEDPickers[i];
@@ -146,8 +145,27 @@ bool Main_C::checkFavoritesButtons(juce::Button* button)
 
 bool Main_C::checkLEDControlButtons(juce::Button* button)
 {
-    if (button == &_allPHueLEDSButton) { _listeningLights[0] = !_listeningLights[0]; return true; }
-    for (int i = 1; i <= *_pHueLEDCount; i++)
+    // Button pressed was global toggle
+    if (button == &_toggleAllLEDControlButton)
+    {
+        bool allActive = checkLEDControlButtonState();
+        if (allActive)
+        {
+            for (int i = 0; i < _listeningLights.size(); i++)
+            {
+                _listeningLights[i] = false;
+            }
+        }
+        else {
+            for (int i = 0; i < _listeningLights.size(); i++)
+            {
+                _listeningLights[i] = true;
+            }
+        }
+        return true;
+    }
+    // Button pressed was an LED toggle
+    for (int i = 0; i < _pHueRestHandler.getNumLights(); i++)
     {
         if (button == _pHueLEDPickers[i])
         {
@@ -156,6 +174,15 @@ bool Main_C::checkLEDControlButtons(juce::Button* button)
         }
     }
     return false;
+}
+
+bool Main_C::checkLEDControlButtonState()
+{
+    for (int i = 0; i < _listeningLights.size(); i++)
+    {
+        if (!_listeningLights[i]) { return false; }
+    }
+    return true;
 }
 
 void Main_C::paint(juce::Graphics& g) {
@@ -168,7 +195,7 @@ void Main_C::paint(juce::Graphics& g) {
 
     paintFavorites(g);
     paintSliders(g);
-    paintLEDSelector(g);
+    paintLEDControlButtons(g);
 
     g.fillAll(juce::Colour(cR, cG, cB));
 }
@@ -262,9 +289,9 @@ void Main_C::paintSliders(juce::Graphics& g)
     _bSlider.setBounds(relativeYPos, relativeHeight + 40, getWidth() - 2 * relativeYPos, 20);
     //* RGBSliders
 } // PaintSlider
-void Main_C::paintLEDSelector(juce::Graphics& g)
+void Main_C::paintLEDControlButtons(juce::Graphics& g)
 {
-    int numSlots = *_pHueLEDCount;
+    int numSlots = _pHueRestHandler.getNumLights();
     float keyButtonWidth = getWidth() / 10;
 
     float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
@@ -273,16 +300,33 @@ void Main_C::paintLEDSelector(juce::Graphics& g)
     float relativeYPos = getHeight() - relativeHeight;
 
     // Draw All Button
-    addAndMakeVisible(_pHueLEDPickers[0]);
-    _pHueLEDPickers[0]->setBounds(0, relativeYPos, keyButtonWidth, relativeHeight);
+    addAndMakeVisible(_toggleAllLEDControlButton);
+    _toggleAllLEDControlButton.setBounds(0, relativeYPos, keyButtonWidth, relativeHeight);
     relativeXPos += keyButtonWidth;
 
     // Draw remaining buttons
-    for (int i = 1; i < _pHueLEDPickers.size(); i++)
+    for (int i = 0; i < _pHueLEDPickers.size(); i++)
     {
         addAndMakeVisible(_pHueLEDPickers[i]);
         _pHueLEDPickers[i]->setBounds(relativeXPos, relativeYPos, relativeWidth, relativeHeight);
         relativeXPos += relativeWidth;
+
+        _pHueLEDPickers[i]->setButtonText(_pHueRestHandler.getLightNameByID(i + 1));
+        _pHueLEDPickers[i]->setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::black);
+
+        if (!_listeningLights[i])
+        {
+            _pHueLEDPickers[i]->setColour(
+                juce::TextButton::ColourIds::buttonColourId, 
+                juce::Colours::darkgrey);
+        }
+        else
+        {
+            TIP_RGB rgb = _rgb.colorCorrect();
+            _pHueLEDPickers[i]->setColour(
+                juce::TextButton::ColourIds::buttonColourId,
+                juce::Colour(rgb.r, rgb.g, rgb.b));
+        }
     }
 }
 

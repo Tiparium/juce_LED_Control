@@ -16,7 +16,7 @@ FavoritesSlot::FavoritesSlot(TIP_RGB rgb)
     _rgb.r = rgb.r;
     _rgb.g = rgb.g;
     _rgb.b = rgb.b;
-    _favButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_rgb.r, _rgb.g, rgb.b));
+    _favButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_rgb.r, _rgb.g, _rgb.b));
 }
 FavoritesSlot::~FavoritesSlot(){}
 

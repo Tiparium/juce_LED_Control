@@ -70,11 +70,14 @@ void RestHandler::pushUpdate(TIP_RGB rgb, int lightID)
     }
 }
 
-void RestHandler::pushUpdateToMultipleLights(TIP_RGB rgb)
+void RestHandler::pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> lights)
 {
     for (int i = 1; i <= _numLights; i++)
     {
-        pushUpdate(rgb, i);
+        if (lights[i - 1])
+        {
+            pushUpdate(rgb, i);
+        }
     }
 }
 

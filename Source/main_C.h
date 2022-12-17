@@ -66,7 +66,7 @@ private:
     std::vector<juce::TextButton*> _pHueLEDPickers;
     juce::TextButton               _allPHueLEDSButton;
     int*                           _pHueLEDCount;
-    int                            _currentLight = 0; // 0 for all lights active
+    std::vector<bool>              _listeningLights;
 
     // Talk to the Handlers
     WebServerHandler        _nodeMCUServerHandler;

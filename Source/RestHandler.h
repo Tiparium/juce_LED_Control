@@ -25,7 +25,7 @@ public:
     ~RestHandler();
 
     void pushUpdate(TIP_RGB rgb, int lightID);
-    void pushUpdateToMultipleLights(TIP_RGB rgb);
+    void pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> lights);
     void updateRootJSON();
     
     //  G/S

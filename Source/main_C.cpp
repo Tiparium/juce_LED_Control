@@ -25,6 +25,7 @@ Main_C::Main_C() :
     {
         _pHueLEDPickers.push_back(new juce::TextButton);
         _pHueLEDPickers[i]->addListener(this);
+        _listeningLights.push_back(true);
     }
 
     // Handle Persistence
@@ -87,7 +88,7 @@ void Main_C::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void Main_C::sliderDragEnded(juce::Slider* slider) {
-    _pHueRestHandler.pushUpdateToMultipleLights(_rgb);
+    _pHueRestHandler.pushUpdateToMultipleLights(_rgb, _listeningLights);
     _nodeMCUServerHandler.pushToServer(_rgb.colorCorrect());
 }
 
@@ -124,7 +125,7 @@ bool Main_C::checkFavoritesButtons(juce::Button* button)
             setSliderValues(rgb);
 
             // Push colors to respective platforms
-            _pHueRestHandler.pushUpdateToMultipleLights(rgb);
+            _pHueRestHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
             _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
             return true;
@@ -145,12 +146,12 @@ bool Main_C::checkFavoritesButtons(juce::Button* button)
 
 bool Main_C::checkLEDControlButtons(juce::Button* button)
 {
-    if (button == &_allPHueLEDSButton) { _currentLight = 0; return true; }
+    if (button == &_allPHueLEDSButton) { _listeningLights[0] = !_listeningLights[0]; return true; }
     for (int i = 1; i <= *_pHueLEDCount; i++)
     {
         if (button == _pHueLEDPickers[i])
         {
-            _currentLight = i;
+            _listeningLights[i] = !_listeningLights[i];
             return true;
         }
     }

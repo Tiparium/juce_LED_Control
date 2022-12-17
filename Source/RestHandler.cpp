@@ -85,6 +85,7 @@ void RestHandler::pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> ligh
             pushUpdate(rgb, i);
         }
     }
+    updateRootJSON();
 }
 
 void RestHandler::updateRootJSON() {
@@ -104,7 +105,7 @@ void RestHandler::updateRootJSON() {
 }
 
 // Getters / Setters
-int             RestHandler::getNumLights() {return _numLights;}
+int             RestHandler::getNumLights() { return _numLights; }
 juce::String    RestHandler::getLightNameByID(int id)
 {
     return _rootJSON[std::to_string(id)]["name"];

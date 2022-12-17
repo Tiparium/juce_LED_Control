@@ -31,10 +31,12 @@ public:
     //  G/S
     int getNumLights();
     int* getRefNumLights();
-    //* G/S
+
     //  Debug
     void resetColor(); // Reset lights to color they were at time of app being opened
-    //* Debug
+    bool _debugMode = true;
+    bool _classDebug = false;
+
 private:
 
     // Combine these for a full callable RESTful URL

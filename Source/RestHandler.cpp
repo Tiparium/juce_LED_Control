@@ -25,14 +25,20 @@ RestHandler::RestHandler(juce::String http, juce::String api, juce::String get, 
 
     updateRootJSON();
 
-    // These aren't needed for the app to run, just for resetColor()
-    _OGxVal = _rootJSON["1"]["state"]["xy"][0];
-    _OGyVal = _rootJSON["1"]["state"]["xy"][1];
+    if (_debugMode)
+    {
+        // These aren't needed for the app to run, just for resetColor()
+        _OGxVal = _rootJSON["1"]["state"]["xy"][0];
+        _OGyVal = _rootJSON["1"]["state"]["xy"][1];
+    }
 }
 
 RestHandler::~RestHandler()
 {
-    resetColor();
+    if (_debugMode)
+    {
+        resetColor();
+    }
 }
 
 void RestHandler::pushUpdate(TIP_RGB rgb, int lightID)
@@ -63,8 +69,8 @@ void RestHandler::pushUpdate(TIP_RGB rgb, int lightID)
         .field("xy", xyColor)
         .execute();
 
-    bool debug = false;
-    if (debug) {
+    bool localDebug = false;
+    if (localDebug || _classDebug) {
         DBG(res.bodyAsString);
         DBG("Target Value: " + target);
     }
@@ -87,9 +93,14 @@ void RestHandler::updateRootJSON() {
 
     juce::String resBody = res.bodyAsString;
     nlohmann::json json = nlohmann::json::parse(resBody.toStdString());
-    DBG(target);
     _rootJSON = json;
     _numLights = _rootJSON.size();
+
+    bool localDebug = false;
+    if (localDebug || _classDebug)
+    {
+        DBG(target);
+    }
 }
 
 // Getters / Setters
@@ -122,8 +133,8 @@ void RestHandler::resetColor() {
             .field("xy", xyColor)
             .execute();
 
-        bool debug = false;
-        if (debug) {
+        bool localDebug = false;
+        if (localDebug || _classDebug) {
             DBG(res.bodyAsString);
         }
     }

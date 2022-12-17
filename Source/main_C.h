@@ -43,6 +43,7 @@ public:
     void paintSliders(juce::Graphics&);
     void paintLEDSelector(juce::Graphics&);
     void resized() override;
+
     //  G/S
     void setSliderValues(TIP_RGB rgb);
 private:

@@ -25,7 +25,7 @@ Main_C::Main_C() :
     {
         _pHueLEDPickers.push_back(new juce::TextButton);
         _pHueLEDPickers[i]->addListener(this);
-        _listeningLights.push_back(true);
+        _listeningLights.push_back(true); // TODO - Save this state, don't just init everything to true
     }
 
     // Handle Persistence

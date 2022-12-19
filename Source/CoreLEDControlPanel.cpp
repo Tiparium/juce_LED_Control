@@ -11,7 +11,7 @@
 #include "CoreLEDControlPanel.h"
 
 CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
-    _nodeMCUServerHandler(),
+    _nodeMCUThreadWrapper(&_rgb),
     _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
@@ -39,7 +39,7 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
         newSlot->getButton(1).addListener(this);
     }
     _newFavButton.addListener(this);
-    _nodeMCUServerHandler.pushToServer(TIP_RGB(0, 0, 0).colorCorrect());
+    _nodeMCUThreadWrapper.startThread();
 }
 
 CoreLEDControlPanel::~CoreLEDControlPanel()
@@ -73,6 +73,9 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
     }
     DBG("JSON TO PUSH TO FILE: " + jsonToFile.dump());
     _favsHandler.saveJSONToFile(jsonToFile);
+
+    // Stop NodeMCU thread
+    _nodeMCUThreadWrapper.stopThread(500);
 }
 
 // Runs when slider value is changed
@@ -89,7 +92,6 @@ void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
 // Runs when mouse is lifted from a slider
 void CoreLEDControlPanel::sliderDragEnded(juce::Slider* slider) {
     _pHuePHueHandler.pushUpdateToMultipleLights(_rgb, _listeningLights);
-    _nodeMCUServerHandler.pushToServer(_rgb.colorCorrect());
 }
 
 void CoreLEDControlPanel::buttonClicked(juce::Button* button)
@@ -126,7 +128,6 @@ bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
 
             // Push colors to respective platforms
             _pHuePHueHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
-            _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
             return true;
         }

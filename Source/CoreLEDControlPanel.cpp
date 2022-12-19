@@ -12,14 +12,14 @@
 
 CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
     _nodeMCUServerHandler(),
-    _pHueRestHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
+    _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
     _parent = parent;
 
     // Individual LED controls
     _toggleAllLEDControlButton.addListener(this);
-    for (int i = 0; i < _pHueRestHandler.getNumLights(); i++)
+    for (int i = 0; i < _pHuePHueHandler.getNumLights(); i++)
     {
         _pHueLEDPickers.push_back(new juce::TextButton);
         _pHueLEDPickers[i]->addListener(this);
@@ -88,7 +88,7 @@ void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void CoreLEDControlPanel::sliderDragEnded(juce::Slider* slider) {
-    _pHueRestHandler.pushUpdateToMultipleLights(_rgb, _listeningLights);
+    _pHuePHueHandler.pushUpdateToMultipleLights(_rgb, _listeningLights);
     _nodeMCUServerHandler.pushToServer(_rgb.colorCorrect());
 }
 
@@ -125,7 +125,7 @@ bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
             setSliderValues(rgb);
 
             // Push colors to respective platforms
-            _pHueRestHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
+            _pHuePHueHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
             _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
             return true;
@@ -166,7 +166,7 @@ bool CoreLEDControlPanel::checkLEDControlButtons(juce::Button* button)
         return true;
     }
     // Button pressed was an LED toggle
-    for (int i = 0; i < _pHueRestHandler.getNumLights(); i++)
+    for (int i = 0; i < _pHuePHueHandler.getNumLights(); i++)
     {
         if (button == _pHueLEDPickers[i])
         {
@@ -292,7 +292,7 @@ void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
 } // PaintSlider
 void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
 {
-    int numSlots = _pHueRestHandler.getNumLights();
+    int numSlots = _pHuePHueHandler.getNumLights();
     float keyButtonWidth = getWidth() / 10;
 
     float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
@@ -312,7 +312,7 @@ void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
         _pHueLEDPickers[i]->setBounds(relativeXPos, relativeYPos, relativeWidth, relativeHeight);
         relativeXPos += relativeWidth;
 
-        _pHueLEDPickers[i]->setButtonText(_pHueRestHandler.getLightNameByID(i + 1));
+        _pHueLEDPickers[i]->setButtonText(_pHuePHueHandler.getLightNameByID(i + 1));
         _pHueLEDPickers[i]->setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::black);
 
         if (!_listeningLights[i])

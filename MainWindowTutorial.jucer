@@ -26,8 +26,8 @@
                 file="Source/WebServerHandler.cpp"/>
           <FILE id="lWdGm4" name="WebServerHandler.h" compile="0" resource="0"
                 file="Source/WebServerHandler.h"/>
-          <FILE id="Ziwc16" name="RestHandler.cpp" compile="1" resource="0" file="Source/RestHandler.cpp"/>
-          <FILE id="QDADO0" name="RestHandler.h" compile="0" resource="0" file="Source/RestHandler.h"/>
+          <FILE id="Ziwc16" name="PHueHandler.cpp" compile="1" resource="0" file="Source/PHueHandler.cpp"/>
+          <FILE id="QDADO0" name="PHueHandler.h" compile="0" resource="0" file="Source/PHueHandler.h"/>
           <FILE id="eIlGpi" name="PersistenceJSONHandler.cpp" compile="1" resource="0"
                 file="Source/PersistenceJSONHandler.cpp"/>
           <FILE id="MHuczW" name="PersistenceJSONHandler.h" compile="0" resource="0"

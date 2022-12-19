@@ -3,7 +3,7 @@
 
     NOTES: None :)
 
-    RestHandler.cpp
+    PHueHandler.cpp
     Created: 12 Oct 2022 9:20:59pm
     Author:  Tiparium
 
@@ -11,9 +11,9 @@
 */
 
 #include <JuceHeader.h>
-#include "RestHandler.h"
+#include "PHueHandler.h"
 
-RestHandler::RestHandler(juce::String http, juce::String api, juce::String get, juce::String put)
+PHueHandler::PHueHandler(juce::String http, juce::String api, juce::String get, juce::String put)
 {
     _req.header("Content-Type", "application/json");
     _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
@@ -33,7 +33,7 @@ RestHandler::RestHandler(juce::String http, juce::String api, juce::String get, 
     }
 }
 
-RestHandler::~RestHandler()
+PHueHandler::~PHueHandler()
 {
     if (_debugMode)
     {
@@ -41,7 +41,7 @@ RestHandler::~RestHandler()
     }
 }
 
-void RestHandler::pushUpdate(TIP_RGB rgb, int lightID)
+void PHueHandler::pushUpdate(TIP_RGB rgb, int lightID)
 {
     juce::String putTarget = _apiPutTarget;
     juce::String target = "";
@@ -76,7 +76,7 @@ void RestHandler::pushUpdate(TIP_RGB rgb, int lightID)
     }
 }
 
-void RestHandler::pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> lights)
+void PHueHandler::pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> lights)
 {
     for (int i = 1; i <= _numLights; i++)
     {
@@ -88,7 +88,7 @@ void RestHandler::pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> ligh
     updateRootJSON();
 }
 
-void RestHandler::updateRootJSON() {
+void PHueHandler::updateRootJSON() {
     juce::String target = _httpTarget + _apiTarget + _apiGetTarget;
     adamski::RestRequest::Response res = _req.get(target).execute();
 
@@ -105,8 +105,8 @@ void RestHandler::updateRootJSON() {
 }
 
 // Getters / Setters
-int             RestHandler::getNumLights() { return _numLights; }
-juce::String    RestHandler::getLightNameByID(int id)
+int             PHueHandler::getNumLights() { return _numLights; }
+juce::String    PHueHandler::getLightNameByID(int id)
 {
     return _rootJSON[std::to_string(id)]["name"];
 }
@@ -115,7 +115,7 @@ juce::String    RestHandler::getLightNameByID(int id)
 /**
 EVERYTHING BELOW THIS LINE IS FOR DEBUG PURPOSES ONLY
 */
-void RestHandler::resetColor() {
+void PHueHandler::resetColor() {
     juce::var xyColor;
     xyColor.append(_OGxVal);
     xyColor.append(_OGyVal);

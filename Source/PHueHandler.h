@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    RestHandler.h
+    PHueHandler.h
     Created: 12 Oct 2022 9:20:59pm
     Author:  Tiparium
 
@@ -18,10 +18,10 @@
 #include "../resources/params.h" // Replace with custom params file
 
 
-class RestHandler{
+class PHueHandler{
 public:
-    RestHandler(juce::String http, juce::String api, juce::String get, juce::String put);
-    ~RestHandler();
+    PHueHandler(juce::String http, juce::String api, juce::String get, juce::String put);
+    ~PHueHandler();
 
     void pushUpdate(TIP_RGB rgb, int lightID);
     void pushUpdateToMultipleLights(TIP_RGB rgb, std::vector<bool> lights);

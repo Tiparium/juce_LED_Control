@@ -18,7 +18,7 @@
 #include <string>
 
 #include "../Source/PersistenceJSONHandler.h"
-#include "../Source/RestHandler.h"
+#include "../Source/PHueHandler.h"
 #include "../Source/FavoritesSlot.h"
 #include "../Source/WebServerHandler.h"
 #include "../Source/LEDControlCommandCodes.h"
@@ -78,7 +78,7 @@ private:
 
     // Talk to the Handlers
     WebServerHandler        _nodeMCUServerHandler;
-    RestHandler             _pHueRestHandler;
+    PHueHandler             _pHuePHueHandler;
     PersistenceJSONHandler  _favsHandler;
     juce::Component*        _parent;
 };

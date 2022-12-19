@@ -18,63 +18,23 @@
 #include <JuceHeader.h>
 #include <string>
 
-#include "../Source/PersistenceJSONHandler.h"
-#include "../Source/RestHandler.h"
-#include "../Source/FavoritesSlot.h"
-#include "../Source/WebServerHandler.h"
+#include "CoreLEDControlPanel.h"
+#include "../Source/LEDControlCommandCodes.h"
 
-class Main_C : public juce::Component,
-               public juce::Slider::Listener,
-               public juce::Button::Listener
+class Main_C : public juce::Component
 {
 public:
     Main_C();
     ~Main_C() override;
 
-    // RGBSliders
-    void sliderValueChanged(juce::Slider* slider) override;
-    void sliderDragEnded(juce::Slider* slider) override;
-
-    // Button Logic
-    void buttonClicked(juce::Button* button) override;
-    bool checkFavoritesButtons(juce::Button* button);
-    bool checkLEDControlButtons(juce::Button* button);
-
-    bool checkLEDControlButtonState(); // Returns true if all LED control buttons are active
-
-    // Drawing Logic
+    void handleCommandMessage(int commandId) override;
     void paint(juce::Graphics&) override;
-    void paintFavorites(juce::Graphics&);
-    void paintSliders(juce::Graphics&);
-    void paintLEDControlButtons(juce::Graphics&);
     void resized() override;
 
-    //  G/S
-    void setSliderValues(TIP_RGB rgb);
 private:
+    // Tab Pannel Selector
+    juce::TabbedComponent* _panelSelector;
 
-    // RGBSliders
-    juce::Label _rLabel;
-    juce::Label _gLabel;
-    juce::Label _bLabel;
-    juce::Slider _rSlider;
-    juce::Slider _gSlider;
-    juce::Slider _bSlider;
-    //* RGBSliders
-
-    TIP_RGB _rgb;
-
-    // FavoritesBar
-    std::vector<FavoritesSlot*> _favSlots;
-    juce::TextButton _newFavButton;
-
-    // Individual pHue LED control
-    std::vector<juce::TextButton*> _pHueLEDPickers;
-    juce::TextButton               _toggleAllLEDControlButton;
-    std::vector<bool>              _listeningLights;
-
-    // Talk to the Handlers
-    WebServerHandler        _nodeMCUServerHandler;
-    RestHandler             _pHueRestHandler;
-    PersistenceJSONHandler  _favsHandler;
+    // DisplayTabs
+    CoreLEDControlPanel* _coreLEDControlPanel;
 };

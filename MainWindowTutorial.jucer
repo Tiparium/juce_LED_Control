@@ -12,6 +12,10 @@
           <FILE id="PIQMbs" name="FavoritesSlot.h" compile="0" resource="0" file="Source/FavoritesSlot.h"/>
         </GROUP>
         <GROUP id="{5897D99A-A494-787D-AC49-E96C4EF5AD5C}" name="host">
+          <FILE id="He4rXA" name="CoreLEDControlPanel.cpp" compile="1" resource="0"
+                file="Source/CoreLEDControlPanel.cpp"/>
+          <FILE id="gBtdL9" name="CoreLEDControlPanel.h" compile="0" resource="0"
+                file="Source/CoreLEDControlPanel.h"/>
           <FILE id="G7uQat" name="Main_C.cpp" compile="1" resource="0" file="Source/Main_C.cpp"/>
           <FILE id="p4ojv3" name="Main_C.h" compile="0" resource="0" file="Source/Main_C.h"/>
         </GROUP>
@@ -32,6 +36,8 @@
       </GROUP>
       <GROUP id="{DE97DC9E-93A9-A6FE-6639-B4A1FEBB698D}" name="DATA (_D)">
         <GROUP id="{83858997-F1F4-EFCC-44B0-A35F4DEFE340}" name="params">
+          <FILE id="jeCn4e" name="LEDControlCommandCodes.h" compile="0" resource="0"
+                file="Source/LEDControlCommandCodes.h"/>
           <FILE id="fUaqt7" name="params.cpp" compile="1" resource="0" file="Source/params.cpp"/>
           <FILE id="TP2L8V" name="params.h" compile="0" resource="0" file="resources/params.h"/>
           <FILE id="xfBMQA" name="paramsTemplate.cpp" compile="1" resource="0"

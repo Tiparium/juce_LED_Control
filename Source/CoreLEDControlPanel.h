@@ -23,8 +23,6 @@
 #include "../Source/WebServerHandler.h"
 #include "../Source/LEDControlCommandCodes.h"
 
-#include "../Source/WebServerThreadWrapper.h"
-
 class CoreLEDControlPanel : public juce::Component,
     public juce::Slider::Listener,
     public juce::Button::Listener
@@ -79,7 +77,7 @@ private:
     std::vector<bool>              _listeningLights;
 
     // Talk to the Handlers
-    WebServerThreadWrapper  _nodeMCUThreadWrapper;
+    WebServerHandler        _nodeMCUServerHandler;
     PHueHandler             _pHuePHueHandler;
     PersistenceJSONHandler  _favsHandler;
     juce::Component*        _parent;

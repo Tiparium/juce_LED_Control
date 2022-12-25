@@ -7,3 +7,6 @@
 [submodule "hueplusplus"]
 	path = hueplusplus
 	url = https://github.com/enwi/hueplusplus.git
+[submodule "RESTinCurl"]
+	path = RESTinCurl
+	url = https://github.com/jgaa/RESTinCurl.git

@@ -12,23 +12,26 @@
 
 #include <JuceHeader.h>
 
-#include "../RestRequest/rest_request.h"
 #include "../Source/RGBStructs.h"
 #include "../json/include/nlohmann/json.hpp"
 #include "../Source/RGBStructs.h"
 
-class WebServerHandler
+class WebServerHandler : public juce::Thread
 {
 public:
 
     WebServerHandler();
     ~WebServerHandler();
 
+
+
     void pushToServer(TIP_RGB rgb);
+    void pushToServer_NativeJUCE(TIP_RGB rgb);
 
 private:
+    // restincurl::Client      _client;
 
     // For making API calls
-    adamski::RestRequest    _req;
+    int                     _timeout = 5000;
     juce::String            _addr = "http://10.0.0.104/setcolor";
 };

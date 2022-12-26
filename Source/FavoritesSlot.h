@@ -29,7 +29,7 @@ public:
     void paint(juce::Graphics&) override;
 
 private:
-    TIP_RGB _rgb;
+    TIP_RGB _ledRGB;
     juce::TextButton _favButton;
     juce::TextButton _delButton;
 };

@@ -14,24 +14,26 @@
 
 #include "../Source/RGBStructs.h"
 #include "../json/include/nlohmann/json.hpp"
-#include "../Source/RGBStructs.h"
 
-class WebServerHandler : public juce::Thread
+class WebServerHandler : juce::Thread
 {
 public:
 
-    WebServerHandler();
+    WebServerHandler(TIP_RGB* rgbRef);
     ~WebServerHandler();
 
-
-
-    void pushToServer(TIP_RGB rgb);
-    void pushToServer_NativeJUCE(TIP_RGB rgb);
-
+    void run() override;
+    void sendPostRequest(TIP_RGB rgb);
 private:
-    // restincurl::Client      _client;
 
     // For making API calls
-    int                     _timeout = 5000;
-    juce::String            _addr = "http://10.0.0.104/setcolor";
+    int          _timeout = 5000;
+    juce::String _addr = "http://10.0.0.104/setcolor";
+
+    // For tracking RGB data
+    TIP_RGB*     _rgbRef;
+    TIP_RGB      _localRGB = TIP_RGB(255, 255, 255);
+
+    // Debug
+    bool    _classDebug = false;
 };

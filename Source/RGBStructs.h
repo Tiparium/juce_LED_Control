@@ -139,6 +139,17 @@ struct TIP_RGB
         return out;
     }
 
+    bool TIP_RGB::equals(TIP_RGB comparitor)
+    {
+        if (r != comparitor.r ||
+            g != comparitor.g ||
+            b != comparitor.b)
+        {
+            return false;
+        }
+        return true;
+    }
+
     // For debug purposes
     juce::String TIP_RGB::toString() {
         juce::String r = "R: " + std::to_string(TIP_RGB::r);

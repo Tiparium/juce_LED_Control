@@ -11,7 +11,7 @@
 #include "CoreLEDControlPanel.h"
 
 CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
-    _nodeMCUServerHandler(),
+    _nodeMCUServerHandler(&_ledRGB),
     _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _favsHandler("../../resources/favSlots.json")
 {
@@ -39,7 +39,6 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
         newSlot->getButton(1).addListener(this);
     }
     _newFavButton.addListener(this);
-    _nodeMCUServerHandler.pushToServer(TIP_RGB(0, 0, 0).colorCorrect());
 }
 
 CoreLEDControlPanel::~CoreLEDControlPanel()
@@ -78,9 +77,9 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
 // Runs when slider value is changed
 void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
 
-    _rgb.r = _rSlider.getValue();
-    _rgb.g = _gSlider.getValue();
-    _rgb.b = _bSlider.getValue();
+    _uiRGB.r = _rSlider.getValue();
+    _uiRGB.g = _gSlider.getValue();
+    _uiRGB.b = _bSlider.getValue();
 
     _parent->postCommandMessage(tip_rgb_Values_Updated);
     repaint();
@@ -88,8 +87,8 @@ void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void CoreLEDControlPanel::sliderDragEnded(juce::Slider* slider) {
-    _pHuePHueHandler.pushUpdateToMultipleLights(_rgb, _listeningLights);
-    _nodeMCUServerHandler.pushToServer(_rgb.colorCorrect());
+    _ledRGB = _uiRGB;
+    _pHuePHueHandler.pushUpdateToMultipleLights(_ledRGB, _listeningLights);
 }
 
 void CoreLEDControlPanel::buttonClicked(juce::Button* button)
@@ -107,7 +106,7 @@ void CoreLEDControlPanel::buttonClicked(juce::Button* button)
 bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
 {
     TIP_RGB rgb;
-    TIP_RGB hRGB = _rgb.colorCorrect();
+    TIP_RGB hRGB = _ledRGB.colorCorrect();
     // Create new Favorite Slot
     if (button == &_newFavButton) {
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
@@ -126,7 +125,6 @@ bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
 
             // Push colors to respective platforms
             _pHuePHueHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
-            _nodeMCUServerHandler.pushToServer(rgb.colorCorrect());
 
             return true;
         }
@@ -189,7 +187,7 @@ bool CoreLEDControlPanel::checkLEDControlButtonState()
 void CoreLEDControlPanel::paint(juce::Graphics& g) {
     g.drawRect(getLocalBounds(), 1);
     // Generate a corrected color & excract rgb components
-    TIP_RGB correctedRGB = _rgb.colorCorrect();
+    TIP_RGB correctedRGB = _uiRGB.colorCorrect();
     juce::uint8 cR = correctedRGB.r;
     juce::uint8 cG = correctedRGB.g;
     juce::uint8 cB = correctedRGB.b;
@@ -323,7 +321,7 @@ void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
         }
         else
         {
-            TIP_RGB rgb = _rgb.colorCorrect();
+            TIP_RGB rgb = _uiRGB.colorCorrect();
             _pHueLEDPickers[i]->setColour(
                 juce::TextButton::ColourIds::buttonColourId,
                 juce::Colour(rgb.r, rgb.g, rgb.b));
@@ -342,5 +340,6 @@ void CoreLEDControlPanel::setSliderValues(TIP_RGB rgb) {
     _bSlider.setValue(rgb.b);
 }
 
-TIP_RGB CoreLEDControlPanel::getRGB() { return _rgb; }
+TIP_RGB CoreLEDControlPanel::getRGB() { return _ledRGB; }
+TIP_RGB CoreLEDControlPanel::getTempRGB() { return _uiRGB; }
 //* Getters / Setters

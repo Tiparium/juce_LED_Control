@@ -47,7 +47,7 @@ void Main_C::handleCommandMessage(int commandId)
 
 void Main_C::paint(juce::Graphics& g)
 {
-    TIP_RGB currentRGB = _coreLEDControlPanel->getRGB().colorCorrect();
+    TIP_RGB currentRGB = _coreLEDControlPanel->getTempRGB().colorCorrect();
     _panelSelector->setColour(juce::TabbedComponent::ColourIds::backgroundColourId,
         juce::Colour(currentRGB.r, currentRGB.g, currentRGB.b));
 }

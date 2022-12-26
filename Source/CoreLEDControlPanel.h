@@ -53,6 +53,7 @@ public:
     //  G/S
     void    setSliderValues(TIP_RGB rgb);
     TIP_RGB getRGB();
+    TIP_RGB getTempRGB();
 private:
 
     // RGBSliders
@@ -65,7 +66,8 @@ private:
     //* RGBSliders
 
     // Current RGB state
-    TIP_RGB _rgb;
+    TIP_RGB _uiRGB; // Represents RGB state displayed on screen
+    TIP_RGB _ledRGB;     // Represents RGB state displayed by LEDS
 
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;

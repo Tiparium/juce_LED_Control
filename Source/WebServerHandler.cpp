@@ -14,20 +14,31 @@
 #include "WebServerHandler.h"
 
 
-WebServerHandler::WebServerHandler()
+WebServerHandler::WebServerHandler(TIP_RGB* rgbRef) :
+    _rgbRef(rgbRef),
+    juce::Thread("NodeMCU RestAPI Thread")
 {
-    _req.header("Content-Type", "application/json");
-    _req.header("Authorization", "Basic " + juce::Base64::toBase64("username:password"));
+    startThread();
 }
 
-WebServerHandler::~WebServerHandler() {}
-
-void WebServerHandler::pushToServer(TIP_RGB rgb)
+WebServerHandler::~WebServerHandler()
 {
-    pushToServer_NativeJUCE(rgb);
+    stopThread(_timeout);
 }
 
-void WebServerHandler::pushToServer_NativeJUCE(TIP_RGB rgb)
+void WebServerHandler::run()
+{
+    while (!threadShouldExit())
+    {
+        if (!_localRGB.equals(_rgbRef->colorCorrect()))
+        {
+            _localRGB = _rgbRef->colorCorrect();
+            sendPostRequest(_localRGB);
+        }
+    }
+}
+
+void WebServerHandler::sendPostRequest(TIP_RGB rgb)
 {
     juce::URL url = juce::URL(_addr);
     juce::StringPairArray responseHeaders;
@@ -40,12 +51,26 @@ void WebServerHandler::pushToServer_NativeJUCE(TIP_RGB rgb)
     json["b"] = rgb.b;
     juce::String jsonAsStr = json.dump();
     DBG(jsonAsStr);
-    
-    if (!jsonAsStr.isEmpty()){ url = url.withPOSTData(jsonAsStr); }
+
+    if (!jsonAsStr.isEmpty()) { url = url.withPOSTData(jsonAsStr); }
     else { DBG("Something went VERY wrong here, RGB values should always be populated."); }
-    
+
     std::unique_ptr<juce::InputStream> stream(url.createInputStream(
         true, nullptr, nullptr,
         { "Content-Type: application/json" }, _timeout,
         &responseHeaders, &statusCode, 5, "POST"));
+
+    bool debug = false;
+
+    if (debug || _classDebug)
+    {
+        if (statusCode == 0)
+        {
+            DBG("NodeMCU Request Timed Out");
+        }
+        else
+        {
+            DBG("NodeMCU Request Succeeded!");
+        }
+    }
 }

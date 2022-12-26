@@ -125,7 +125,7 @@ bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
 
             // Push colors to respective platforms
             _pHuePHueHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
-
+            _ledRGB = _uiRGB;
             return true;
         }
         // Delete Favorite Slot
@@ -338,6 +338,9 @@ void CoreLEDControlPanel::setSliderValues(TIP_RGB rgb) {
     _rSlider.setValue(rgb.r);
     _gSlider.setValue(rgb.g);
     _bSlider.setValue(rgb.b);
+
+    _ledRGB = rgb.colorCorrect();
+    _uiRGB = rgb.colorCorrect();
 }
 
 TIP_RGB CoreLEDControlPanel::getRGB() { return _ledRGB; }

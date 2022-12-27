@@ -18,6 +18,10 @@
                 file="Source/CoreLEDControlPanel.h"/>
           <FILE id="G7uQat" name="Main_C.cpp" compile="1" resource="0" file="Source/Main_C.cpp"/>
           <FILE id="p4ojv3" name="Main_C.h" compile="0" resource="0" file="Source/Main_C.h"/>
+          <FILE id="rKiY7R" name="NodeMCUPatternProgrammer.cpp" compile="1" resource="0"
+                file="Source/NodeMCUPatternProgrammer.cpp"/>
+          <FILE id="rBWFdH" name="NodeMCUPatternProgrammer.h" compile="0" resource="0"
+                file="Source/NodeMCUPatternProgrammer.h"/>
         </GROUP>
       </GROUP>
       <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">

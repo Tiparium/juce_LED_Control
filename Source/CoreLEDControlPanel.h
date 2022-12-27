@@ -23,7 +23,8 @@
 #include "../Source/WebServerHandler.h"
 #include "../Source/LEDControlCommandCodes.h"
 
-class CoreLEDControlPanel : public juce::Component,
+class CoreLEDControlPanel :
+    public juce::Component,
     public juce::Slider::Listener,
     public juce::Button::Listener
 {

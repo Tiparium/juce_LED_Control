@@ -19,8 +19,10 @@ Main_C::Main_C() :
     // _panelSelector->setBounds(0, 0, 300, getHeight());
     addAndMakeVisible(_panelSelector);
 
+    _nodeMCUPatternProgrammer = new NodeMCUPatternProgrammer(dynamic_cast<juce::Component*>(this));
     _coreLEDControlPanel = new CoreLEDControlPanel(dynamic_cast<juce::Component*>(this));
     _panelSelector->addTab("Home", juce::Colours::slategrey, _coreLEDControlPanel, true, 0);
+    _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
     setSize(800, 600);
 }
 
@@ -28,6 +30,7 @@ Main_C::~Main_C()
 {
     removeAllChildren();
     delete _coreLEDControlPanel;
+    delete _nodeMCUPatternProgrammer;
     delete _panelSelector;
 }
 

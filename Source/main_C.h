@@ -18,7 +18,8 @@
 #include <JuceHeader.h>
 #include <string>
 
-#include "CoreLEDControlPanel.h"
+#include "../Source/CoreLEDControlPanel.h"
+#include "../Source/NodeMCUPatternProgrammer.h"
 #include "../Source/LEDControlCommandCodes.h"
 
 class Main_C : public juce::Component
@@ -36,5 +37,7 @@ private:
     juce::TabbedComponent* _panelSelector;
 
     // DisplayTabs
-    CoreLEDControlPanel* _coreLEDControlPanel;
+    CoreLEDControlPanel*        _coreLEDControlPanel;
+    NodeMCUPatternProgrammer*   _nodeMCUPatternProgrammer;
+
 };

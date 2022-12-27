@@ -19,9 +19,13 @@ Main_C::Main_C() :
     // _panelSelector->setBounds(0, 0, 300, getHeight());
     addAndMakeVisible(_panelSelector);
 
-    _nodeMCUPatternProgrammer = new NodeMCUPatternProgrammer(dynamic_cast<juce::Component*>(this));
+    // Build the UI
     _coreLEDControlPanel = new CoreLEDControlPanel(dynamic_cast<juce::Component*>(this));
     _panelSelector->addTab("Home", juce::Colours::slategrey, _coreLEDControlPanel, true, 0);
+
+    _nodeMCUPatternProgrammer = new NodeMCUPatternProgrammer(dynamic_cast<juce::Component*>(this));
+    _nodeMCUPatternProgrammer->setWebServerHandlerRef(_coreLEDControlPanel->getWebServerHandlerRef());
+    _nodeMCUPatternProgrammer->setPersistenceHandlerRef(_coreLEDControlPanel->getPersistenceHandlerRef());
     _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
     setSize(800, 600);
 }

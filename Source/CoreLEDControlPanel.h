@@ -53,8 +53,11 @@ public:
 
     //  G/S
     void    setSliderValues(TIP_RGB rgb);
-    TIP_RGB getRGB();
-    TIP_RGB getTempRGB();
+    TIP_RGB                     getRGB();
+    TIP_RGB                     getTempRGB();
+    WebServerHandler*           getWebServerHandlerRef();
+    PersistenceJSONHandler*     getPersistenceHandlerRef();
+
 private:
 
     // RGBSliders

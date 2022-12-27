@@ -345,4 +345,9 @@ void CoreLEDControlPanel::setSliderValues(TIP_RGB rgb) {
 
 TIP_RGB CoreLEDControlPanel::getRGB() { return _ledRGB; }
 TIP_RGB CoreLEDControlPanel::getTempRGB() { return _uiRGB; }
+
+WebServerHandler* CoreLEDControlPanel::getWebServerHandlerRef() 
+{ return &_nodeMCUServerHandler; }
+PersistenceJSONHandler* CoreLEDControlPanel::getPersistenceHandlerRef() 
+{ return &_favsHandler; }
 //* Getters / Setters

@@ -39,3 +39,12 @@ void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
 {
 
 }
+
+// G/S
+
+void NodeMCUPatternProgrammer::setWebServerHandlerRef(WebServerHandler* nodeMCUServerHandlerRef)
+{ _nodeMCUServerHandlerRef = nodeMCUServerHandlerRef; }
+void NodeMCUPatternProgrammer::setPersistenceHandlerRef(PersistenceJSONHandler* favsHandlerRef)
+{ _favsHandlerRef = favsHandlerRef; }
+
+// *G/S

@@ -3,7 +3,7 @@
 
     persistenceJSONHandler.cpp
     Created: 29 Oct 2022 2:52:54pm
-    Author:  merje
+    Author:  Tiparium
 
   ==============================================================================
 */

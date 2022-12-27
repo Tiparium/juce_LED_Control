@@ -23,7 +23,7 @@ WebServerHandler::WebServerHandler(TIP_RGB* rgbRef) :
 
 WebServerHandler::~WebServerHandler()
 {
-    stopThread(_timeout);
+    stopThread(_timeout + 500);
 }
 
 void WebServerHandler::run()

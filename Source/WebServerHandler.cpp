@@ -33,12 +33,12 @@ void WebServerHandler::run()
         if (!_localRGB.equals(_rgbRef->colorCorrect()))
         {
             _localRGB = _rgbRef->colorCorrect();
-            sendPostRequest(_localRGB);
+            sendSingleRGBPostRequest(_localRGB);
         }
     }
 }
 
-void WebServerHandler::sendPostRequest(TIP_RGB rgb)
+void WebServerHandler::sendSingleRGBPostRequest(TIP_RGB rgb)
 {
     juce::URL url = juce::URL(_addr);
     juce::StringPairArray responseHeaders;
@@ -49,7 +49,10 @@ void WebServerHandler::sendPostRequest(TIP_RGB rgb)
     json["r"] = rgb.r;
     json["g"] = rgb.g;
     json["b"] = rgb.b;
-    juce::String jsonAsStr = json.dump();
+    nlohmann::json jsonArr;
+    jsonArr["rgbDataPoints"].push_back(json);
+
+    juce::String jsonAsStr = jsonArr.dump();
     DBG(jsonAsStr);
 
     if (!jsonAsStr.isEmpty()) { url = url.withPOSTData(jsonAsStr); }

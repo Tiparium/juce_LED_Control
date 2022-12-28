@@ -23,7 +23,7 @@ public:
     ~WebServerHandler();
 
     void run() override;
-    void sendPostRequest(TIP_RGB rgb);
+    void sendSingleRGBPostRequest(TIP_RGB rgb);
 private:
 
     // For making API calls

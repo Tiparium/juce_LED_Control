@@ -27,6 +27,7 @@ Main_C::Main_C() :
     _nodeMCUPatternProgrammer->setWebServerHandlerRef(_coreLEDControlPanel->getWebServerHandlerRef());
     _nodeMCUPatternProgrammer->setPersistenceHandlerRef(_coreLEDControlPanel->getPersistenceHandlerRef());
     _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
+    
     setSize(800, 600);
 }
 

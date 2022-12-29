@@ -5,8 +5,6 @@
     Created: 9 Oct 2022 12:05:31am
     Author:  Tiparium
 
-    Contains & Displays subcomponents both for data processing & UI display.
-
   ==============================================================================
 */
 

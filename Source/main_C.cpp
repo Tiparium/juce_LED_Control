@@ -13,11 +13,18 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
-    _webServerHandler(&_ledRGB),
+    _webServerHandler(&_ledRGB, &_rgbPattern),
     _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
     _persistenceJSONHandler("../../resources/favSlots.json"),
     _coreLEDControlPanel()
 {
+
+    TIP_RGB r = TIP_RGB(255, 0, 0);
+    TIP_RGB g = TIP_RGB(0, 255, 0);
+    TIP_RGB b = TIP_RGB(0, 0, 255);
+    _rgbPattern.push_back(r);
+    _rgbPattern.push_back(g);
+    _rgbPattern.push_back(b);
 
     _panelSelector = new juce::TabbedComponent(juce::TabbedButtonBar::TabsAtTop);
     // _panelSelector->setBounds(0, 0, 300, getHeight());

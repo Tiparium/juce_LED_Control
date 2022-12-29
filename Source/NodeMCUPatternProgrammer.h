@@ -40,7 +40,6 @@ public:
     void buttonClicked(juce::Button* button) override;
 
     // G/S
-    std::vector<TIP_RGB>* getPatternRef();
     // *G/S
 
 private:
@@ -48,11 +47,6 @@ private:
     // Refs to RGB State
     TIP_RGB* _uiRGB_Ref;
     TIP_RGB* _ledRGB_Ref;
-
-    // TODO: Restructure so all of this stuff is stored in Main_C instead of here.
-    //       There is no good reason NodeMCUPatternProgrammer should have them.
-    //       (Other than that it made sense with my earlier design choices.)
-    std::vector<TIP_RGB>        _rgbPattern;
 
     // Talk to the Handlers
     // Talk to the Handlers

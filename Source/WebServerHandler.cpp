@@ -14,8 +14,9 @@
 #include "WebServerHandler.h"
 
 
-WebServerHandler::WebServerHandler(TIP_RGB* rgbRef) :
+WebServerHandler::WebServerHandler(TIP_RGB* rgbRef, std::vector<TIP_RGB>* rgbPatternRef) :
     _rgbRef(rgbRef),
+    _rgbPatternRef(rgbPatternRef),
     juce::Thread("NodeMCU RestAPI Thread")
 {
 }

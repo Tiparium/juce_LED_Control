@@ -44,8 +44,9 @@ private:
     NodeMCUPatternProgrammer*   _nodeMCUPatternProgrammer;
 
     // Current RGB state
-    TIP_RGB _uiRGB;      // Represents RGB state displayed on screen
-    TIP_RGB _ledRGB;     // Represents RGB state displayed by LEDS
+    TIP_RGB                 _uiRGB;      // Represents RGB state displayed on screen
+    TIP_RGB                 _ledRGB;     // Represents RGB state displayed by LEDS
+    std::vector<TIP_RGB>    _rgbPattern;
 
     // Talk To The Handlers -> How I send data to places
     WebServerHandler        _webServerHandler;

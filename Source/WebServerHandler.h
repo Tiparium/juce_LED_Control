@@ -19,7 +19,7 @@ class WebServerHandler : public juce::Thread
 {
 public:
 
-    WebServerHandler(TIP_RGB* rgbRef);
+    WebServerHandler(TIP_RGB* rgbRef, std::vector<TIP_RGB>* rgbPatternRef);
     ~WebServerHandler();
 
     void run() override;

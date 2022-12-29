@@ -14,14 +14,18 @@
 
 #pragma once
 
+// Mandatory
 #include <JuceHeader.h>
 #include <string>
 
-#include "../Source/PersistenceJSONHandler.h"
-#include "../Source/PHueHandler.h"
+// Has
 #include "../Source/FavoritesSlot.h"
-#include "../Source/WebServerHandler.h"
 #include "../Source/LEDControlCommandCodes.h"
+
+// Has&
+#include "../Source/WebServerHandler.h"
+#include "../Source/PHueHandler.h"
+#include "../Source/PersistenceJSONHandler.h"
 
 class CoreLEDControlPanel :
     public juce::Component,
@@ -29,7 +33,11 @@ class CoreLEDControlPanel :
     public juce::Button::Listener
 {
 public:
-    CoreLEDControlPanel(juce::Component* parent);
+    CoreLEDControlPanel(juce::Component* parent, 
+        WebServerHandler* webServerHandler,
+        PHueHandler* pHueHandler,
+        PersistenceJSONHandler* persistenceJSONHandler,
+        TIP_RGB* uiRGB, TIP_RGB* ledRGB);
     ~CoreLEDControlPanel() override;
 
     // RGBSliders
@@ -53,12 +61,12 @@ public:
 
     //  G/S
     void    setSliderValues(TIP_RGB rgb);
-    TIP_RGB                     getRGB();
-    TIP_RGB                     getTempRGB();
-    WebServerHandler*           getWebServerHandlerRef();
-    PersistenceJSONHandler*     getPersistenceHandlerRef();
 
 private:
+
+    // Refs to RGB State
+    TIP_RGB* _uiRGB_Ref;
+    TIP_RGB* _ledRGB_Ref;
 
     // RGBSliders
     juce::Label _rLabel;
@@ -68,10 +76,6 @@ private:
     juce::Slider _gSlider;
     juce::Slider _bSlider;
     //* RGBSliders
-
-    // Current RGB state
-    TIP_RGB _uiRGB; // Represents RGB state displayed on screen
-    TIP_RGB _ledRGB;     // Represents RGB state displayed by LEDS
 
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
@@ -83,8 +87,8 @@ private:
     std::vector<bool>              _listeningLights;
 
     // Talk to the Handlers
-    WebServerHandler        _nodeMCUServerHandler;
-    PHueHandler             _pHuePHueHandler;
-    PersistenceJSONHandler  _favsHandler;
-    juce::Component*        _parent;
+    WebServerHandler*        _webServerHandler_Ref;
+    PHueHandler*             _pHuePHueHandler_Ref;
+    PersistenceJSONHandler*  _persistenceJSONHandler_Ref;
+    juce::Component*         _parent;
 };

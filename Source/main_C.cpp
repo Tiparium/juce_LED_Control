@@ -13,29 +13,35 @@
 #include "Main_C.h"
 
 Main_C::Main_C() :
+    _webServerHandler(&_ledRGB),
+    _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
+    _persistenceJSONHandler("../../resources/favSlots.json"),
     _coreLEDControlPanel()
 {
+
     _panelSelector = new juce::TabbedComponent(juce::TabbedButtonBar::TabsAtTop);
     // _panelSelector->setBounds(0, 0, 300, getHeight());
     addAndMakeVisible(_panelSelector);
 
     // Build the UI
-    _coreLEDControlPanel = new CoreLEDControlPanel(dynamic_cast<juce::Component*>(this));
+    _coreLEDControlPanel = new CoreLEDControlPanel(
+        dynamic_cast<juce::Component*>(this),
+        &_webServerHandler, &_pHuePHueHandler,
+        &_persistenceJSONHandler,
+        &_uiRGB,
+        &_ledRGB);
     _panelSelector->addTab("Home", juce::Colours::slategrey, _coreLEDControlPanel, true, 0);
-
-    _nodeMCUPatternProgrammer = new NodeMCUPatternProgrammer(dynamic_cast<juce::Component*>(this));
-    _nodeMCUPatternProgrammer->setWebServerHandlerRef(_coreLEDControlPanel->getWebServerHandlerRef());
-    _nodeMCUPatternProgrammer->setPersistenceHandlerRef(_coreLEDControlPanel->getPersistenceHandlerRef());
+    _nodeMCUPatternProgrammer = new NodeMCUPatternProgrammer(
+        dynamic_cast<juce::Component*>(this),
+        &_webServerHandler, &_pHuePHueHandler,
+        &_persistenceJSONHandler,
+        &_uiRGB, 
+        &_ledRGB);
     _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
-    
     setSize(800, 600);
 
-    // This is temporary until I restructure the code so that RGB state data is stored here
-    // instead of in CoreLEDControlPanel.
-    // Seriously this code is ugly AF. I'm just passing data around in the worst possible way.
-    _coreLEDControlPanel->getWebServerHandlerRef()->setRGBPatternRef(
-        _nodeMCUPatternProgrammer->getPatternRef());
-    _coreLEDControlPanel->getWebServerHandlerRef()->startThread();
+    // Start NodeMCU Broadcast thread
+    _webServerHandler.startThread();
 }
 
 Main_C::~Main_C()
@@ -62,7 +68,7 @@ void Main_C::handleCommandMessage(int commandId)
 
 void Main_C::paint(juce::Graphics& g)
 {
-    TIP_RGB currentRGB = _coreLEDControlPanel->getTempRGB().colorCorrect();
+    TIP_RGB currentRGB = _uiRGB.colorCorrect();
     _panelSelector->setColour(juce::TabbedComponent::ColourIds::backgroundColourId,
         juce::Colour(currentRGB.r, currentRGB.g, currentRGB.b));
 }

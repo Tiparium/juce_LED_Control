@@ -36,9 +36,9 @@ void WebServerHandler::run()
         if (!_stateOverride)
         {
             // All LEDS on NodeMCU should be the same color
-            if (!_localRGBPattern[0].equals(_rgbRef->colorCorrect()))
+            if (!_localRGBPattern[0].isEqualTo((*_rgbRef).colorCorrect()))
             {
-                _localRGBPattern[0] = _rgbRef->colorCorrect();
+                _localRGBPattern[0] = (*_rgbRef).colorCorrect();
                 std::vector<TIP_RGB> temp;
                 temp.push_back(_localRGBPattern[0]);
                 sendRGBPatternPostRequest(temp);
@@ -151,7 +151,7 @@ bool WebServerHandler::checkRGBPatternEquality(std::vector<TIP_RGB> local, std::
     std::vector<TIP_RGB> localCopyOfNewData = *newData;
     for (int i = 0; i < local.size(); i++)
     {
-        if (!local[i].equals(localCopyOfNewData[i]))
+        if (!local[i].isEqualTo(localCopyOfNewData[i]))
         {
             return false;
         }

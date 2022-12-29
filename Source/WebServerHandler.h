@@ -44,7 +44,7 @@ private:
     std::vector<TIP_RGB>    _localRGBPattern;
 
     // For state tracking
-    bool _stateOverride = true;
+    bool _stateOverride = false;
 
     // Debug
     bool    _classDebug = false;

@@ -21,6 +21,9 @@
 #include "../Source/CoreLEDControlPanel.h"
 #include "../Source/NodeMCUPatternProgrammer.h"
 #include "../Source/LEDControlCommandCodes.h"
+#include "../Source/WebServerHandler.h"
+#include "../Source/PHueHandler.h"
+#include "../Source/PersistenceJSONHandler.h"
 
 class Main_C : public juce::Component
 {
@@ -40,4 +43,12 @@ private:
     CoreLEDControlPanel*        _coreLEDControlPanel;
     NodeMCUPatternProgrammer*   _nodeMCUPatternProgrammer;
 
+    // Current RGB state
+    TIP_RGB _uiRGB;      // Represents RGB state displayed on screen
+    TIP_RGB _ledRGB;     // Represents RGB state displayed by LEDS
+
+    // Talk To The Handlers -> How I send data to places
+    WebServerHandler        _webServerHandler;
+    PHueHandler             _pHuePHueHandler;
+    PersistenceJSONHandler  _persistenceJSONHandler;
 };

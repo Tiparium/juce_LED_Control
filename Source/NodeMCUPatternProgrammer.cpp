@@ -10,8 +10,13 @@
 
 #include "NodeMCUPatternProgrammer.h"
 
-NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent) :
-    _parent(parent)
+NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB) :
+    _webServerHandler_Ref(webServerHandler),
+    _pHuePHueHandler_Ref(pHueHandler),
+    _persistenceJSONHandler_Ref(persistenceJSONHandler),
+    _parent(parent),
+    _uiRGB_Ref(uiRGB),
+    _ledRGB_Ref(ledRGB)
 {
     TIP_RGB r = TIP_RGB(255, 0, 0);
     TIP_RGB g = TIP_RGB(0, 255, 0);
@@ -46,11 +51,6 @@ void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
 }
 
 // G/S
-
-void NodeMCUPatternProgrammer::setWebServerHandlerRef(WebServerHandler* nodeMCUServerHandlerRef)
-{ _nodeMCUServerHandlerRef = nodeMCUServerHandlerRef; }
-void NodeMCUPatternProgrammer::setPersistenceHandlerRef(PersistenceJSONHandler* favsHandlerRef)
-{ _favsHandlerRef = favsHandlerRef; }
 std::vector<TIP_RGB>* NodeMCUPatternProgrammer::getPatternRef()
 { return &_rgbPattern; }
 // *G/S

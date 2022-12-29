@@ -139,7 +139,7 @@ struct TIP_RGB
         return out;
     }
 
-    bool TIP_RGB::equals(TIP_RGB comparitor)
+    bool TIP_RGB::isEqualTo(TIP_RGB comparitor)
     {
         if (r != comparitor.r ||
             g != comparitor.g ||

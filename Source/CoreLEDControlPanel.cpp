@@ -10,16 +10,18 @@
 
 #include "CoreLEDControlPanel.h"
 
-CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
-    _nodeMCUServerHandler(&_ledRGB),
-    _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
-    _favsHandler("../../resources/favSlots.json")
+CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB):
+    _webServerHandler_Ref(webServerHandler),
+    _pHuePHueHandler_Ref(pHueHandler),
+    _persistenceJSONHandler_Ref(persistenceJSONHandler),
+    _parent(parent),
+    _uiRGB_Ref(uiRGB),
+    _ledRGB_Ref(ledRGB)
 {
-    _parent = parent;
 
     // Individual LED controls
     _toggleAllLEDControlButton.addListener(this);
-    for (int i = 0; i < _pHuePHueHandler.getNumLights(); i++)
+    for (int i = 0; i < _pHuePHueHandler_Ref->getNumLights(); i++)
     {
         _pHueLEDPickers.push_back(new juce::TextButton);
         _pHueLEDPickers[i]->addListener(this);
@@ -28,7 +30,7 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
     }
 
     // Handle Persistence
-    nlohmann::json jsonFromFile = _favsHandler.readJSONFromFile();
+    nlohmann::json jsonFromFile = _persistenceJSONHandler_Ref->readJSONFromFile();
     for (auto i = 0; i < jsonFromFile.size(); i++)
     {
         TIP_RGB newRGB = TIP_RGB(jsonFromFile[i]["r"], jsonFromFile[i]["g"], jsonFromFile[i]["b"]);
@@ -41,7 +43,7 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
     _newFavButton.addListener(this);
 
     // Begin thread for NodeMCU LED sync
-    // _nodeMCUServerHandler.startThread();
+    // _webServerHandler_Ref.startThread();
 }
 
 CoreLEDControlPanel::~CoreLEDControlPanel()
@@ -74,15 +76,16 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
         delete _favSlots[i];
     }
     DBG("JSON TO PUSH TO FILE: " + jsonToFile.dump());
-    _favsHandler.saveJSONToFile(jsonToFile);
+    // TODO - Find a way to move this to main. It shouldn't be here.
+    _persistenceJSONHandler_Ref->saveJSONToFile(jsonToFile);
 }
 
 // Runs when slider value is changed
 void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
 
-    _uiRGB.r = _rSlider.getValue();
-    _uiRGB.g = _gSlider.getValue();
-    _uiRGB.b = _bSlider.getValue();
+    _uiRGB_Ref->r = _rSlider.getValue();
+    _uiRGB_Ref->g = _gSlider.getValue();
+    _uiRGB_Ref->b = _bSlider.getValue();
 
     _parent->postCommandMessage(tip_rgb_Values_Updated);
     repaint();
@@ -90,8 +93,8 @@ void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
 
 // Runs when mouse is lifted from a slider
 void CoreLEDControlPanel::sliderDragEnded(juce::Slider* slider) {
-    _ledRGB = _uiRGB;
-    _pHuePHueHandler.pushUpdateToMultipleLights(_ledRGB, _listeningLights);
+    *_ledRGB_Ref = *_uiRGB_Ref;
+    _pHuePHueHandler_Ref->pushUpdateToMultipleLights(*_ledRGB_Ref, _listeningLights);
 }
 
 void CoreLEDControlPanel::buttonClicked(juce::Button* button)
@@ -109,7 +112,7 @@ void CoreLEDControlPanel::buttonClicked(juce::Button* button)
 bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
 {
     TIP_RGB rgb;
-    TIP_RGB hRGB = _ledRGB.colorCorrect();
+    TIP_RGB hRGB = (*_ledRGB_Ref).colorCorrect();
     // Create new Favorite Slot
     if (button == &_newFavButton) {
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
@@ -127,8 +130,8 @@ bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
             setSliderValues(rgb);
 
             // Push colors to respective platforms
-            _pHuePHueHandler.pushUpdateToMultipleLights(rgb, _listeningLights);
-            _ledRGB = _uiRGB;
+            _pHuePHueHandler_Ref->pushUpdateToMultipleLights(rgb, _listeningLights);
+            *_ledRGB_Ref = *_uiRGB_Ref;
             return true;
         }
         // Delete Favorite Slot
@@ -167,7 +170,7 @@ bool CoreLEDControlPanel::checkLEDControlButtons(juce::Button* button)
         return true;
     }
     // Button pressed was an LED toggle
-    for (int i = 0; i < _pHuePHueHandler.getNumLights(); i++)
+    for (int i = 0; i < _pHuePHueHandler_Ref->getNumLights(); i++)
     {
         if (button == _pHueLEDPickers[i])
         {
@@ -190,7 +193,7 @@ bool CoreLEDControlPanel::checkLEDControlButtonState()
 void CoreLEDControlPanel::paint(juce::Graphics& g) {
     g.drawRect(getLocalBounds(), 1);
     // Generate a corrected color & excract rgb components
-    TIP_RGB correctedRGB = _uiRGB.colorCorrect();
+    TIP_RGB correctedRGB = (*_uiRGB_Ref).colorCorrect();
     juce::uint8 cR = correctedRGB.r;
     juce::uint8 cG = correctedRGB.g;
     juce::uint8 cB = correctedRGB.b;
@@ -293,7 +296,7 @@ void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
 } // PaintSlider
 void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
 {
-    int numSlots = _pHuePHueHandler.getNumLights();
+    int numSlots = _pHuePHueHandler_Ref->getNumLights();
     float keyButtonWidth = getWidth() / 10;
 
     float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
@@ -313,7 +316,7 @@ void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
         _pHueLEDPickers[i]->setBounds(relativeXPos, relativeYPos, relativeWidth, relativeHeight);
         relativeXPos += relativeWidth;
 
-        _pHueLEDPickers[i]->setButtonText(_pHuePHueHandler.getLightNameByID(i + 1));
+        _pHueLEDPickers[i]->setButtonText(_pHuePHueHandler_Ref->getLightNameByID(i + 1));
         _pHueLEDPickers[i]->setColour(juce::TextButton::ColourIds::textColourOffId, juce::Colours::black);
 
         if (!_listeningLights[i])
@@ -324,7 +327,7 @@ void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
         }
         else
         {
-            TIP_RGB rgb = _uiRGB.colorCorrect();
+            TIP_RGB rgb = (*_uiRGB_Ref).colorCorrect();
             _pHueLEDPickers[i]->setColour(
                 juce::TextButton::ColourIds::buttonColourId,
                 juce::Colour(rgb.r, rgb.g, rgb.b));
@@ -342,15 +345,7 @@ void CoreLEDControlPanel::setSliderValues(TIP_RGB rgb) {
     _gSlider.setValue(rgb.g);
     _bSlider.setValue(rgb.b);
 
-    _ledRGB = rgb.colorCorrect();
-    _uiRGB = rgb.colorCorrect();
+    *_ledRGB_Ref = rgb.colorCorrect();
+    *_uiRGB_Ref = rgb.colorCorrect();
 }
-
-TIP_RGB CoreLEDControlPanel::getRGB() { return _ledRGB; }
-TIP_RGB CoreLEDControlPanel::getTempRGB() { return _uiRGB; }
-
-WebServerHandler* CoreLEDControlPanel::getWebServerHandlerRef() 
-{ return &_nodeMCUServerHandler; }
-PersistenceJSONHandler* CoreLEDControlPanel::getPersistenceHandlerRef() 
-{ return &_favsHandler; }
 //* Getters / Setters

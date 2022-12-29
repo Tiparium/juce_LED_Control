@@ -40,10 +40,14 @@ public:
     // G/S
     void setWebServerHandlerRef(WebServerHandler* nodeMCUServerHandlerRef);
     void setPersistenceHandlerRef(PersistenceJSONHandler* favsHandlerRef);
+    std::vector<TIP_RGB>* getPatternRef();
     // *G/S
 
 private:
-
+    // TODO: Restructure so all of this stuff is stored in Main_C instead of here.
+    //       There is no good reason NodeMCUPatternProgrammer should have them.
+    //       (Other than that it made sense with my earlier design choices.)
+    std::vector<TIP_RGB>        _rgbPattern;
     WebServerHandler*           _nodeMCUServerHandlerRef;
     PersistenceJSONHandler*     _favsHandlerRef;
     juce::Component* _parent;

@@ -15,7 +15,7 @@
 #include "../Source/RGBStructs.h"
 #include "../json/include/nlohmann/json.hpp"
 
-class WebServerHandler : juce::Thread
+class WebServerHandler : public juce::Thread
 {
 public:
 
@@ -24,6 +24,13 @@ public:
 
     void run() override;
     void sendSingleRGBPostRequest(TIP_RGB rgb);
+    void sendRGBPatternPostRequest(std::vector<TIP_RGB> pattern);
+
+    bool checkRGBPatternEquality(std::vector<TIP_RGB> local, std::vector<TIP_RGB>* newData);
+
+    // G/S
+    void setRGBPatternRef(std::vector<TIP_RGB>* patternRef);
+    // *G/S
 private:
 
     // For making API calls
@@ -31,8 +38,13 @@ private:
     juce::String _addr = "http://10.0.0.104/setcolor";
 
     // For tracking RGB data
-    TIP_RGB*     _rgbRef;
-    TIP_RGB      _localRGB = TIP_RGB(255, 255, 255);
+    TIP_RGB*                _rgbRef;
+    TIP_RGB                 _localRGB = TIP_RGB(1, 2, 3);
+    std::vector<TIP_RGB>*   _rgbPatternRef;
+    std::vector<TIP_RGB>    _localRGBPattern;
+
+    // For state tracking
+    bool _stateOverride = true;
 
     // Debug
     bool    _classDebug = false;

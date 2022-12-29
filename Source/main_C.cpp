@@ -29,6 +29,13 @@ Main_C::Main_C() :
     _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
     
     setSize(800, 600);
+
+    // This is temporary until I restructure the code so that RGB state data is stored here
+    // instead of in CoreLEDControlPanel.
+    // Seriously this code is ugly AF. I'm just passing data around in the worst possible way.
+    _coreLEDControlPanel->getWebServerHandlerRef()->setRGBPatternRef(
+        _nodeMCUPatternProgrammer->getPatternRef());
+    _coreLEDControlPanel->getWebServerHandlerRef()->startThread();
 }
 
 Main_C::~Main_C()

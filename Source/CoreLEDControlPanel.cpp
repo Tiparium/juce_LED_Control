@@ -39,6 +39,9 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent) :
         newSlot->getButton(1).addListener(this);
     }
     _newFavButton.addListener(this);
+
+    // Begin thread for NodeMCU LED sync
+    // _nodeMCUServerHandler.startThread();
 }
 
 CoreLEDControlPanel::~CoreLEDControlPanel()

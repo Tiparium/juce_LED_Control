@@ -24,6 +24,7 @@ Main_C::Main_C() :
     _rgbPattern.push_back(g);
     _rgbPattern.push_back(b);
 
+
     _panelSelector = new juce::TabbedComponent(juce::TabbedButtonBar::TabsAtTop);
     // _panelSelector->setBounds(0, 0, 300, getHeight());
     addAndMakeVisible(_panelSelector);
@@ -36,6 +37,7 @@ Main_C::Main_C() :
         &_uiRGB,
         &_ledRGB);
     _panelSelector->addTab("Home", juce::Colours::slategrey, _coreLEDControlPanel, true, 0);
+
     _nodeMCUPatternProgrammer = new NodeMCUPatternProgrammer(
         dynamic_cast<juce::Component*>(this),
         &_webServerHandler, &_pHuePHueHandler,
@@ -44,6 +46,8 @@ Main_C::Main_C() :
         &_ledRGB);
     _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
     setSize(800, 600);
+
+    _coreLEDControlPanel->setSliderValues(_uiRGB);
 
     // Start NodeMCU Broadcast thread
     _webServerHandler.startThread();

@@ -18,6 +18,9 @@
 #include <JuceHeader.h>
 #include <string>
 
+// Uses Enums
+#include "../Source/PersistenceIDValues.h"
+
 // Has
 #include "../Source/FavoritesSlot.h"
 #include "../Source/LEDControlCommandCodes.h"

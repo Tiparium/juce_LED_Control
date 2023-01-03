@@ -46,6 +46,8 @@
           <FILE id="TP2L8V" name="params.h" compile="0" resource="0" file="resources/params.h"/>
           <FILE id="xfBMQA" name="paramsTemplate.cpp" compile="1" resource="0"
                 file="Source/paramsTemplate.cpp"/>
+          <FILE id="J4jJMj" name="PersistenceIDValues.h" compile="0" resource="0"
+                file="Source/PersistenceIDValues.h"/>
         </GROUP>
         <FILE id="xzv8iE" name="RGBStructs.h" compile="0" resource="0" file="Source/RGBStructs.h"/>
       </GROUP>

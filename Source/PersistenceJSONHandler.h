@@ -12,6 +12,7 @@
 
 #include <fstream>
 
+#include "../Source/PersistenceIDValues.h"
 #include <../JuceLibraryCode/JuceHeader.h>
 #include "../json/include/nlohmann/json.hpp"
 
@@ -21,6 +22,7 @@ public:
     PersistenceJSONHandler(juce::String path);
     ~PersistenceJSONHandler();
 
+    void checkForEmptyJSON();
     nlohmann::json readJSONFromFile();
     void addJSONToLocalInstance(juce::String segmentTitle, nlohmann::json jsonIn);
     void saveJSONToFile();

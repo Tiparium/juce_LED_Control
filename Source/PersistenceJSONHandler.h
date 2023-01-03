@@ -22,9 +22,12 @@ public:
     ~PersistenceJSONHandler();
 
     nlohmann::json readJSONFromFile();
-    void saveJSONToFile(nlohmann::json jsonIn);
+    void addJSONToLocalInstance(juce::String segmentTitle, nlohmann::json jsonIn);
+    void saveJSONToFile();
 
 private:
-    juce::String _path;
-    juce::String _rootName;
+    nlohmann::json  _localInstance;
+
+    juce::String    _path;
+    juce::String    _rootName;
 };

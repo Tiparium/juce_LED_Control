@@ -20,7 +20,7 @@ WebServerHandler::WebServerHandler(TIP_RGB* rgbRef, std::vector<TIP_RGB>* rgbPat
 
 WebServerHandler::~WebServerHandler()
 {
-    stopThread(_timeout + 500);
+    stopThread(_timeout * 2);
 }
 
 void WebServerHandler::run()

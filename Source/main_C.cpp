@@ -55,6 +55,8 @@ Main_C::~Main_C()
     delete _coreLEDControlPanel;
     delete _nodeMCUPatternProgrammer;
     delete _panelSelector;
+
+    _persistenceJSONHandler.saveJSONToFile();
 }
 
 void Main_C::handleCommandMessage(int commandId)

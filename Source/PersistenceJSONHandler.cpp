@@ -26,9 +26,15 @@ nlohmann::json PersistenceJSONHandler::readJSONFromFile()
     return temp;
 }
 
-void PersistenceJSONHandler::saveJSONToFile(nlohmann::json jsonIn)
+void PersistenceJSONHandler::addJSONToLocalInstance(juce::String segmentTitle, nlohmann::json jsonIn)
 {
-    nlohmann::json newFileContents = jsonIn;
+    std::string segTitle = segmentTitle.toStdString();
+    _localInstance[segTitle] = jsonIn;
+}
+
+void PersistenceJSONHandler::saveJSONToFile()
+{
+    nlohmann::json newFileContents = _localInstance;
     std::ofstream file(_path.toStdString());
     file << newFileContents;
     file.close();

@@ -37,7 +37,7 @@ public:
 private:
 
     // For making API calls
-    int          _timeout = 5000;
+    int          _timeout = 3000;
     juce::String _addr = "http://10.0.0.104/setcolor";
 
     // For tracking RGB data

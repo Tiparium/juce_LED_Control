@@ -29,11 +29,11 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent, WebServerHandl
         DBG(i);
     }
 
-    // Handle Persistence
+    // Handle Fav Slots Persistence
     nlohmann::json jsonFromFile = _persistenceJSONHandler_Ref->readJSONFromFile();
-    for (auto i = 0; i < jsonFromFile.size(); i++)
+    for (auto i = 0; i < jsonFromFile["favorites"].size(); i++)
     {
-        TIP_RGB newRGB = TIP_RGB(jsonFromFile[i]["r"], jsonFromFile[i]["g"], jsonFromFile[i]["b"]);
+        TIP_RGB newRGB = TIP_RGB(jsonFromFile["favorites"][i]["r"], jsonFromFile["favorites"][i]["g"], jsonFromFile["favorites"][i]["b"]);
         TIP_RGB hRGB = newRGB.colorCorrect();
         FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
         _favSlots.push_back(newSlot);
@@ -77,7 +77,7 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
     }
     DBG("JSON TO PUSH TO FILE: " + jsonToFile.dump());
     // TODO - Find a way to move this to main. It shouldn't be here.
-    _persistenceJSONHandler_Ref->saveJSONToFile(jsonToFile);
+    _persistenceJSONHandler_Ref->addJSONToLocalInstance("favorites", jsonToFile);
 }
 
 // Runs when slider value is changed

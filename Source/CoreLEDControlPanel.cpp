@@ -49,7 +49,7 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent, WebServerHandl
     _newFavButton.addListener(this);
 
 
-    // Restore Previous State
+    // Restore Previous State - TODO: Figure out why this doesn't work
     juce::uint8 r = jsonFromFile["base_color_state"]["r"];
     juce::uint8 g = jsonFromFile["base_color_state"]["g"];
     juce::uint8 b = jsonFromFile["base_color_state"]["b"];

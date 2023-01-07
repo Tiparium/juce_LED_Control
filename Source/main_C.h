@@ -10,8 +10,6 @@
 
     Contains & Displays subcomponents both for data processing & UI display.
 
-    // TODO - Save the state of what lights are active, don't just init everything to true
-    // TODO - Wrap all handlers in their own threads so the program doesn't hang for a million years
   ==============================================================================
 */
 

@@ -32,6 +32,11 @@ public:
     NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB);
     ~NodeMCUPatternProgrammer();
 
+    // Painting Logic
+    void paint(juce::Graphics& g) override;
+    void paintSliders(juce::Graphics& g);
+    void paintPatternGenerator(juce::Graphics& g);
+
     // RGBSliders
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
@@ -47,6 +52,15 @@ private:
     // Refs to RGB State
     TIP_RGB* _uiRGB_Ref;
     TIP_RGB* _ledRGB_Ref;
+
+    // RGBSliders
+    juce::Label _rLabel;
+    juce::Label _gLabel;
+    juce::Label _bLabel;
+    juce::Slider _rSlider;
+    juce::Slider _gSlider;
+    juce::Slider _bSlider;
+    //* RGBSliders
 
     // Talk to the Handlers
     // Talk to the Handlers

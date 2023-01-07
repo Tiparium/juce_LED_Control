@@ -45,6 +45,7 @@ Main_C::Main_C() :
         &_uiRGB, 
         &_ledRGB);
     _panelSelector->addTab("Pattern Programmer", juce::Colours::slategrey, _nodeMCUPatternProgrammer, true, 1);
+    
     setSize(800, 600);
 
     _coreLEDControlPanel->setSliderValues(_uiRGB);

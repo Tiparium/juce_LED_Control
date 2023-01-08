@@ -213,7 +213,6 @@ void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
 
 bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
 {
-    // TODO
     if (button == &_newNodeButton)
     {
         PatternPickerSlot* temp = new PatternPickerSlot(dynamic_cast<juce::Component*>(this), buildRGBFromSliders());
@@ -296,6 +295,4 @@ void NodeMCUPatternProgrammer::setSliderValues(TIP_RGB rgb) {
     _gSlider.setValue(rgb.g);
     _bSlider.setValue(rgb.b);
 }
-
-// G/S
 // *G/S

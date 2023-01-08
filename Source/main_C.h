@@ -36,6 +36,8 @@ public:
     void resized() override;
 
 private:
+    juce::TooltipWindow    _testToolTip;
+
     // Tab Pannel Selector
     juce::TabbedComponent* _panelSelector;
 

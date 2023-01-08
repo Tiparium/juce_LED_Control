@@ -6,12 +6,16 @@
   <MAINGROUP id="fCxj2T" name="LED CONTROL">
     <GROUP id="{216EAAD5-2819-DE20-19C6-696F2D2282F5}" name="Source">
       <GROUP id="{BB0A579E-5E01-0A5A-A2D1-432E586D3039}" name="FRONT (_C)">
-        <GROUP id="{6DB810CF-8930-4F6C-518B-066FD5999B4F}" name="favorites">
+        <GROUP id="{6DB810CF-8930-4F6C-518B-066FD5999B4F}" name="UI Elements">
           <FILE id="N8JnZs" name="FavoritesSlot.cpp" compile="1" resource="0"
                 file="Source/FavoritesSlot.cpp"/>
           <FILE id="PIQMbs" name="FavoritesSlot.h" compile="0" resource="0" file="Source/FavoritesSlot.h"/>
+          <FILE id="UhPtlI" name="PatternPickerSlot.cpp" compile="1" resource="0"
+                file="Source/PatternPickerSlot.cpp"/>
+          <FILE id="vRWPCd" name="PatternPickerSlot.h" compile="0" resource="0"
+                file="Source/PatternPickerSlot.h"/>
         </GROUP>
-        <GROUP id="{5897D99A-A494-787D-AC49-E96C4EF5AD5C}" name="host">
+        <GROUP id="{5897D99A-A494-787D-AC49-E96C4EF5AD5C}" name="Core UI Panels">
           <FILE id="He4rXA" name="CoreLEDControlPanel.cpp" compile="1" resource="0"
                 file="Source/CoreLEDControlPanel.cpp"/>
           <FILE id="gBtdL9" name="CoreLEDControlPanel.h" compile="0" resource="0"

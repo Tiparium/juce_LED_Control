@@ -51,7 +51,6 @@ public:
     void buttonClicked(juce::Button* button) override;
     bool checkFavoritesButtons(juce::Button* button);
     bool checkLEDControlButtons(juce::Button* button);
-
     bool checkLEDControlButtonState(); // Returns true if all LED control buttons are active
 
     // Drawing Logic

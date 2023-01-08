@@ -12,10 +12,10 @@
 
 FavoritesSlot::FavoritesSlot(TIP_RGB rgb)
 {
-    _delButton.setButtonText("X");
     _ledRGB.r = rgb.r;
     _ledRGB.g = rgb.g;
     _ledRGB.b = rgb.b;
+    _delButton.setButtonText("X");
     _favButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_ledRGB.r, _ledRGB.g, _ledRGB.b));
 }
 FavoritesSlot::~FavoritesSlot(){}
@@ -23,6 +23,7 @@ FavoritesSlot::~FavoritesSlot(){}
 TIP_RGB FavoritesSlot::getRGB() {
     return _ledRGB;
 }
+
 void FavoritesSlot::setRGB(TIP_RGB rgb) {
     _ledRGB = rgb;
 }

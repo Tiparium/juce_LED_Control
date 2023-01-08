@@ -18,6 +18,11 @@ NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebS
     _uiRGB_Ref(uiRGB),
     _ledRGB_Ref(ledRGB)
 {
+    // Handle persistence
+
+    // Create button listeners
+    _newNodeButton.addListener(this);
+
 }
 
 NodeMCUPatternProgrammer::~NodeMCUPatternProgrammer()
@@ -25,14 +30,25 @@ NodeMCUPatternProgrammer::~NodeMCUPatternProgrammer()
     // Handle persistance
 
     // Remove listeners
-
+    _newNodeButton.removeListener(this);
     // Delete any dynamic variables
+    // Free & Delete pattern picker nodes
+    for (int i = 0; i < _patternPickers.size(); i++)
+    {
+        _patternPickers[i]->getButton(0).removeListener(this);
+        _patternPickers[i]->getButton(1).removeListener(this);
+        _patternPickers[i]->getButton(2).removeListener(this);
+
+        delete _patternPickers[i];
+    }
 }
 
 void NodeMCUPatternProgrammer::paint(juce::Graphics& g)
 {
     paintSliders(g);
     paintPatternGenerator(g);
+
+    g.fillAll(juce::Colour(_localRGB.r, _localRGB.g, _localRGB.b));
 }
 
 void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
@@ -100,22 +116,158 @@ void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
 
 void NodeMCUPatternProgrammer::paintPatternGenerator(juce::Graphics& g)
 {
+    int numSlots = _patternPickers.size();
 
+    float keyButtonWidth = getWidth() / 10;
+    float relativeXPos = 0;
+    float relativeYPos = keyButtonWidth;
+    float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
+    float relativeHeight = getHeight() / 7;
+    // Create Fav button
+    addAndMakeVisible(_newNodeButton);
+    if (_patternPickers.size() > 0) {
+        _newNodeButton.setBounds(0, 0, keyButtonWidth, getHeight() / 7);
+        _newNodeButton.setButtonText("+");
+    }
+    else {
+        _newNodeButton.setBounds(0, 0, getWidth(), getHeight() / 7);
+        _newNodeButton.setButtonText("Click Here to Create a Pattern Node");
+    }
+
+    // Draw and size FavoritesSlots
+    for (int i = 0; i < _patternPickers.size(); i++) {
+        addAndMakeVisible(_patternPickers[i]);
+        _patternPickers[i]->setBounds(relativeYPos, relativeXPos, relativeWidth, relativeHeight);
+        relativeYPos += relativeWidth;
+    }
 }
 
 void NodeMCUPatternProgrammer::sliderValueChanged(juce::Slider* slider)
 {
-
+    if (_patternPickers.size() > 0)
+    {
+        if (_currentSlot->getMode())
+        {
+            _localRGB = buildRGBFromSliders().colorCorrect();
+        }
+        else
+        {
+            _localRGB = buildRGBFromSliders();
+        }
+        _currentSlot->setRGB(_localRGB);
+    }
+    else
+    {
+        _localRGB = buildRGBFromSliders().colorCorrect();
+    }
+    repaint();
 }
 
 void NodeMCUPatternProgrammer::sliderDragEnded(juce::Slider* slider)
 {
+}
 
+TIP_RGB NodeMCUPatternProgrammer::buildRGBFromSliders()
+{
+    juce::uint8 r = _rSlider.getValue();
+    juce::uint8 g = _gSlider.getValue();
+    juce::uint8 b = _bSlider.getValue();
+
+    return TIP_RGB(r, g, b);
 }
 
 void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
 {
+    bool check;
+    check = checkPatternButtons(button);
+    if (check) { return; }
 
+    check = checkMultiplierButtons(button);
+    if (check) { return; }
+
+    check = checkSaveLoadUploadButtons(button);
+    if (check) { return; }
+
+    check = checkScrollingButtons(button);
+    if (check) { return; }
+
+    DBG("Something went wrong: An Unhandeled button has been pushed.");
+}
+
+bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
+{
+    // TODO
+    if (button == &_newNodeButton)
+    {
+        PatternPickerSlot* temp = new PatternPickerSlot(buildRGBFromSliders());
+        temp->getButton(0).addListener(this);
+        temp->getButton(1).addListener(this);
+        temp->getButton(2).addListener(this);
+        _patternPickers.push_back(temp);
+        setActiveSlot(_patternPickers.size() - 1);
+        return true;
+    }
+    for (int i = 0; i < _patternPickers.size(); i++)
+    {
+        // Call core slot (select)
+        if (button == &_patternPickers[i]->getButton(0))
+        {
+            setActiveSlot(i);
+            return true;
+        }
+        // Call toggle mode slot
+        if (button == &_patternPickers[i]->getButton(2))
+        {
+            _patternPickers[i]->toggleMode();
+            return true;
+        }
+        if (button == &_patternPickers[i]->getButton(1))
+        {
+            _patternPickers[i]->getButton(0).removeListener(this);
+            _patternPickers[i]->getButton(1).removeListener(this);
+            _patternPickers[i]->getButton(2).removeListener(this);
+            removeChildComponent(_patternPickers[i]);
+            PatternPickerSlot* temp = _patternPickers[i];
+            _patternPickers.erase(_patternPickers.begin() + i);
+            delete temp;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool NodeMCUPatternProgrammer::checkMultiplierButtons(juce::Button* button)
+{
+    // TODO
+    return false;
+}
+
+bool NodeMCUPatternProgrammer::checkScrollingButtons(juce::Button* button)
+{
+    // TODO
+    return false;
+}
+
+bool NodeMCUPatternProgrammer::checkSaveLoadUploadButtons(juce::Button* button)
+{
+    // TODO
+    return false;
+}
+
+void NodeMCUPatternProgrammer::setActiveSlot(int slotIndex)
+{
+    for (int i = 0; i < _patternPickers.size(); i++)
+    {
+        if (i == slotIndex)
+        {
+            _patternPickers[i]->setActive();
+            _currentSlot = _patternPickers[i];
+        }
+        else
+        {
+            _patternPickers[i]->setInactive();
+        }
+    }
 }
 
 // G/S

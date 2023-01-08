@@ -38,6 +38,7 @@ NodeMCUPatternProgrammer::~NodeMCUPatternProgrammer()
         _patternPickers[i]->getButton(0).removeListener(this);
         _patternPickers[i]->getButton(1).removeListener(this);
         _patternPickers[i]->getButton(2).removeListener(this);
+        _patternPickers[i]->getButton(-1).removeListener(this);
 
         delete _patternPickers[i];
     }
@@ -219,6 +220,7 @@ bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
         temp->getButton(0).addListener(this);
         temp->getButton(1).addListener(this);
         temp->getButton(2).addListener(this);
+        temp->getButton(-1).addListener(this);
         _patternPickers.push_back(temp);
         setActiveSlot(_patternPickers.size() - 1);
         return true;
@@ -226,7 +228,7 @@ bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
     for (int i = 0; i < _patternPickers.size(); i++)
     {
         // Call core slot (select)
-        if (button == &_patternPickers[i]->getButton(0))
+        if (button == &_patternPickers[i]->getButton(0) || button == &_patternPickers[i]->getButton(-1))
         {
             setActiveSlot(i);
             setSliderValues(_patternPickers[i]->getTrueRGB());

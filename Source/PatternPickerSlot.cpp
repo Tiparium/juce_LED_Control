@@ -41,6 +41,7 @@ void PatternPickerSlot::setRGB(TIP_RGB rgb) {
 }
 
 juce::Button& PatternPickerSlot::getButton(int button) {
+    if (button == -1) return _activityIndicator;
     if (button == 0) return _slotButton;
     if (button == 1) return _delButton;
     if (button == 2) return _toggleModeButton;

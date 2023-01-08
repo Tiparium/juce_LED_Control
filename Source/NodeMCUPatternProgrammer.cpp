@@ -69,9 +69,8 @@ void NodeMCUPatternProgrammer::paint(juce::Graphics& g)
 void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
 {
     float relativeXPos;
-    float relativeYPos;
     float relativeWidth;
-    float relativeHeight;
+    float relativeYPos;
 
     // Red Slider
     addAndMakeVisible(_rSlider);
@@ -121,11 +120,11 @@ void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
     g.setFont(30.0f);
 
     // Size RGBSliders
-    relativeHeight = getHeight() / 2;
-    relativeYPos = 100;
-    _rSlider.setBounds(relativeYPos, relativeHeight, getWidth() - 2 * relativeYPos, 20);
-    _gSlider.setBounds(relativeYPos, relativeHeight + 20, getWidth() - 2 * relativeYPos, 20);
-    _bSlider.setBounds(relativeYPos, relativeHeight + 40, getWidth() - 2 * relativeYPos, 20);
+    relativeYPos = getHeight() / 2;
+    relativeXPos = 100;
+    _rSlider.setBounds(relativeXPos, relativeYPos, getWidth() - (2 * relativeXPos), 20);
+    _gSlider.setBounds(relativeXPos, relativeYPos + 20, getWidth() - (2 * relativeXPos), 20);
+    _bSlider.setBounds(relativeXPos, relativeYPos + 40, getWidth() - (2 * relativeXPos), 20);
     //* RGBSliders
 } // PaintSlider
 

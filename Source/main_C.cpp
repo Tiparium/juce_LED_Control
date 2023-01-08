@@ -68,7 +68,7 @@ void Main_C::handleCommandMessage(int commandId)
 {
     switch (commandId)
     {
-    case tip_rgb_Values_Updated:
+    case tip_rgb_values_updated:
         repaint();
         break;
 

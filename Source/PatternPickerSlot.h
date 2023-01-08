@@ -12,14 +12,16 @@
 
 #include <JuceHeader.h>
 #include "../Source/RGBStructs.h"
+#include "../Source/LEDControlCommandCodes.h"
 
 class PatternPickerSlot : public juce::Component
 {
 public:
-    PatternPickerSlot(TIP_RGB rgb);
+    PatternPickerSlot(juce::Component* parent, TIP_RGB rgb);
     ~PatternPickerSlot();
 
     // RGB Data
+    TIP_RGB getTrueRGB();
     TIP_RGB getRGB();
     void setRGB(TIP_RGB rgb);
 
@@ -44,6 +46,12 @@ private:
 
     // Data
     bool             _isActiveSlot;
-    TIP_RGB          _ledRGB;
+    TIP_RGB          _localRGB;
     bool             _useColorCorrect = true;
+
+    // Intercomms
+    juce::Component* _parent;
+
+    // DEBUG
+    int _repaintCounter = 0;
 };

@@ -33,6 +33,8 @@ public:
     NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB);
     ~NodeMCUPatternProgrammer();
 
+    void handleCommandMessage(int commandId) override;
+
     // Painting Logic
     void paint(juce::Graphics& g) override;
     void paintSliders(juce::Graphics& g);
@@ -52,11 +54,11 @@ public:
 
     void setActiveSlot(int slotIndex);
 
-    // G/S
+    //  G/S
+    void setSliderValues(TIP_RGB rgb);
     // *G/S
 
 private:
-
     // Refs to RGB State
     TIP_RGB* _uiRGB_Ref;
     TIP_RGB* _ledRGB_Ref;
@@ -77,6 +79,9 @@ private:
     std::vector<PatternPickerSlot*> _patternPickers;
     PatternPickerSlot*              _currentSlot;
     juce::TextButton                _newNodeButton;
+
+    // Save / Load / Upload
+    juce::TextButton                _UploadPattern;
 
     // Talk to the Handlers
     WebServerHandler*           _webServerHandler_Ref;

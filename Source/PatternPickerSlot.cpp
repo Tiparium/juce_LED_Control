@@ -11,26 +11,32 @@
 #include "PatternPickerSlot.h"
 
 
-PatternPickerSlot::PatternPickerSlot(TIP_RGB rgb) :
+PatternPickerSlot::PatternPickerSlot(juce::Component* parent, TIP_RGB rgb) :
+    _parent(parent),
     _isActiveSlot(true)
 {
-    _ledRGB.r = rgb.r;
-    _ledRGB.g = rgb.g;
-    _ledRGB.b = rgb.b;
+    _localRGB.r = rgb.r;
+    _localRGB.g = rgb.g;
+    _localRGB.b = rgb.b;
     _delButton.setButtonText("X");
     _toggleModeButton.setButtonText("C");
     _toggleModeButton.setHelpText("Toggle Pattern Node between Color Corrected & Absolute mode");
-    setSlotButtonColors();
+    _parent->postCommandMessage(pattern_picker_mode_updated);
 }
 PatternPickerSlot::~PatternPickerSlot() {}
 
+TIP_RGB PatternPickerSlot::getTrueRGB()
+{
+    return _localRGB;
+}
+
 TIP_RGB PatternPickerSlot::getRGB() {
-    if (_useColorCorrect) { return _ledRGB.colorCorrect(); }
-    return _ledRGB;
+    if (_useColorCorrect) { return _localRGB.colorCorrect(); }
+    return _localRGB;
 }
 
 void PatternPickerSlot::setRGB(TIP_RGB rgb) {
-    _ledRGB = rgb;
+    _localRGB = rgb;
     setSlotButtonColors();
 }
 
@@ -44,6 +50,10 @@ juce::Button& PatternPickerSlot::getButton(int button) {
 void PatternPickerSlot::toggleMode()
 {
     _useColorCorrect = !_useColorCorrect;
+    if (_isActiveSlot)
+    {
+        _parent->postCommandMessage(pattern_picker_mode_updated);
+    }
     repaint();
 }
 
@@ -78,15 +88,15 @@ void PatternPickerSlot::paint(juce::Graphics& g) {
 
     setSlotButtonColors();
 
-    juce::String toggleMode = _useColorCorrect ? "C" : "A";
-    _toggleModeButton.setButtonText(toggleMode);
+    juce::String buttonMode = _useColorCorrect ? "C" : "A";
+    _toggleModeButton.setButtonText(buttonMode);
 }
 
 void PatternPickerSlot::setSlotButtonColors()
 {
     TIP_RGB rgbToAssign;
-    if (_useColorCorrect) { rgbToAssign = TIP_RGB(_ledRGB.colorCorrect()); }
-    else { rgbToAssign = TIP_RGB(_ledRGB); }
+    if (_useColorCorrect) { rgbToAssign = TIP_RGB(_localRGB.colorCorrect()); }
+    else { rgbToAssign = TIP_RGB(_localRGB); }
 
     _slotButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(rgbToAssign.r, rgbToAssign.g, rgbToAssign.b));
 

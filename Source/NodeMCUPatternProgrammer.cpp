@@ -43,6 +43,21 @@ NodeMCUPatternProgrammer::~NodeMCUPatternProgrammer()
     }
 }
 
+void NodeMCUPatternProgrammer::handleCommandMessage(int commandId)
+{
+    switch (commandId)
+    {
+    case pattern_picker_mode_updated:
+        _localRGB = _currentSlot->getRGB();
+        repaint();
+        break;
+
+    default:
+        throw std::invalid_argument("Invalid Command Message");
+        break;
+    }
+}
+
 void NodeMCUPatternProgrammer::paint(juce::Graphics& g)
 {
     paintSliders(g);
@@ -148,13 +163,15 @@ void NodeMCUPatternProgrammer::sliderValueChanged(juce::Slider* slider)
     {
         if (_currentSlot->getMode())
         {
+            TIP_RGB tempRGB = buildRGBFromSliders();
             _localRGB = buildRGBFromSliders().colorCorrect();
+            _currentSlot->setRGB(tempRGB);
         }
         else
         {
             _localRGB = buildRGBFromSliders();
+            _currentSlot->setRGB(_localRGB);
         }
-        _currentSlot->setRGB(_localRGB);
     }
     else
     {
@@ -199,7 +216,7 @@ bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
     // TODO
     if (button == &_newNodeButton)
     {
-        PatternPickerSlot* temp = new PatternPickerSlot(buildRGBFromSliders());
+        PatternPickerSlot* temp = new PatternPickerSlot(dynamic_cast<juce::Component*>(this), buildRGBFromSliders());
         temp->getButton(0).addListener(this);
         temp->getButton(1).addListener(this);
         temp->getButton(2).addListener(this);
@@ -213,6 +230,7 @@ bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
         if (button == &_patternPickers[i]->getButton(0))
         {
             setActiveSlot(i);
+            setSliderValues(_patternPickers[i]->getTrueRGB());
             return true;
         }
         // Call toggle mode slot
@@ -221,6 +239,7 @@ bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
             _patternPickers[i]->toggleMode();
             return true;
         }
+        // Call delete slot
         if (button == &_patternPickers[i]->getButton(1))
         {
             _patternPickers[i]->getButton(0).removeListener(this);
@@ -268,6 +287,13 @@ void NodeMCUPatternProgrammer::setActiveSlot(int slotIndex)
             _patternPickers[i]->setInactive();
         }
     }
+}
+
+// Getters / Setters
+void NodeMCUPatternProgrammer::setSliderValues(TIP_RGB rgb) {
+    _rSlider.setValue(rgb.r);
+    _gSlider.setValue(rgb.g);
+    _bSlider.setValue(rgb.b);
 }
 
 // G/S

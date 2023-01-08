@@ -106,7 +106,7 @@ void CoreLEDControlPanel::sliderValueChanged(juce::Slider* slider) {
     _uiRGB_Ref->g = _gSlider.getValue();
     _uiRGB_Ref->b = _bSlider.getValue();
 
-    _parent->postCommandMessage(tip_rgb_Values_Updated);
+    _parent->postCommandMessage(tip_rgb_values_updated);
     repaint();
 }
 

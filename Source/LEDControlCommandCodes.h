@@ -15,5 +15,6 @@
 
 enum LEDControlCommandCodes
 {
-    tip_rgb_Values_Updated
+    tip_rgb_values_updated,
+    pattern_picker_mode_updated
 };

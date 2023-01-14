@@ -30,15 +30,17 @@ class NodeMCUPatternProgrammer :
 {
 public:
 
-    NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB);
+    NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode);
     ~NodeMCUPatternProgrammer();
 
     void handleCommandMessage(int commandId) override;
 
     // Painting Logic
     void paint(juce::Graphics& g) override;
-    void paintSliders(juce::Graphics& g);
     void paintPatternGenerator(juce::Graphics& g);
+    void paintSliders(juce::Graphics& g);
+    void paintPatternOptions(juce::Graphics& g);
+    void paintSaveLoadUpload(juce::Graphics& g);
 
     // RGBSliders
     void sliderValueChanged(juce::Slider* slider) override;
@@ -75,13 +77,28 @@ private:
     juce::Slider _bSlider;
     //* RGBSliders
 
-    // Pattern picker bar
+    // Pattern picker bar:
     std::vector<PatternPickerSlot*> _patternPickers;
     PatternPickerSlot*              _currentSlot;
-    juce::TextButton                _newNodeButton;
+    juce::TextButton                _newNode_B;
 
-    // Save / Load / Upload
-    juce::TextButton                _UploadPattern;
+    // General UI Elements:
+    juce::TextButton    _uploadPattern_B;
+    juce::TextButton    _togglePatternOverride_B;
+    juce::TextButton    _multiplierUp_B;
+    juce::TextButton    _multiplierDown_B;
+    juce::TextButton    _scrollSpeedUp_B;   // TODO - Later. Requires reprogramming NodeMCU.
+    juce::TextButton    _scrollSpeedDown_B; // TODO - Later. Requires reprogramming NodeMCU.
+    juce::TextButton    _savePattern_B;
+    juce::TextButton    _loadPattern_B;
+
+    juce::Label         _multiplierValue_L;
+    juce::Label         _currentScrollSpeed_L;
+
+    // Logic
+    int     _patternMultiplier = 1;
+    int     _scrollSpeed = 0; // TODO - Later. Requires reprogramming NodeMCU.
+    bool*   _patternOverrideMode_Ref;
 
     // Talk to the Handlers
     WebServerHandler*           _webServerHandler_Ref;

@@ -50,6 +50,7 @@ public:
             setFullScreen(true);
 #else
             setResizable(true, true);
+            setResizeLimits(600, 600, 8000, 6000);
             centreWithSize(getWidth(), getHeight());
 #endif
             setVisible(true);

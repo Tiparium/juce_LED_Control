@@ -251,11 +251,13 @@ void CoreLEDControlPanel::paintFavorites(juce::Graphics& g)
         relativeYPos += relativeWidth;
     }
 }
+
 void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
 {
     float relativeXPos;
-    float relativeWidth;
     float relativeYPos;
+    float relativeWidth;
+    float relativeHeight;
 
     // Red Slider
     addAndMakeVisible(_rSlider);
@@ -264,7 +266,7 @@ void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
     _rSlider.setTextValueSuffix(" R");
 
     addAndMakeVisible(_rLabel);
-    _rLabel.setText("RED", juce::NotificationType::dontSendNotification);
+    _rLabel.setText("R", juce::NotificationType::dontSendNotification);
     _rLabel.attachToComponent(&_rSlider, true);
     _rSlider.addListener(this);
     //* Red Slider
@@ -276,7 +278,7 @@ void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
     _gSlider.setTextValueSuffix(" G");
 
     addAndMakeVisible(_gLabel);
-    _gLabel.setText("GREEN", juce::NotificationType::dontSendNotification);
+    _gLabel.setText("G", juce::NotificationType::dontSendNotification);
     _gLabel.attachToComponent(&_gSlider, true);
     _gSlider.addListener(this);
     //* Green Slider
@@ -288,7 +290,7 @@ void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
     _bSlider.setTextValueSuffix(" B");
 
     addAndMakeVisible(_bLabel);
-    _bLabel.setText("BLUE", juce::NotificationType::dontSendNotification);
+    _bLabel.setText("B", juce::NotificationType::dontSendNotification);
     _bLabel.attachToComponent(&_bSlider, true);
     _bSlider.addListener(this);
     //* Blue Slider
@@ -305,11 +307,13 @@ void CoreLEDControlPanel::paintSliders(juce::Graphics& g)
     g.setFont(30.0f);
 
     // Size RGBSliders
+    relativeWidth = getWidth() / 1.5;
+    relativeHeight = 20;
     relativeYPos = getHeight() / 2;
-    relativeXPos = 100;
-    _rSlider.setBounds(relativeXPos, relativeYPos     , getWidth() - (2 * relativeXPos), 20);
-    _gSlider.setBounds(relativeXPos, relativeYPos + 20, getWidth() - (2 * relativeXPos), 20);
-    _bSlider.setBounds(relativeXPos, relativeYPos + 40, getWidth() - (2 * relativeXPos), 20);
+    relativeXPos = getWidth() / 2 - (relativeWidth / 2);
+    _rSlider.setBounds(relativeXPos, relativeYPos + 00, relativeWidth, relativeHeight);
+    _gSlider.setBounds(relativeXPos, relativeYPos + 20, relativeWidth, relativeHeight);
+    _bSlider.setBounds(relativeXPos, relativeYPos + 40, relativeWidth, relativeHeight);
     //* RGBSliders
 } // PaintSlider
 

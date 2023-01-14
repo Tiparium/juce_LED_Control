@@ -10,27 +10,44 @@
 
 #include "NodeMCUPatternProgrammer.h"
 
-NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB) :
+NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode) :
     _webServerHandler_Ref(webServerHandler),
     _pHuePHueHandler_Ref(pHueHandler),
     _persistenceJSONHandler_Ref(persistenceJSONHandler),
     _parent(parent),
     _uiRGB_Ref(uiRGB),
-    _ledRGB_Ref(ledRGB)
+    _ledRGB_Ref(ledRGB),
+    _patternOverrideMode_Ref(overrideMode)
 {
     // Handle persistence
 
     // Create button listeners
-    _newNodeButton.addListener(this);
-
+    _newNode_B.addListener(this);
+    _uploadPattern_B.addListener(this);
+    _togglePatternOverride_B.addListener(this);
+    _multiplierUp_B.addListener(this);
+    _multiplierDown_B.addListener(this);
+    _scrollSpeedUp_B.addListener(this);
+    _scrollSpeedDown_B.addListener(this);
+    _savePattern_B.addListener(this);
+    _loadPattern_B.addListener(this);
 }
 
 NodeMCUPatternProgrammer::~NodeMCUPatternProgrammer()
 {
-    // Handle persistance
+    // TODO: Handle persistance
 
     // Remove listeners
-    _newNodeButton.removeListener(this);
+    _newNode_B.removeListener(this);
+    _uploadPattern_B.removeListener(this);
+    _togglePatternOverride_B.removeListener(this);
+    _multiplierUp_B.removeListener(this);
+    _multiplierDown_B.removeListener(this);
+    _scrollSpeedUp_B.removeListener(this);
+    _scrollSpeedDown_B.removeListener(this);
+    _savePattern_B.removeListener(this);
+    _loadPattern_B.removeListener(this);
+
     // Delete any dynamic variables
     // Free & Delete pattern picker nodes
     for (int i = 0; i < _patternPickers.size(); i++)
@@ -63,15 +80,46 @@ void NodeMCUPatternProgrammer::paint(juce::Graphics& g)
 {
     paintSliders(g);
     paintPatternGenerator(g);
+    paintPatternOptions(g);
+    paintSaveLoadUpload(g);
 
     g.fillAll(juce::Colour(_localRGB.r, _localRGB.g, _localRGB.b));
 }
 
+void NodeMCUPatternProgrammer::paintPatternGenerator(juce::Graphics& g)
+{
+    int numSlots = _patternPickers.size();
+
+    float keyButtonWidth = getWidth() / 10;
+    float relativeXPos = 0;
+    float relativeYPos = keyButtonWidth;
+    float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
+    float relativeHeight = getHeight() / 7;
+    // Create Fav button
+    addAndMakeVisible(_newNode_B);
+    if (_patternPickers.size() > 0) {
+        _newNode_B.setBounds(0, 0, keyButtonWidth, getHeight() / 7);
+        _newNode_B.setButtonText("+");
+    }
+    else {
+        _newNode_B.setBounds(0, 0, getWidth(), getHeight() / 7);
+        _newNode_B.setButtonText("Click Here to Create a Pattern Node");
+    }
+
+    // Draw and size FavoritesSlots
+    for (int i = 0; i < _patternPickers.size(); i++) {
+        addAndMakeVisible(_patternPickers[i]);
+        _patternPickers[i]->setBounds(relativeYPos, relativeXPos, relativeWidth, relativeHeight);
+        relativeYPos += relativeWidth;
+    }
+}
+
 void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
 {
-    float relativeXPos;
-    float relativeWidth;
-    float relativeYPos;
+    float xPos;
+    float yPos;
+    float width;
+    float height;
 
     // Red Slider
     addAndMakeVisible(_rSlider);
@@ -80,7 +128,7 @@ void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
     _rSlider.setTextValueSuffix(" R");
 
     addAndMakeVisible(_rLabel);
-    _rLabel.setText("RED", juce::NotificationType::dontSendNotification);
+    _rLabel.setText("R", juce::NotificationType::dontSendNotification);
     _rLabel.attachToComponent(&_rSlider, true);
     _rSlider.addListener(this);
     //* Red Slider
@@ -92,7 +140,7 @@ void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
     _gSlider.setTextValueSuffix(" G");
 
     addAndMakeVisible(_gLabel);
-    _gLabel.setText("GREEN", juce::NotificationType::dontSendNotification);
+    _gLabel.setText("G", juce::NotificationType::dontSendNotification);
     _gLabel.attachToComponent(&_gSlider, true);
     _gSlider.addListener(this);
     //* Green Slider
@@ -104,7 +152,7 @@ void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
     _bSlider.setTextValueSuffix(" B");
 
     addAndMakeVisible(_bLabel);
-    _bLabel.setText("BLUE", juce::NotificationType::dontSendNotification);
+    _bLabel.setText("B", juce::NotificationType::dontSendNotification);
     _bLabel.attachToComponent(&_bSlider, true);
     _bSlider.addListener(this);
     //* Blue Slider
@@ -121,41 +169,76 @@ void NodeMCUPatternProgrammer::paintSliders(juce::Graphics& g)
     g.setFont(30.0f);
 
     // Size RGBSliders
-    relativeYPos = getHeight() / 2;
-    relativeXPos = 100;
-    _rSlider.setBounds(relativeXPos, relativeYPos, getWidth() - (2 * relativeXPos), 20);
-    _gSlider.setBounds(relativeXPos, relativeYPos + 20, getWidth() - (2 * relativeXPos), 20);
-    _bSlider.setBounds(relativeXPos, relativeYPos + 40, getWidth() - (2 * relativeXPos), 20);
+    width = getWidth() / 1.5;
+    height = 20;
+    yPos = getHeight() / 2;
+    xPos = getWidth() / 2 - (width / 2);
+    _rSlider.setBounds(xPos, yPos + 00, width, height);
+    _gSlider.setBounds(xPos, yPos + 20, width, height);
+    _bSlider.setBounds(xPos, yPos + 40, width, height);
     //* RGBSliders
 } // PaintSlider
 
-void NodeMCUPatternProgrammer::paintPatternGenerator(juce::Graphics& g)
+void NodeMCUPatternProgrammer::paintPatternOptions(juce::Graphics& g)
 {
-    int numSlots = _patternPickers.size();
+    float leftEdge = getWidth() / 6;
 
-    float keyButtonWidth = getWidth() / 10;
-    float relativeXPos = 0;
-    float relativeYPos = keyButtonWidth;
-    float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
-    float relativeHeight = getHeight() / 7;
-    // Create Fav button
-    addAndMakeVisible(_newNodeButton);
-    if (_patternPickers.size() > 0) {
-        _newNodeButton.setBounds(0, 0, keyButtonWidth, getHeight() / 7);
-        _newNodeButton.setButtonText("+");
-    }
-    else {
-        _newNodeButton.setBounds(0, 0, getWidth(), getHeight() / 7);
-        _newNodeButton.setButtonText("Click Here to Create a Pattern Node");
-    }
+    // Values are initialized to left hand buttons first
+    const float width = getWidth() / 8;
+    float height = getHeight() / 14;
+    float xPos = leftEdge;
+    const float yPosUpper = getHeight() / 2 + 60;
+    const float yPosLower = getHeight() / 2 + 60 + height;
 
-    // Draw and size FavoritesSlots
-    for (int i = 0; i < _patternPickers.size(); i++) {
-        addAndMakeVisible(_patternPickers[i]);
-        _patternPickers[i]->setBounds(relativeYPos, relativeXPos, relativeWidth, relativeHeight);
-        relativeYPos += relativeWidth;
-    }
+    _multiplierUp_B.setBounds(xPos, yPosUpper, width, height);
+    _multiplierUp_B.setButtonText("* ^");
+    _multiplierUp_B.setTooltip("Increases pattern multiplier");
+    _multiplierDown_B.setBounds(xPos, yPosLower, width, height);
+    _multiplierDown_B.setButtonText("* v");
+    _multiplierDown_B.setTooltip("Decreases pattern multiplier");
+    addAndMakeVisible(_multiplierUp_B);
+    addAndMakeVisible(_multiplierDown_B);
+
+    xPos += width;
+
+    _multiplierValue_L.setBounds(xPos, yPosUpper, width, height * 2);
+    _multiplierValue_L.setText(std::to_string(_patternMultiplier), juce::dontSendNotification);
+    _multiplierValue_L.setFont(40.0f);
+    _multiplierValue_L.setColour(juce::Label::textColourId, juce::Colours::black);
+    _multiplierValue_L.setColour(juce::Label::outlineColourId, juce::Colours::grey);
+    _multiplierValue_L.setTooltip("Current Pattern Multiplier");
+    _multiplierValue_L.setJustificationType(juce::Justification::centred);
+    addAndMakeVisible(_multiplierValue_L);
+
+    xPos += width;
+
+    _togglePatternOverride_B.setBounds(xPos, yPosUpper, width * 2, height * 2);
+    _togglePatternOverride_B.setButtonText("Toggle Pattern\nOverride State\nIs:" + std::to_string(*_patternOverrideMode_Ref));
+    addAndMakeVisible(_togglePatternOverride_B);
 }
+
+void NodeMCUPatternProgrammer::paintSaveLoadUpload(juce::Graphics& g)
+{
+    float width = getWidth() / 4;
+    float height = getHeight() / 10;
+    float xPos = getWidth() / 2 - (width / 2);
+    float yPos = getHeight() - height;
+
+    _uploadPattern_B.setButtonText("Upload\nPattern");
+    _uploadPattern_B.setBounds(xPos, yPos, width, height);
+    addAndMakeVisible(_uploadPattern_B);
+
+    _savePattern_B.setButtonText("Save\nPattern");
+    _savePattern_B.setBounds(0, yPos - height * 0.5, width * 1.505, height * 1.5);
+    addAndMakeVisible(_savePattern_B);
+
+    xPos += width;
+
+    _loadPattern_B.setButtonText("Load\nPattern");
+    _loadPattern_B.setBounds(xPos, yPos - height * 0.5, width * 1.505, height * 1.5);
+    addAndMakeVisible(_loadPattern_B);
+}
+
 
 void NodeMCUPatternProgrammer::sliderValueChanged(juce::Slider* slider)
 {
@@ -182,6 +265,7 @@ void NodeMCUPatternProgrammer::sliderValueChanged(juce::Slider* slider)
 
 void NodeMCUPatternProgrammer::sliderDragEnded(juce::Slider* slider)
 {
+    // Currently does nothing
 }
 
 TIP_RGB NodeMCUPatternProgrammer::buildRGBFromSliders()
@@ -213,7 +297,7 @@ void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
 
 bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
 {
-    if (button == &_newNodeButton)
+    if (button == &_newNode_B)
     {
         PatternPickerSlot* temp = new PatternPickerSlot(dynamic_cast<juce::Component*>(this), buildRGBFromSliders());
         temp->getButton(0).addListener(this);

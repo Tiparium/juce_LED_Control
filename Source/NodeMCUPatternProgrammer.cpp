@@ -201,19 +201,20 @@ void NodeMCUPatternProgrammer::paintPatternOptions(juce::Graphics& g)
 
     xPos += width;
 
-    _multiplierValue_L.setBounds(xPos, yPosUpper, width, height * 2);
-    _multiplierValue_L.setText(std::to_string(_patternMultiplier), juce::dontSendNotification);
-    _multiplierValue_L.setFont(40.0f);
-    _multiplierValue_L.setColour(juce::Label::textColourId, juce::Colours::black);
-    _multiplierValue_L.setColour(juce::Label::outlineColourId, juce::Colours::grey);
-    _multiplierValue_L.setTooltip("Current Pattern Multiplier");
-    _multiplierValue_L.setJustificationType(juce::Justification::centred);
-    addAndMakeVisible(_multiplierValue_L);
+    _patternMultiplier_L.setBounds(xPos, yPosUpper, width, height * 2);
+    _patternMultiplier_L.setText(std::to_string(_patternMultiplier), juce::dontSendNotification);
+    _patternMultiplier_L.setFont(40.0f);
+    _patternMultiplier_L.setColour(juce::Label::textColourId, juce::Colours::black);
+    _patternMultiplier_L.setColour(juce::Label::outlineColourId, juce::Colours::grey);
+    _patternMultiplier_L.setTooltip("Current Pattern Multiplier");
+    _patternMultiplier_L.setJustificationType(juce::Justification::centred);
+    addAndMakeVisible(_patternMultiplier_L);
 
     xPos += width;
 
+    juce::String mode = *_patternOverrideMode_Ref ? "On" : "Off";
     _togglePatternOverride_B.setBounds(xPos, yPosUpper, width * 2, height * 2);
-    _togglePatternOverride_B.setButtonText("Toggle Pattern\nOverride State\nIs:" + std::to_string(*_patternOverrideMode_Ref));
+    _togglePatternOverride_B.setButtonText("Toggle Pattern\nOverride State\n\nIs: " + mode);
     addAndMakeVisible(_togglePatternOverride_B);
 }
 
@@ -289,7 +290,7 @@ void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
     check = checkSaveLoadUploadButtons(button);
     if (check) { return; }
 
-    check = checkScrollingButtons(button);
+    check = checkToggleModeButton(button);
     if (check) { return; }
 
     DBG("Something went wrong: An Unhandeled button has been pushed.");
@@ -341,13 +342,32 @@ bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
 
 bool NodeMCUPatternProgrammer::checkMultiplierButtons(juce::Button* button)
 {
-    // TODO
+    if (button == &_multiplierUp_B)
+    {
+        if (_patternMultiplier < 10)
+        {
+            _patternMultiplier += 1;
+        }
+        return true;
+    }
+    if (button == &_multiplierDown_B)
+    {
+        if (_patternMultiplier > 1)
+        {
+            _patternMultiplier -= 1;
+        }
+        return true;
+    }
     return false;
 }
 
-bool NodeMCUPatternProgrammer::checkScrollingButtons(juce::Button* button)
+bool NodeMCUPatternProgrammer::checkToggleModeButton(juce::Button* button)
 {
-    // TODO
+    if (button == &_togglePatternOverride_B)
+    {
+        *_patternOverrideMode_Ref = !*_patternOverrideMode_Ref;
+        return true;
+    }
     return false;
 }
 

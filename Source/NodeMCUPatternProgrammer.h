@@ -51,7 +51,7 @@ public:
     void buttonClicked(juce::Button* button) override;
     bool checkPatternButtons(juce::Button* button);
     bool checkMultiplierButtons(juce::Button* button);
-    bool checkScrollingButtons(juce::Button* button);
+    bool checkToggleModeButton(juce::Button* button);
     bool checkSaveLoadUploadButtons(juce::Button* button);
 
     void setActiveSlot(int slotIndex);
@@ -92,7 +92,7 @@ private:
     juce::TextButton    _savePattern_B;
     juce::TextButton    _loadPattern_B;
 
-    juce::Label         _multiplierValue_L;
+    juce::Label         _patternMultiplier_L;
     juce::Label         _currentScrollSpeed_L;
 
     // Logic

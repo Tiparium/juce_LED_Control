@@ -13,8 +13,7 @@
 Main_C::Main_C() :
     _webServerHandler(&_ledRGB, &_rgbPattern),
     _pHuePHueHandler(params::_httpTarget, params::_apiTarget, params::_apiGetTarget, params::_apiPutTarget),
-    _persistenceJSONHandler("../../resources/favSlots.json"),
-    _coreLEDControlPanel()
+    _persistenceJSONHandler("../../resources/favSlots.json")
 {
 
     TIP_RGB r = TIP_RGB(255, 0, 0);
@@ -26,7 +25,6 @@ Main_C::Main_C() :
 
 
     _panelSelector = new juce::TabbedComponent(juce::TabbedButtonBar::TabsAtTop);
-    // _panelSelector->setBounds(0, 0, 300, getHeight());
     addAndMakeVisible(_panelSelector);
 
     // Build the UI

@@ -184,11 +184,11 @@ void NodeMCUPatternProgrammer::paintPatternOptions(juce::Graphics& g)
     float leftEdge = getWidth() / 6;
 
     // Values are initialized to left hand buttons first
-    const float width = getWidth() / 8;
-    float height = getHeight() / 14;
+    const float width = (getWidth() / 1.5) / 6;
+    const float height = getHeight() / 14;
+    const float yPosUpper = getHeight() / 2 + 80;
+    const float yPosLower = getHeight() / 2 + 80 + height;
     float xPos = leftEdge;
-    const float yPosUpper = getHeight() / 2 + 60;
-    const float yPosLower = getHeight() / 2 + 60 + height;
 
     _multiplierUp_B.setBounds(xPos, yPosUpper, width, height);
     _multiplierUp_B.setButtonText("* ^");
@@ -212,10 +212,20 @@ void NodeMCUPatternProgrammer::paintPatternOptions(juce::Graphics& g)
 
     xPos += width;
 
-    juce::String mode = *_patternOverrideMode_Ref ? "On" : "Off";
     _togglePatternOverride_B.setBounds(xPos, yPosUpper, width * 2, height * 2);
-    _togglePatternOverride_B.setButtonText("Toggle Pattern\nOverride State\n\nIs: " + mode);
+    _togglePatternOverride_B.setButtonText("Toggle Pattern\nOverride State");
     addAndMakeVisible(_togglePatternOverride_B);
+
+    xPos += (width * 2);
+
+    juce::String mode = *_patternOverrideMode_Ref ? "Pattern Override" : "Single Color";
+    _currentMode_L.setBounds(xPos, yPosUpper, width * 2, height * 2);
+    _currentMode_L.setText("Current Mode:\n" + mode, juce::dontSendNotification);
+    _currentMode_L.setFont(16.0f);
+    _currentMode_L.setJustificationType(juce::Justification::centred);
+    _currentMode_L.setColour(juce::Label::textColourId, juce::Colours::black);
+    _currentMode_L.setColour(juce::Label::outlineColourId, juce::Colours::grey);
+    addAndMakeVisible(_currentMode_L);
 }
 
 void NodeMCUPatternProgrammer::paintSaveLoadUpload(juce::Graphics& g)
@@ -293,7 +303,7 @@ void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
     check = checkToggleModeButton(button);
     if (check) { return; }
 
-    DBG("Something went wrong: An Unhandeled button has been pushed.");
+    DBG("\n*****************************\nSomething went wrong, button:\n-----------\n" + button->getButtonText() + "\n-----------\nHas not been handled");
 }
 
 bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)

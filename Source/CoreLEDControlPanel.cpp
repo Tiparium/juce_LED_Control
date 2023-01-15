@@ -125,7 +125,7 @@ void CoreLEDControlPanel::buttonClicked(juce::Button* button)
     check = checkLEDControlButtons(button);
     if (check) { return; }
 
-    DBG("Something went wrong: An Unhandeled button has been pushed.");
+    DBG("\n*****************************\nSomething went wrong, button:\n-----------\n" + button->getButtonText() + "\n-----------\nHas not been handled");
 }
 
 bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)

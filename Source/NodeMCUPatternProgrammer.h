@@ -10,6 +10,9 @@
 
     Makes changes to NodeMCU via reference to CoreLEDControlPanel's handler.
 
+    TODO: Reprogram NodeMCUs to allow scrolling patterns.
+          Hooks exist here, but they are not wired up.
+
   ==============================================================================
 */
 
@@ -87,17 +90,17 @@ private:
     juce::TextButton    _togglePatternOverride_B;
     juce::TextButton    _multiplierUp_B;
     juce::TextButton    _multiplierDown_B;
-    juce::TextButton    _scrollSpeedUp_B;   // TODO - Later. Requires reprogramming NodeMCU.
-    juce::TextButton    _scrollSpeedDown_B; // TODO - Later. Requires reprogramming NodeMCU.
+    juce::TextButton    _scrollSpeedUp_B;
+    juce::TextButton    _scrollSpeedDown_B;
     juce::TextButton    _savePattern_B;
     juce::TextButton    _loadPattern_B;
 
     juce::Label         _patternMultiplier_L;
-    juce::Label         _currentScrollSpeed_L;
+    juce::Label         _currentMode_L;
 
     // Logic
     int     _patternMultiplier = 1;
-    int     _scrollSpeed = 0; // TODO - Later. Requires reprogramming NodeMCU.
+    int     _scrollSpeed = 0;
     bool*   _patternOverrideMode_Ref;
 
     // Talk to the Handlers

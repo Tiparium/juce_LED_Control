@@ -21,11 +21,15 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent, WebServerHandl
     nlohmann::json jsonFromFile = _persistenceJSONHandler_Ref->readJSONFromFile();
     
     // Individual LED controls
-    _toggleAllLEDControlButton.addListener(this);
+
+    _toggleAllLEDControl_B.onClick = [this] { toggleAllLEDControl_B_Clicked(); };
+    _newFav_B.onClick = [this] { newFav_B_Clicked(); };
+
     for (int i = 0; i < _pHuePHueHandler_Ref->getNumLights(); i++)
     {
-        _pHueLEDPickers.push_back(new juce::TextButton);
-        _pHueLEDPickers[i]->addListener(this);
+        juce::TextButton* temp = new juce::TextButton;
+        _pHueLEDPickers.push_back(temp);
+        _pHueLEDPickers[i]->onClick = [this, temp] { checkLEDControlButtons(temp); };
         try
         {
             _listeningLights.push_back(jsonFromFile["phue_led_bools"][i]);
@@ -39,15 +43,12 @@ CoreLEDControlPanel::CoreLEDControlPanel(juce::Component* parent, WebServerHandl
     // Handle Fav Slots Persistence
     for (auto i = 0; i < jsonFromFile["favorites"].size(); i++)
     {
-        TIP_RGB newRGB = TIP_RGB(jsonFromFile["favorites"][i]["r"], jsonFromFile["favorites"][i]["g"], jsonFromFile["favorites"][i]["b"]);
-        TIP_RGB hRGB = newRGB.colorCorrect();
-        FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
-        _favSlots.push_back(newSlot);
-        newSlot->getButton(0).addListener(this);
-        newSlot->getButton(1).addListener(this);
+        TIP_RGB newRGB = TIP_RGB(
+            jsonFromFile["favorites"][i]["r"],
+            jsonFromFile["favorites"][i]["g"],
+            jsonFromFile["favorites"][i]["b"]);
+        initAndAddNewFavSlot(newRGB);
     }
-    _newFavButton.addListener(this);
-
 
     // Restore Previous State - TODO: Figure out why this doesn't work
     juce::uint8 r = jsonFromFile["base_color_state"]["r"];
@@ -69,18 +70,15 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
 
     // Save LED Picker state & destroy LED pickers
     nlohmann::json ledPickerStatesToJSONFile;
-    _toggleAllLEDControlButton.removeListener(this);
     for (int i = 0; i < _pHueLEDPickers.size(); i++)
     {
         ledPickerStatesToJSONFile.push_back(_listeningLights[i]);
-        _pHueLEDPickers[i]->removeListener(this);
         delete _pHueLEDPickers[i];
     }
 
     // Save Faveslot data & destroy slots
     nlohmann::json favoritesToJSONFile;
-    _newFavButton.removeListener(this);
-    for (auto i = 0; i < _favSlots.size(); i++) {
+    for (int i = 0; i < _favSlots.size(); i++) {
         nlohmann::json favSlotJSON;
         TIP_RGB favSlotRGB = _favSlots[i]->getRGB();
         favSlotJSON["r"] = favSlotRGB.r;
@@ -88,10 +86,7 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
         favSlotJSON["b"] = favSlotRGB.b;
         favoritesToJSONFile.push_back(favSlotJSON);
     }
-    for (unsigned int i = 0; i < _favSlots.size(); i++) {
-        _favSlots[i]->getButton(0).removeListener(this);
-        _favSlots[i]->getButton(1).removeListener(this);
-
+    for (int i = 0; i < _favSlots.size(); i++) {
         delete _favSlots[i];
     }
     _persistenceJSONHandler_Ref->addJSONToLocalInstance("base_color_state", currentStateToJSONFile);
@@ -116,34 +111,48 @@ void CoreLEDControlPanel::sliderDragEnded(juce::Slider* slider) {
     _pHuePHueHandler_Ref->pushUpdateToMultipleLights(*_ledRGB_Ref, _listeningLights);
 }
 
-void CoreLEDControlPanel::buttonClicked(juce::Button* button)
+void CoreLEDControlPanel::initAndAddNewFavSlot(TIP_RGB rgb)
 {
-    bool check;
-    check = checkFavoritesButtons(button);
-    if (check) { return; }
-
-    check = checkLEDControlButtons(button);
-    if (check) { return; }
-
-    DBG("\n*****************************\nSomething went wrong, button:\n-----------\n" + button->getButtonText() + "\n-----------\nHas not been handled");
+    TIP_RGB hRGB = (rgb).colorCorrect();
+    FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
+    _favSlots.push_back(newSlot);
+    newSlot->getButton(FavoritesSlot::_fav_B_ID).onClick
+        = [this, newSlot] { favSlot_B_Clicked(newSlot); };
+    newSlot->getButton(FavoritesSlot::_del_B_ID).onClick
+        = [this, newSlot] { favSlotDelete_B_Clicked(newSlot); };
 }
 
-bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
+void CoreLEDControlPanel::toggleAllLEDControl_B_Clicked()
 {
-    TIP_RGB rgb;
-    TIP_RGB hRGB = (*_ledRGB_Ref).colorCorrect();
-    // Create new Favorite Slot
-    if (button == &_newFavButton) {
-        FavoritesSlot* newSlot = new FavoritesSlot(hRGB);
-        _favSlots.push_back(newSlot);
-        newSlot->getButton(0).addListener(this);
-        newSlot->getButton(1).addListener(this);
-        return true;
+    bool allActive = checkLEDControlButtonState();
+    if (allActive)
+    {
+        for (int i = 0; i < _listeningLights.size(); i++)
+        {
+            _listeningLights[i] = false;
+        }
     }
-    for (unsigned int i = 0; i < _favSlots.size(); i++) {
-        // Call Favorite Slot
-        if (button == &_favSlots[i]->getButton(0)) {
-            rgb = _favSlots[i]->getRGB();
+    else {
+        for (int i = 0; i < _listeningLights.size(); i++)
+        {
+            _listeningLights[i] = true;
+        }
+    }
+}
+
+void CoreLEDControlPanel::newFav_B_Clicked()
+{
+    TIP_RGB rgb = *_ledRGB_Ref;
+    initAndAddNewFavSlot(rgb);
+}
+
+void CoreLEDControlPanel::favSlot_B_Clicked(FavoritesSlot* slot)
+{
+    for (int i = 0; i < _favSlots.size(); i++)
+    {
+        if (slot == _favSlots[i])
+        {
+            TIP_RGB rgb = _favSlots[i]->getRGB();
 
             // Update UI
             setSliderValues(rgb);
@@ -151,41 +160,31 @@ bool CoreLEDControlPanel::checkFavoritesButtons(juce::Button* button)
             // Push colors to respective platforms
             _pHuePHueHandler_Ref->pushUpdateToMultipleLights(rgb, _listeningLights);
             *_ledRGB_Ref = *_uiRGB_Ref;
-            return true;
+            break;
         }
-        // Delete Favorite Slot
-        else if (button == &_favSlots[i]->getButton(1)) {
-            _favSlots[i]->getButton(0).removeListener(this);
-            _favSlots[i]->getButton(1).removeListener(this);
-            removeChildComponent(_favSlots[i]);
+    }
+}
+
+void CoreLEDControlPanel::favSlotDelete_B_Clicked(FavoritesSlot* slot)
+{
+    for (int i = 0; i < _favSlots.size(); i++)
+    {
+        if (slot == _favSlots[i])
+        {
             FavoritesSlot* temp = _favSlots[i];
             _favSlots.erase(_favSlots.begin() + i);
             delete temp;
-            return true;
+            break;
         }
     }
-    return false;
 }
 
 bool CoreLEDControlPanel::checkLEDControlButtons(juce::Button* button)
 {
     // Button pressed was global toggle
-    if (button == &_toggleAllLEDControlButton)
+    if (button == &_toggleAllLEDControl_B)
     {
-        bool allActive = checkLEDControlButtonState();
-        if (allActive)
-        {
-            for (int i = 0; i < _listeningLights.size(); i++)
-            {
-                _listeningLights[i] = false;
-            }
-        }
-        else {
-            for (int i = 0; i < _listeningLights.size(); i++)
-            {
-                _listeningLights[i] = true;
-            }
-        }
+
         return true;
     }
     // Button pressed was an LED toggle
@@ -234,14 +233,14 @@ void CoreLEDControlPanel::paintFavorites(juce::Graphics& g)
     float relativeWidth = (getWidth() - keyButtonWidth) / numSlots;
     float relativeHeight = getHeight() / 7;
     // Create Fav button
-    addAndMakeVisible(_newFavButton);
+    addAndMakeVisible(_newFav_B);
     if (_favSlots.size() > 0) {
-        _newFavButton.setBounds(0, 0, keyButtonWidth, getHeight() / 7);
-        _newFavButton.setButtonText("+");
+        _newFav_B.setBounds(0, 0, keyButtonWidth, getHeight() / 7);
+        _newFav_B.setButtonText("+");
     }
     else {
-        _newFavButton.setBounds(0, 0, getWidth(), getHeight() / 7);
-        _newFavButton.setButtonText("Click Here to Create a Favorite");
+        _newFav_B.setBounds(0, 0, getWidth(), getHeight() / 7);
+        _newFav_B.setButtonText("Click Here to Create a Favorite");
     }
 
     // Draw and size FavoritesSlots
@@ -328,8 +327,8 @@ void CoreLEDControlPanel::paintLEDControlButtons(juce::Graphics& g)
     float relativeYPos = getHeight() - relativeHeight;
 
     // Draw All Button
-    addAndMakeVisible(_toggleAllLEDControlButton);
-    _toggleAllLEDControlButton.setBounds(0, relativeYPos, keyButtonWidth, relativeHeight);
+    addAndMakeVisible(_toggleAllLEDControl_B);
+    _toggleAllLEDControl_B.setBounds(0, relativeYPos, keyButtonWidth, relativeHeight);
     relativeXPos += keyButtonWidth;
 
     // Draw remaining buttons

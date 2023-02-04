@@ -30,6 +30,10 @@
       </GROUP>
       <GROUP id="{14A2B2D2-34EB-D6D5-9E43-3D763F39F97D}" name="BACK (_B)">
         <GROUP id="{203BC7B9-C78E-408A-55D1-0239B2933963}" name="Handlers">
+          <FILE id="lGP7dM" name="FileChooserJSONHandler.cpp" compile="1" resource="0"
+                file="Source/FileChooserJSONHandler.cpp"/>
+          <FILE id="iwhH5y" name="FileChooserJSONHandler.h" compile="0" resource="0"
+                file="Source/FileChooserJSONHandler.h"/>
           <FILE id="vP46DZ" name="WebServerHandler.cpp" compile="1" resource="0"
                 file="Source/WebServerHandler.cpp"/>
           <FILE id="lWdGm4" name="WebServerHandler.h" compile="0" resource="0"

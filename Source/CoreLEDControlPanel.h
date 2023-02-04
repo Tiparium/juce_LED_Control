@@ -32,8 +32,7 @@
 
 class CoreLEDControlPanel :
     public juce::Component,
-    public juce::Slider::Listener,
-    public juce::Button::Listener
+    public juce::Slider::Listener
 {
 public:
     CoreLEDControlPanel(juce::Component* parent, 
@@ -47,9 +46,13 @@ public:
     void sliderValueChanged(juce::Slider* slider) override;
     void sliderDragEnded(juce::Slider* slider) override;
 
+    void initAndAddNewFavSlot(TIP_RGB rgb);
+
     // Button Logic
-    void buttonClicked(juce::Button* button) override;
-    bool checkFavoritesButtons(juce::Button* button);
+    void toggleAllLEDControl_B_Clicked();
+    void newFav_B_Clicked();
+    void favSlot_B_Clicked(FavoritesSlot* slot);
+    void favSlotDelete_B_Clicked(FavoritesSlot* slot);
     bool checkLEDControlButtons(juce::Button* button);
     bool checkLEDControlButtonState(); // Returns true if all LED control buttons are active
 
@@ -59,7 +62,6 @@ public:
     void paintSliders(juce::Graphics&);
     void paintLEDControlButtons(juce::Graphics&);
     void resized() override;
-
 
     //  G/S
     void    setSliderValues(TIP_RGB rgb);
@@ -81,11 +83,11 @@ private:
 
     // FavoritesBar
     std::vector<FavoritesSlot*> _favSlots;
-    juce::TextButton            _newFavButton;
+    juce::TextButton            _newFav_B;
 
     // Individual pHue LED control
     std::vector<juce::TextButton*> _pHueLEDPickers;
-    juce::TextButton               _toggleAllLEDControlButton;
+    juce::TextButton               _toggleAllLEDControl_B;
     std::vector<bool>              _listeningLights;
 
     // Talk to the Handlers

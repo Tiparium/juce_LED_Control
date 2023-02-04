@@ -19,7 +19,7 @@ class PatternPickerSlot : public juce::Component
 public:
     PatternPickerSlot(juce::Component* parent, TIP_RGB rgb);
     ~PatternPickerSlot();
-
+    void initButtonLogic();
     // RGB Data
     TIP_RGB getTrueRGB();
     TIP_RGB getRGB();
@@ -36,13 +36,19 @@ public:
     void paint(juce::Graphics&) override;
     void setSlotButtonColors();
 
+    enum {
+        _slot_B_ID,
+        _del_B_ID,
+        _toggleMode_B_ID,
+        _activityIndicator_ID
+    };
 
 private:
     // UI Elements
-    juce::TextButton _slotButton;
-    juce::TextButton _delButton;
-    juce::TextButton _toggleModeButton;
-    juce::TextButton _activityIndicator;
+    juce::TextButton _slot_B;            //  0
+    juce::TextButton _del_B;             //  1
+    juce::TextButton _toggleMode_B;      //  2
+    juce::TextButton _activityIndicator; // -1
 
     // Data
     bool             _isActiveSlot;

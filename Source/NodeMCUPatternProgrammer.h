@@ -12,7 +12,10 @@
 
     TODO: Reprogram NodeMCUs to allow scrolling patterns.
           Hooks exist here, but they are not wired up.
-
+    TODO: Add variance option, with amount parameter.
+          Adds slight offset to all colors, making them look slightly different.
+            (Note this is current possible with pattern uploader,
+             but running it natively on the NodeMCU would be better.)
   ==============================================================================
 */
 
@@ -25,15 +28,15 @@
 #include "../Source/PHueHandler.h"
 #include "../Source/PersistenceJSONHandler.h"
 #include "../Source/PatternPickerSlot.h"
+#include "../Source/FileChooserJSONHandler.h"
 
 class NodeMCUPatternProgrammer :
     public juce::Component,
-    public juce::Slider::Listener,
-    public juce::Button::Listener
+    public juce::Slider::Listener
 {
 public:
 
-    NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode);
+    NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, FileChooserJSONHandler* fileChooserJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode);
     ~NodeMCUPatternProgrammer();
 
     void handleCommandMessage(int commandId) override;
@@ -51,13 +54,21 @@ public:
     TIP_RGB buildRGBFromSliders();
 
     // Button Logic
-    void buttonClicked(juce::Button* button) override;
-    bool checkPatternButtons(juce::Button* button);
-    bool checkMultiplierButtons(juce::Button* button);
-    bool checkToggleModeButton(juce::Button* button);
-    bool checkSaveLoadUploadButtons(juce::Button* button);
+    void savePatternToFile();
+    void loadPatternFromFile();
+    void uploadPattern_B_Clicked();
+    void newNode_B_Clicked();
+    void multiplierUp_B_Clicked();
+    void multiplierDown_B_Clicked();
+    void togglePatternOverride_B_Clicked();
 
-    void setActiveSlot(int slotIndex);
+    void deleteSlot(PatternPickerSlot* slotToRemove);
+    void setActiveSlot(PatternPickerSlot* newActiveSlot);
+    void setActiveSlot(int slotIndex); // Sets the currently active pattern slot
+
+    // Helper Functions
+    nlohmann::json          buildPatternAsJSON();
+    std::vector<TIP_RGB>    buildPatternAsVector();
 
     //  G/S
     void setSliderValues(TIP_RGB rgb);
@@ -90,8 +101,6 @@ private:
     juce::TextButton    _togglePatternOverride_B;
     juce::TextButton    _multiplierUp_B;
     juce::TextButton    _multiplierDown_B;
-    juce::TextButton    _scrollSpeedUp_B;
-    juce::TextButton    _scrollSpeedDown_B;
     juce::TextButton    _savePattern_B;
     juce::TextButton    _loadPattern_B;
 
@@ -107,5 +116,6 @@ private:
     WebServerHandler*           _webServerHandler_Ref;
     PHueHandler*                _pHuePHueHandler_Ref;
     PersistenceJSONHandler*     _persistenceJSONHandler_Ref;
+    FileChooserJSONHandler*     _fileChooserJSONHandler_Ref;
     juce::Component*            _parent;
 };

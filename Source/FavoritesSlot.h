@@ -28,8 +28,14 @@ public:
     // Drawing Logic
     void paint(juce::Graphics&) override;
 
+    enum
+    {
+        _fav_B_ID,
+        _del_B_ID
+    };
+
 private:
     TIP_RGB          _ledRGB;
-    juce::TextButton _favButton;
-    juce::TextButton _delButton;
+    juce::TextButton _fav_B;
+    juce::TextButton _del_B;
 };

@@ -15,8 +15,8 @@ FavoritesSlot::FavoritesSlot(TIP_RGB rgb)
     _ledRGB.r = rgb.r;
     _ledRGB.g = rgb.g;
     _ledRGB.b = rgb.b;
-    _delButton.setButtonText("X");
-    _favButton.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_ledRGB.r, _ledRGB.g, _ledRGB.b));
+    _del_B.setButtonText("X");
+    _fav_B.setColour(juce::TextButton::ColourIds::buttonColourId, juce::Colour(_ledRGB.r, _ledRGB.g, _ledRGB.b));
 }
 FavoritesSlot::~FavoritesSlot(){}
 
@@ -29,14 +29,14 @@ void FavoritesSlot::setRGB(TIP_RGB rgb) {
 }
 
 juce::Button& FavoritesSlot::getButton(int button) {
-    if (button == 0) return _favButton;
-    if (button == 1) return _delButton;
+    if (button == _fav_B_ID) return _fav_B;
+    if (button == _del_B_ID) return _del_B;
     DBG("You shouldn't be here");
 }
 
 void FavoritesSlot::paint(juce::Graphics& g) {
-    addAndMakeVisible(_favButton);
-    _favButton.setBoundsRelative(0, 0, 1, 1);
-    addAndMakeVisible(_delButton);
-    _delButton.setBoundsRelative(0.75f, 0.0f, 0.25f, 0.25f);
+    addAndMakeVisible(_fav_B);
+    _fav_B.setBoundsRelative(0, 0, 1, 1);
+    addAndMakeVisible(_del_B);
+    _del_B.setBoundsRelative(0.75f, 0.0f, 0.25f, 0.25f);
 }

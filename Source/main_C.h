@@ -10,6 +10,9 @@
 
     Contains & Displays subcomponents both for data processing & UI display.
 
+    TODO: Redo ALL button handlers with the following format:
+          _button.onClick = [this] { function(args); };
+
   ==============================================================================
 */
 
@@ -18,12 +21,14 @@
 #include <JuceHeader.h>
 #include <string>
 
+// Has:
 #include "../Source/CoreLEDControlPanel.h"
 #include "../Source/NodeMCUPatternProgrammer.h"
 #include "../Source/LEDControlCommandCodes.h"
 #include "../Source/WebServerHandler.h"
 #include "../Source/PHueHandler.h"
 #include "../Source/PersistenceJSONHandler.h"
+#include "../Source/FileChooserJSONHandler.h"
 
 class Main_C : public juce::Component
 {
@@ -55,4 +60,5 @@ private:
     WebServerHandler        _webServerHandler;
     PHueHandler             _pHuePHueHandler;
     PersistenceJSONHandler  _persistenceJSONHandler;
+    FileChooserJSONHandler  _fileChooserJSONHandler;
 };

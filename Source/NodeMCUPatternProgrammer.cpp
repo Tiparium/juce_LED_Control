@@ -10,7 +10,7 @@
 
 #include "NodeMCUPatternProgrammer.h"
 
-NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode) :
+NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, FileChooserJSONHandler* fileChooserJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode) :
     _webServerHandler_Ref(webServerHandler),
     _pHuePHueHandler_Ref(pHueHandler),
     _persistenceJSONHandler_Ref(persistenceJSONHandler),
@@ -21,42 +21,24 @@ NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebS
 {
     // Handle persistence
 
-    // Create button listeners
-    _newNode_B.addListener(this);
-    _uploadPattern_B.addListener(this);
-    _togglePatternOverride_B.addListener(this);
-    _multiplierUp_B.addListener(this);
-    _multiplierDown_B.addListener(this);
-    _scrollSpeedUp_B.addListener(this);
-    _scrollSpeedDown_B.addListener(this);
-    _savePattern_B.addListener(this);
-    _loadPattern_B.addListener(this);
+    // Create Button Commands
+    _newNode_B.onClick                  = [this] { newNode_B_Clicked(); };
+    _uploadPattern_B.onClick            = [this] { uploadPattern_B_Clicked(); };
+    _multiplierUp_B.onClick             = [this] { multiplierUp_B_Clicked(); };
+    _multiplierDown_B.onClick           = [this] { multiplierDown_B_Clicked(); };
+    _togglePatternOverride_B.onClick    = [this] { togglePatternOverride_B_Clicked(); };
+    _savePattern_B.onClick              = [this] { savePatternToFile(); };
+    _loadPattern_B.onClick              = [this] { loadPatternFromFile(); };
 }
 
 NodeMCUPatternProgrammer::~NodeMCUPatternProgrammer()
 {
     // TODO: Handle persistance
 
-    // Remove listeners
-    _newNode_B.removeListener(this);
-    _uploadPattern_B.removeListener(this);
-    _togglePatternOverride_B.removeListener(this);
-    _multiplierUp_B.removeListener(this);
-    _multiplierDown_B.removeListener(this);
-    _scrollSpeedUp_B.removeListener(this);
-    _scrollSpeedDown_B.removeListener(this);
-    _savePattern_B.removeListener(this);
-    _loadPattern_B.removeListener(this);
-
     // Delete any dynamic variables
     // Free & Delete pattern picker nodes
     for (int i = 0; i < _patternPickers.size(); i++)
     {
-        _patternPickers[i]->getButton(0).removeListener(this);
-        _patternPickers[i]->getButton(1).removeListener(this);
-        _patternPickers[i]->getButton(2).removeListener(this);
-        _patternPickers[i]->getButton(-1).removeListener(this);
-
         delete _patternPickers[i];
     }
 }
@@ -250,7 +232,6 @@ void NodeMCUPatternProgrammer::paintSaveLoadUpload(juce::Graphics& g)
     addAndMakeVisible(_loadPattern_B);
 }
 
-
 void NodeMCUPatternProgrammer::sliderValueChanged(juce::Slider* slider)
 {
     if (_patternPickers.size() > 0)
@@ -288,103 +269,86 @@ TIP_RGB NodeMCUPatternProgrammer::buildRGBFromSliders()
     return TIP_RGB(r, g, b);
 }
 
-void NodeMCUPatternProgrammer::buttonClicked(juce::Button* button)
+void NodeMCUPatternProgrammer::savePatternToFile()
 {
-    bool check;
-    check = checkPatternButtons(button);
-    if (check) { return; }
-
-    check = checkMultiplierButtons(button);
-    if (check) { return; }
-
-    check = checkSaveLoadUploadButtons(button);
-    if (check) { return; }
-
-    check = checkToggleModeButton(button);
-    if (check) { return; }
-
-    DBG("\n*****************************\nSomething went wrong, button:\n-----------\n" + button->getButtonText() + "\n-----------\nHas not been handled");
+    // TODO
 }
 
-bool NodeMCUPatternProgrammer::checkPatternButtons(juce::Button* button)
+void NodeMCUPatternProgrammer::loadPatternFromFile()
 {
-    if (button == &_newNode_B)
+    // TODO
+}
+
+void NodeMCUPatternProgrammer::uploadPattern_B_Clicked()
+{
+    std::vector<TIP_RGB> pattern = buildPatternAsVector();
+    _webServerHandler_Ref->sendRGBPatternPostRequest(pattern);
+}
+
+void NodeMCUPatternProgrammer::newNode_B_Clicked()
+{
+    PatternPickerSlot* temp = new PatternPickerSlot(
+        dynamic_cast<juce::Component*>(this), buildRGBFromSliders());
+
+    temp->getButton(PatternPickerSlot::_del_B_ID).onClick
+        = [this, temp] { deleteSlot(temp); };
+    temp->getButton(PatternPickerSlot::_slot_B_ID).onClick  
+        = [this, temp] { setActiveSlot(temp); };
+    temp->getButton(PatternPickerSlot::_activityIndicator_ID).onClick 
+        = [this, temp] { setActiveSlot(temp); };
+    _patternPickers.push_back(temp);
+    setActiveSlot(_patternPickers.size() - 1);
+}
+
+void NodeMCUPatternProgrammer::multiplierUp_B_Clicked()
+{
+    if (_patternMultiplier < 10)
     {
-        PatternPickerSlot* temp = new PatternPickerSlot(dynamic_cast<juce::Component*>(this), buildRGBFromSliders());
-        temp->getButton(0).addListener(this);
-        temp->getButton(1).addListener(this);
-        temp->getButton(2).addListener(this);
-        temp->getButton(-1).addListener(this);
-        _patternPickers.push_back(temp);
-        setActiveSlot(_patternPickers.size() - 1);
-        return true;
+        _patternMultiplier += 1;
     }
+}
+
+void NodeMCUPatternProgrammer::multiplierDown_B_Clicked()
+{
+    if (_patternMultiplier > 1)
+    {
+        _patternMultiplier -= 1;
+    }
+}
+
+void NodeMCUPatternProgrammer::togglePatternOverride_B_Clicked()
+{
+    *_patternOverrideMode_Ref = !*_patternOverrideMode_Ref;
+}
+
+void NodeMCUPatternProgrammer::deleteSlot(PatternPickerSlot* slotToRemove)
+{
     for (int i = 0; i < _patternPickers.size(); i++)
     {
-        // Call core slot (select)
-        if (button == &_patternPickers[i]->getButton(0) || button == &_patternPickers[i]->getButton(-1))
+        if (_patternPickers[i] == slotToRemove)
         {
-            setActiveSlot(i);
-            setSliderValues(_patternPickers[i]->getTrueRGB());
-            return true;
-        }
-        // Call toggle mode slot
-        if (button == &_patternPickers[i]->getButton(2))
-        {
-            _patternPickers[i]->toggleMode();
-            return true;
-        }
-        // Call delete slot
-        if (button == &_patternPickers[i]->getButton(1))
-        {
-            _patternPickers[i]->getButton(0).removeListener(this);
-            _patternPickers[i]->getButton(1).removeListener(this);
-            _patternPickers[i]->getButton(2).removeListener(this);
-            removeChildComponent(_patternPickers[i]);
             PatternPickerSlot* temp = _patternPickers[i];
             _patternPickers.erase(_patternPickers.begin() + i);
             delete temp;
-            return true;
+            break;
         }
     }
-    return false;
 }
 
-bool NodeMCUPatternProgrammer::checkMultiplierButtons(juce::Button* button)
+void NodeMCUPatternProgrammer::setActiveSlot(PatternPickerSlot* newActiveSlot)
 {
-    if (button == &_multiplierUp_B)
+    for (int i = 0; i < _patternPickers.size(); i++)
     {
-        if (_patternMultiplier < 10)
+        if (_patternPickers[i] == newActiveSlot)
         {
-            _patternMultiplier += 1;
+            _patternPickers[i]->setActive();
+            _currentSlot = _patternPickers[i];
         }
-        return true;
-    }
-    if (button == &_multiplierDown_B)
-    {
-        if (_patternMultiplier > 1)
+        else
         {
-            _patternMultiplier -= 1;
+            _patternPickers[i]->setInactive();
         }
-        return true;
     }
-    return false;
-}
-
-bool NodeMCUPatternProgrammer::checkToggleModeButton(juce::Button* button)
-{
-    if (button == &_togglePatternOverride_B)
-    {
-        *_patternOverrideMode_Ref = !*_patternOverrideMode_Ref;
-        return true;
-    }
-    return false;
-}
-
-bool NodeMCUPatternProgrammer::checkSaveLoadUploadButtons(juce::Button* button)
-{
-    // TODO
-    return false;
 }
 
 void NodeMCUPatternProgrammer::setActiveSlot(int slotIndex)
@@ -401,6 +365,34 @@ void NodeMCUPatternProgrammer::setActiveSlot(int slotIndex)
             _patternPickers[i]->setInactive();
         }
     }
+}
+
+nlohmann::json NodeMCUPatternProgrammer::buildPatternAsJSON()
+{
+    // TODO - Needed for persistence
+    nlohmann::json output;
+    return output;
+}
+
+std::vector<TIP_RGB> NodeMCUPatternProgrammer::buildPatternAsVector()
+{
+    std::vector<TIP_RGB> output;
+    // TODO -> Make this handled on the NodeMCU side, as opposed to this side.
+    for (int i = 0; i < _patternPickers.size(); i++)
+    {
+        for (int j = 0; j < _patternMultiplier; j++)
+        {
+            if (_patternPickers[i]->getMode())
+            {
+                output.push_back(_patternPickers[i]->getRGB());
+            }
+            else
+            {
+                output.push_back(_patternPickers[i]->getTrueRGB());
+            }
+        }
+    }
+    return output;
 }
 
 // Getters / Setters

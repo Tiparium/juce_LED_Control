@@ -10,7 +10,7 @@
 
 #include "NodeMCUPatternProgrammer.h"
 
-NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, FileChooserJSONHandler* fileChooserJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode) :
+NodeMCUPatternProgrammer::NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode) :
     _webServerHandler_Ref(webServerHandler),
     _pHuePHueHandler_Ref(pHueHandler),
     _persistenceJSONHandler_Ref(persistenceJSONHandler),
@@ -48,7 +48,7 @@ void NodeMCUPatternProgrammer::handleCommandMessage(int commandId)
     switch (commandId)
     {
     case pattern_picker_mode_updated:
-        _localRGB = _currentSlot->getRGB();
+        _localRGB = _currentSlot->getCCRGB();
         repaint();
         break;
 
@@ -271,13 +271,88 @@ TIP_RGB NodeMCUPatternProgrammer::buildRGBFromSliders()
 
 void NodeMCUPatternProgrammer::savePatternToFile()
 {
-    // TODO
-}
+    std::vector<PatternPickerSlot*> pattern = _patternPickers;
+    // Grab multiplier data
+    nlohmann::json outputJSON;
+    outputJSON["multiplier"] = _patternMultiplier;
+
+    // Convert pattern to string in JSON format
+    nlohmann::json patternAsJSON;
+    for (int i = 0; i < pattern.size(); i++)
+    {
+        TIP_RGB tempRGB = pattern[i]->getTrueRGB();
+        patternAsJSON.push_back(tempRGB.toJSON());
+    }
+    outputJSON["pattern"] = patternAsJSON;
+    juce::String patternAsJSONString = outputJSON.dump();
+
+    // Create a file with JSON contents
+    juce::File tempFile = juce::File::createTempFile("json");
+    if (!tempFile.createDirectory().wasOk()) {
+        DBG("Error saving file!");
+        throw new std::exception("Error Saving File!");
+    }
+
+    // Reset & trigger file chooser
+    _fileChooserHandler.reset(new juce::FileChooser("Choose a file to save...",
+        juce::File::getSpecialLocation(juce::File::userDocumentsDirectory).getChildFile(tempFile.getFileName()),
+        "*json", true));
+
+    // Write file contents to permanent file
+    _fileChooserHandler->launchAsync(juce::FileBrowserComponent::saveMode |
+        juce::FileBrowserComponent::canSelectFiles,
+        [tempFile, patternAsJSONString](const juce::FileChooser& chooser)
+    {
+        auto result = chooser.getURLResult();
+        auto name = result.isEmpty() ? juce::String()
+            : (result.isLocalFile() ? result.getLocalFile().getFullPathName() : result.toString(true));
+
+        juce::File file(name);
+        if (!result.isEmpty())
+        {
+            patternAsJSONString != "null" ?
+                file.replaceWithText(patternAsJSONString) : file.replaceWithText("{\"multiplier\":1,\"pattern\":[]");
+            file.create();
+        }
+    });
+} // Save Pattern To File
 
 void NodeMCUPatternProgrammer::loadPatternFromFile()
-{
-    // TODO
-}
+{    _fileChooserHandler.reset(new juce::FileChooser("Choose a file to open...", juce::File::getSpecialLocation(juce::File::userDocumentsDirectory),
+        "*json", true));
+
+    _fileChooserHandler->launchAsync(juce::FileBrowserComponent::openMode
+        | juce::FileBrowserComponent::canSelectFiles,
+        [this](const juce::FileChooser& chooser)
+    {
+        juce::String chosen;
+        auto results = chooser.getURLResults();
+
+        if (!results.isEmpty())
+        {
+            for (auto result : results)
+                chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+                    : result.toString(false));
+
+            std::ifstream ifs(chosen.toStdString());
+            nlohmann::json temp = nlohmann::json::parse(ifs);
+            DBG(temp.dump());
+
+            _patternMultiplier = temp["multiplier"];
+
+            nlohmann::json pattern = temp["pattern"];
+            clearSlots();
+            for (int i = 0; i < pattern.size(); i++)
+            {
+                int r = pattern[i]["r"];
+                int g = pattern[i]["g"];
+                int b = pattern[i]["b"];
+                TIP_RGB tempRGB(r, g, b);
+                buildNodeFromRGB(tempRGB);
+            }
+        }
+    });
+} // Load Pattern From File
 
 void NodeMCUPatternProgrammer::uploadPattern_B_Clicked()
 {
@@ -287,17 +362,7 @@ void NodeMCUPatternProgrammer::uploadPattern_B_Clicked()
 
 void NodeMCUPatternProgrammer::newNode_B_Clicked()
 {
-    PatternPickerSlot* temp = new PatternPickerSlot(
-        dynamic_cast<juce::Component*>(this), buildRGBFromSliders());
-
-    temp->getButton(PatternPickerSlot::_del_B_ID).onClick
-        = [this, temp] { deleteSlot(temp); };
-    temp->getButton(PatternPickerSlot::_slot_B_ID).onClick  
-        = [this, temp] { setActiveSlot(temp); };
-    temp->getButton(PatternPickerSlot::_activityIndicator_ID).onClick 
-        = [this, temp] { setActiveSlot(temp); };
-    _patternPickers.push_back(temp);
-    setActiveSlot(_patternPickers.size() - 1);
+    buildNodeFromRGB(buildRGBFromSliders());
 }
 
 void NodeMCUPatternProgrammer::multiplierUp_B_Clicked()
@@ -332,6 +397,15 @@ void NodeMCUPatternProgrammer::deleteSlot(PatternPickerSlot* slotToRemove)
             delete temp;
             break;
         }
+    }
+}
+
+void NodeMCUPatternProgrammer::clearSlots()
+{
+    for (int i = _patternPickers.size() - 1; i >= 0; i--)
+    {
+        PatternPickerSlot* curr = _patternPickers[i];
+        deleteSlot(curr);
     }
 }
 
@@ -384,7 +458,7 @@ std::vector<TIP_RGB> NodeMCUPatternProgrammer::buildPatternAsVector()
         {
             if (_patternPickers[i]->getMode())
             {
-                output.push_back(_patternPickers[i]->getRGB());
+                output.push_back(_patternPickers[i]->getCCRGB());
             }
             else
             {
@@ -393,6 +467,21 @@ std::vector<TIP_RGB> NodeMCUPatternProgrammer::buildPatternAsVector()
         }
     }
     return output;
+}
+
+void NodeMCUPatternProgrammer::buildNodeFromRGB(TIP_RGB rgb)
+{
+    PatternPickerSlot* temp = new PatternPickerSlot(
+        dynamic_cast<juce::Component*>(this), rgb);
+
+    temp->getButton(PatternPickerSlot::_del_B_ID).onClick
+        = [this, temp] { deleteSlot(temp); };
+    temp->getButton(PatternPickerSlot::_slot_B_ID).onClick
+        = [this, temp] { setActiveSlot(temp); };
+    temp->getButton(PatternPickerSlot::_activityIndicator_ID).onClick
+        = [this, temp] { setActiveSlot(temp); };
+    _patternPickers.push_back(temp);
+    setActiveSlot(_patternPickers.size() - 1);
 }
 
 // Getters / Setters

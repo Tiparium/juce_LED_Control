@@ -16,11 +16,21 @@
 
 #include <JuceHeader.h>
 
+#include "nlohmann/json.hpp"
+#include "../Source/RGBStructs.h"
+#include "../Source/PatternPickerSlot.h"
+#include <fstream>
+
 class FileChooserJSONHandler
 {
 public:
     FileChooserJSONHandler();
     ~FileChooserJSONHandler();
-private:
 
+    void           writeDataToJSONFile(std::vector<PatternPickerSlot*> pattern, int multiplier);
+    nlohmann::json readDataFromJSONFile();
+    // DBG
+    void holder();
+private:
+    std::unique_ptr<juce::FileChooser> _fileChooser;
 };

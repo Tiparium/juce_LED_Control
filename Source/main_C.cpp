@@ -40,7 +40,6 @@ Main_C::Main_C() :
         dynamic_cast<juce::Component*>(this),
         &_webServerHandler, &_pHuePHueHandler,
         &_persistenceJSONHandler,
-        &_fileChooserJSONHandler,
         &_uiRGB, 
         &_ledRGB,
         &_patternOverrideMode);

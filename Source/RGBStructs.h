@@ -13,6 +13,7 @@
 
 #pragma once
 #include <JuceHeader.h>
+#include "nlohmann/json.hpp"
 // I definitely didn't steal these structs. Nope. (Credit to Moritz Wirger, @enwi on github)
 // Some of my own modifications have been added.
 struct TIP_XY
@@ -157,5 +158,14 @@ struct TIP_RGB
         juce::String b = "B: " + std::to_string(TIP_RGB::b);
         juce::String nl = "\n";
         return nl + r + nl + g + nl + b + nl;
+    }
+
+    nlohmann::json TIP_RGB::toJSON()
+    {
+        nlohmann::json output;
+        output["r"] = r;
+        output["g"] = g;
+        output["b"] = b;
+        return output;
     }
 };

@@ -20,7 +20,7 @@ public:
     FavoritesSlot(TIP_RGB rgb);
     ~FavoritesSlot();
 
-    TIP_RGB getRGB();
+    TIP_RGB getCCRGB();
     void setRGB(TIP_RGB rgb);
 
     juce::Button& getButton(int button);

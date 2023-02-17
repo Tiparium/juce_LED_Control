@@ -60,5 +60,4 @@ private:
     WebServerHandler        _webServerHandler;
     PHueHandler             _pHuePHueHandler;
     PersistenceJSONHandler  _persistenceJSONHandler;
-    FileChooserJSONHandler  _fileChooserJSONHandler;
 };

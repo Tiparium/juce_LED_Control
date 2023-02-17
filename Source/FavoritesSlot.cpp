@@ -20,7 +20,7 @@ FavoritesSlot::FavoritesSlot(TIP_RGB rgb)
 }
 FavoritesSlot::~FavoritesSlot(){}
 
-TIP_RGB FavoritesSlot::getRGB() {
+TIP_RGB FavoritesSlot::getCCRGB() {
     return _ledRGB;
 }
 

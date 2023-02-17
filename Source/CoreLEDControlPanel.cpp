@@ -80,7 +80,7 @@ CoreLEDControlPanel::~CoreLEDControlPanel()
     nlohmann::json favoritesToJSONFile;
     for (int i = 0; i < _favSlots.size(); i++) {
         nlohmann::json favSlotJSON;
-        TIP_RGB favSlotRGB = _favSlots[i]->getRGB();
+        TIP_RGB favSlotRGB = _favSlots[i]->getCCRGB();
         favSlotJSON["r"] = favSlotRGB.r;
         favSlotJSON["g"] = favSlotRGB.g;
         favSlotJSON["b"] = favSlotRGB.b;
@@ -152,7 +152,7 @@ void CoreLEDControlPanel::favSlot_B_Clicked(FavoritesSlot* slot)
     {
         if (slot == _favSlots[i])
         {
-            TIP_RGB rgb = _favSlots[i]->getRGB();
+            TIP_RGB rgb = _favSlots[i]->getCCRGB();
 
             // Update UI
             setSliderValues(rgb);

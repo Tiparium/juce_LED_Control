@@ -36,7 +36,7 @@ class NodeMCUPatternProgrammer :
 {
 public:
 
-    NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, FileChooserJSONHandler* fileChooserJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode);
+    NodeMCUPatternProgrammer(juce::Component* parent, WebServerHandler* webServerHandler, PHueHandler* pHueHandler, PersistenceJSONHandler* persistenceJSONHandler, TIP_RGB* uiRGB, TIP_RGB* ledRGB, bool* overrideMode);
     ~NodeMCUPatternProgrammer();
 
     void handleCommandMessage(int commandId) override;
@@ -63,12 +63,14 @@ public:
     void togglePatternOverride_B_Clicked();
 
     void deleteSlot(PatternPickerSlot* slotToRemove);
+    void clearSlots();
     void setActiveSlot(PatternPickerSlot* newActiveSlot);
     void setActiveSlot(int slotIndex); // Sets the currently active pattern slot
 
     // Helper Functions
     nlohmann::json          buildPatternAsJSON();
     std::vector<TIP_RGB>    buildPatternAsVector();
+    void                    buildNodeFromRGB(TIP_RGB rgb);
 
     //  G/S
     void setSliderValues(TIP_RGB rgb);
@@ -113,9 +115,9 @@ private:
     bool*   _patternOverrideMode_Ref;
 
     // Talk to the Handlers
-    WebServerHandler*           _webServerHandler_Ref;
-    PHueHandler*                _pHuePHueHandler_Ref;
-    PersistenceJSONHandler*     _persistenceJSONHandler_Ref;
-    FileChooserJSONHandler*     _fileChooserJSONHandler_Ref;
-    juce::Component*            _parent;
+    WebServerHandler*                    _webServerHandler_Ref;
+    PHueHandler*                         _pHuePHueHandler_Ref;
+    PersistenceJSONHandler*              _persistenceJSONHandler_Ref;
+    std::unique_ptr<juce::FileChooser>   _fileChooserHandler;
+    juce::Component*                     _parent;
 };

@@ -22,7 +22,7 @@ public:
     void initButtonLogic();
     // RGB Data
     TIP_RGB getTrueRGB();
-    TIP_RGB getRGB();
+    TIP_RGB getCCRGB();
     void setRGB(TIP_RGB rgb);
 
     // Mode and activity

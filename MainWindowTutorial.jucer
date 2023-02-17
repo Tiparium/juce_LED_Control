@@ -92,6 +92,20 @@
         <MODULEPATH id="juce_gui_extra" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
       </MODULEPATHS>
     </ANDROIDSTUDIO>
+    <VS2022 targetFolder="Builds/VisualStudio2022">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../json/include&#10;../../JuceLibraryCode&#10;../../hueplusplus/include/hueplusplus&#10;../../RestRequest"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="../../json/include&#10;../../JuceLibraryCode&#10;../../hueplusplus/include/hueplusplus&#10;../../RestRequest"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="E:\Stuff\Programs\File Structures\JUCE\modules"/>
+      </MODULEPATHS>
+    </VS2022>
   </EXPORTFORMATS>
   <MODULES>
     <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>

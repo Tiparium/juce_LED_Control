@@ -39,7 +39,7 @@ TIP_RGB PatternPickerSlot::getTrueRGB()
 }
 
 // Returns color corrected RGB
-TIP_RGB PatternPickerSlot::getRGB() {
+TIP_RGB PatternPickerSlot::getCCRGB() {
     if (_useColorCorrect) { return _localRGB.colorCorrect(); }
     return _localRGB;
 }
